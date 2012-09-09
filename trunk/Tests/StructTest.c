@@ -1,9 +1,16 @@
 typedef struct
 {
-	//int(*pt2Function)(tMotor) = NULL;
-} MotorTest;
+	tMotor mp1;
+	tMotor mp2;
+	tMotor mp3;
+	tMotor mp4;
+	float currentAngle;
+
+} RobotState;
+
+RobotState rState;
 
 task main()
 {
-	MotorTest f;
+
 }
