@@ -1,0 +1,13 @@
+Auto:    1-1: Auto
+
+Gyro:    2-1: G
+Color:   2-2: C
+Light:   2-3: L
+
+Scoring: 3-1: S
+Balance: 3-2: B
+Left:    3-3: L
+Right:   3-3: R
+
+Example: AutoGC-SBL
+	 Auto Gyro Color: Scoring Balance Left
