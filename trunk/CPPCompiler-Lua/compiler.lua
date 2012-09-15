@@ -49,18 +49,41 @@ function verifyNoDuplicates(t)
 	end
 end
 
+function removeWhitespaceLines(t)
+	for i,v in ipairs(t) do
+		local removeLine = true
+		for j=0,#v do
+			if v:sub(j,j) ~= "\t" and v:sub(j,j) ~= " " and v:sub(j,j) ~= "" then
+				removeLine = false
+			end
+
+			if v == "{" then
+				t[i-1] = t[i-1].." {"
+				removeLine = true;
+			end
+		end
+		if removeLine then table.remove(t, i) end
+	end
+end
+
 function main()
 	readIn = true
 	addNewFile(arg[1])
 
 	while true do
-		printTable(lineList); print("\n\n")
+		--printTable(lineList); print("\n\n")
 		newImports = findImports()
 		if #newImports == 0 then break end
 		for i,v in ipairs(newImports) do
 			addNewFile(v)
 		end
 	end
+	print("Imported the following files (besides the main file):")
+	printTable(importList)
+
+	printTable(lineList)
+	removeWhitespaceLines(lineList)
+	printTable(lineList)
 end
 
 main()
