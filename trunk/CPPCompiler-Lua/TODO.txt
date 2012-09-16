@@ -1,0 +1,8 @@
+Steps:
+1) Change all references to classname.staticvar to classname_staticvar
+2) Change all references within classname of staticvar to classname_staticvar
+3) Change all references within classname of nonstaticvar to cn.nonstaticvar (as will be passed through arguments)
+3) Rename functions to classname_functionname and append (classname cn) argument
+4) Change all classname.function(args) to classname.function(classname [as typedef] cn, args)
+5) Copy all functions out of the class
+6) Create the typedef classname
