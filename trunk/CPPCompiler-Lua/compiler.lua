@@ -73,8 +73,9 @@ function parseClass(startLine)
 	local words = wordList(lineList[startLine])
 	local className = words[2]
 
-	endLine = -1
-	parensCount = 0
+	local endLine = -1
+	local parensCount = 0
+
 	for i=startLine,#lineList do
 		for j=1,#lineList[i] do
 			if string.sub(lineList[i],j,j) == "{" then parensCount = parensCount + 1; firstFound = true; end
@@ -121,7 +122,7 @@ function parseClass(startLine)
 			end
 			oldName = words[3]
 			newName = className.."_"..words[3]
-			lineList[i] = words[2] .. " " .. className .. "_" .. words[3] .. "(" .. className .. " tdef," .. string.sub(lineList[i], openParens+1)
+			lineList[i] = words[2] .. " " .. words[3] .. "(" .. className .. " tdef," .. string.sub(lineList[i], openParens+1)
 		end
 	end
 

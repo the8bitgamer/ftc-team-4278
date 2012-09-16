@@ -6,7 +6,7 @@ class test
 	static int hi2;
 	public void test()
 	{
-	
+		test2()
 	}
 	
 	private int test2()
