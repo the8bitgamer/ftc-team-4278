@@ -70,6 +70,9 @@ function wordList(str)
 end
 
 function parseClass(startLine)
+	local words = wordList(lineList[startLine])
+	local className = words[2]
+
 	endLine = -1
 	parensCount = 0
 	for i=startLine,#lineList do
@@ -83,10 +86,30 @@ function parseClass(startLine)
 	--startLine is class entry
 	--endLine is class exit
 
+	local typedefList = {}
+	local staticList = {}
+
 	for i=startLine,endLine do
 		local words = wordList(lineList[i])
+		if(words[1] == "int") then
+			if(#words > 2) then
+				print("Assignment not allowed, or invalid instruction: please use initializer on line " .. i .."! " .. lineList[i])
+				os.exit()
+			end
+			typedefList[#typedefList+1] = words[1] .. " " .. words[2] .. ";"
+		end
+
+		if(words[1] == "static") then
+			if(#words > 3) then
+				print("Assignment not allowed, or invalid instruction: please use initializer on line " .. i .."! " .. lineList[i])
+				os.exit()
+			end
+			staticList[#staticList+1] = words[1] .. " " .. words[2] .. " " .. className .. "_" .. words[3] .. ";"
+		end
 	end
 
+	printTable(typedefList)
+	printTable(staticList)
 end
 
 function parseCode()
@@ -109,8 +132,10 @@ function main()
 	end
 	print("Imported the following files (besides the main file):")
 	printTable(importList)
+	print("")
 
 	removeWhitespaceLines(lineList)
+	print("Working with the following operational code:")
 	printTable(lineList)
 
 	parseCode()

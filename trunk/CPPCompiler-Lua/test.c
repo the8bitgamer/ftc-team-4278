@@ -1,9 +1,9 @@
 #import test2.c
 
-class test
+class test 
 {
 	int hi;
-	static int hi;
+	static int hi2;
 	public void test()
 	{
 	
