@@ -9,7 +9,7 @@ class test
 	
 	}
 	
-	public static void test()
+	private int test2()
 	{
 
 	}

@@ -92,11 +92,11 @@ function parseClass(startLine)
 	for i=startLine,endLine do
 		local words = wordList(lineList[i])
 		if(words[1] == "int") then
-			if(#words > 2) then
-				print("Assignment not allowed, or invalid instruction: please use initializer on line " .. i .."! " .. lineList[i])
-				os.exit()
-			end
-			typedefList[#typedefList+1] = words[1] .. " " .. words[2] .. ";"
+				if(#words > 2) then
+					print("Assignment not allowed, or invalid instruction: please use initializer on line " .. i .."! " .. lineList[i])
+					os.exit()
+				end
+				typedefList[#typedefList+1] = words[1] .. " " .. words[2] .. ";"
 		end
 
 		if(words[1] == "static") then
@@ -106,10 +106,41 @@ function parseClass(startLine)
 			end
 			staticList[#staticList+1] = words[1] .. " " .. words[2] .. " " .. className .. "_" .. words[3] .. ";"
 		end
+
+		if(words[1] == "public" or words[1] == "private") then
+			for n=1, #words do
+				if words[n] == "static" then
+					print("Static modifier not allowed on functions! Line " .. i .. ": " .. lineList[i])
+					os.exit()
+				end
+			end
+			local openParens = string.find(lineList[i], "(", 1, true)
+			if(openParens == nil) then
+				print("Function call must have (args)! at line " .. i ": "..lineList[i])
+				os.exit()
+			end
+			oldName = words[3]
+			newName = className.."_"..words[3]
+			lineList[i] = words[2] .. " " .. className .. "_" .. words[3] .. "(" .. className .. " tdef," .. string.sub(lineList[i], openParens+1)
+		end
 	end
 
 	printTable(typedefList)
 	printTable(staticList)
+end
+
+function findBracketStartEnd(line)
+	bracketFound = false
+	bracketCount = 0
+	for i=line, #lineList do
+		for j=1, #lineList[i] do
+			if(string.sub(lineList[i], j, j) == "{") then bracketCount = bracketCount + 1; bracketFound = true; end
+			if(string.sub(lineList[i], j, j) == "}") then bracketCount = bracketCount - 1 end
+			if(bracketCount == 0 and bracketFound) then return i end
+		end
+	end
+	print("Close bracket not found!")
+	os.exit()
 end
 
 function parseCode()
@@ -139,6 +170,7 @@ function main()
 	printTable(lineList)
 
 	parseCode()
+	printTable(lineList)
 end
 
 main()
