@@ -1,5 +1,7 @@
 lineList = {}
 importList = {}
+functionList = {}
+globalVarList = {}
 
 function addNewFile(fileName)
 	file = io.open(fileName,"r")
@@ -61,6 +63,39 @@ function removeWhitespaceLines(t)
 	end
 end
 
+function wordList(str)
+	local words = {}
+	for word in str:gmatch("%w+") do table.insert(words,word) end
+	return words
+end
+
+function parseClass(startLine)
+	endLine = -1
+	parensCount = 0
+	for i=startLine,#lineList do
+		for j=1,#lineList[i] do
+			if string.sub(lineList[i],j,j) == "{" then parensCount = parensCount + 1; firstFound = true; end
+			if string.sub(lineList[i],j,j) == "}" then parensCount = parensCount - 1 end
+			--print(string.sub(lineList[i],j,j), parensCount)
+		end
+		if parensCount == 0 and firstFound == true then endLine = i; break; end
+	end
+	--startLine is class entry
+	--endLine is class exit
+
+	for i=startLine,endLine do
+		local words = wordList(lineList[i])
+	end
+
+end
+
+function parseCode()
+	for i,v in ipairs(lineList) do
+		local words = wordList(v)
+		if words[1] == "class" then parseClass(i) end
+	end
+end
+
 function main()
 	readIn = true
 	addNewFile(arg[1])
@@ -76,8 +111,9 @@ function main()
 	printTable(importList)
 
 	removeWhitespaceLines(lineList)
+	printTable(lineList)
 
-
+	parseCode()
 end
 
 main()
