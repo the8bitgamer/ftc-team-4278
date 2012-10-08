@@ -28,6 +28,7 @@
 
 float robotAngle = 0;
 float lastTime = 0;
+bool fieldOriented = true;
 //0.75 1.00 1.25
 void calculateGyro()
 {
@@ -69,8 +70,7 @@ void computeMovement()
   float th = getTheta(joyX, joyY);
   float v = getMagnitude(joyX, joyY);
   float rot = getRotation(joyRot);
-  float gyr = degreesToRadians(robotAngle);
-
+  float gyr = degreesToRadians(robotAngle) - (fieldOriented ? 0 : degreesToRadians(robotAngle));
   float mBackLeftTmp = (cos(th+(PI/4)-gyr)*v - rot/(1.5));
   float mFrontRightTmp = (cos(th+(PI/4)-gyr)*v + rot/1.5);
   float mBackRightTmp = -1 * (sin(th+(PI/4)-gyr)*v - rot/1.5);
@@ -89,9 +89,14 @@ void computeMovement()
   mFrontLeft = 100 * mFrontLeftTmp / max;
 }
 
+bool lastStateDown = false;
 void checkButtons()
 {
   if(joy1Btn(2)) {HTGYROstartCal(S2); PlaySound(soundBeepBeep);}
+  
+  if(joy1Btn(3) && !lastStateDown) {fieldOriented = !fieldOriented;}
+  if(!joy1Btn(3)) {lastStateDown = false;}
+  
   if(joy1Btn(5)) {mRArm =  80; mLArm = -80;}
   if(joy1Btn(6)) {mRArm = -80; mLArm =  80;}
   if(!joy1Btn(5) && !joy1Btn(6)) {mRArm = 0; mLArm = 0;}
