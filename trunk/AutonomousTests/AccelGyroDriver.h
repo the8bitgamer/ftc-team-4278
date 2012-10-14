@@ -50,7 +50,7 @@ void integrateAccel() {
 
 void resetPositions() {xPos=0; yPos=0; zPos=0; xVel = 0; yVel = 0; zVel = 0;}
 
-void setupSensors(tSensors snsAccz, tSensors snsGyrz) {
+void setupAccGyr(tSensors snsAccz, tSensors snsGyrz) {
 	snsGyr = snsGyrz;
 	snsAcc = snsAccz;
 	HTGYROstartCal(snsGyr);
