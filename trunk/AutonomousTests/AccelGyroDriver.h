@@ -32,7 +32,7 @@ void integrateGyro() {
 void integrateAccel() {
 	getAccVals(); float dT = (nPgmTime - lastIterTime)/1000.0;
 
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < 3; i++) {
 		xAccAvg[i] = xAccAvg[i+1];
 		yAccAvg[i] = yAccAvg[i+1];
 		zAccAvg[i] = zAccAvg[i+1];
@@ -41,7 +41,7 @@ void integrateAccel() {
 	yAccAvg[4] = yAcc;
 	zAccAvg[4] = zAcc;
 	xAcc=0; yAcc=0; zAcc=0;
-	for(int i=0; i<5; i++) {xAcc += (xAccAvg[i]+xOff)/xScl; yAcc += (yAccAvg[i]+yOff)/yScl; zAcc += (zAccAvg[i]+zOff)/zScl;}
+	for(int i=0; i<4; i++) {xAcc += (xAccAvg[i]+xOff)/xScl; yAcc += (yAccAvg[i]+yOff)/yScl; zAcc += (zAccAvg[i]+zOff)/zScl;}
 	xAcc = ((xAcc) / 5)/aToN; yAcc = ((yAcc) / 5)/aToN; zAcc = ((zAcc) / 5)/aToN;
 
 	xVel += (xAcc>aThresh?xAcc:0)*dT; yVel += (yAcc>aThresh?yAcc:0)*dT; zVel += (zAcc>aThresh?zAcc:0)*dT;

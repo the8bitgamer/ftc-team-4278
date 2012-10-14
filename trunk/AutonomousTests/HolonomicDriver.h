@@ -22,10 +22,10 @@ task HolonomicControl()
 		float rot = 0.5*((robotTh+targetRobotTh)/abs(robotTh+targetRobotTh));
 		float gyr = degreesToRadians(robotTh);
 
-		float mBackLeftTmp = (cos(th+(PI/4)-gyr)*v) - rot/1.5;
-		float mFrontRightTmp = (cos(th+(PI/4)-gyr)*v) + rot/1.5;
-		float mBackRightTmp = -1 * (sin(th+(PI/4)-gyr)*v) - rot/1.5;
-		float mFrontLeftTmp = -1 * (sin(th+(PI/4)-gyr)*v) + rot/1.5;
+		float mBackLeftTmp = (cos(th+(PI/4)-gyr)*v - rot/1.5);
+		float mFrontRightTmp = (cos(th+(PI/4)-gyr)*v + rot/1.5);
+		float mBackRightTmp = -1 * (sin(th+(PI/4)-gyr)*v - rot/1.5);
+		float mFrontLeftTmp = -1 * (sin(th+(PI/4)-gyr)*v + rot/1.5);
 
 		float max = 1;
 		if(abs(mBackLeftTmp) > abs(max)) max = mBackLeftTmp;
