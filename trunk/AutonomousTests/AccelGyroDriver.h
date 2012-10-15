@@ -5,7 +5,7 @@ float xPos=0, yPos=0, zPos=0, xVel=0, yVel=0, zVel=0, xAcc=0, yAcc=0, zAcc=0;
 float xOff=0, yOff=0, zOff=0, xScl=0, yScl=0, zScl=0; //Off = offset, Scl = scalar. For internal use ONLY
 #define aToN 20
 #define aThresh 0.1
-#define posToMet 1
+#define posToMet (1/12)
 float xAccAvg[5] = {0,0,0,0,0}, yAccAvg[5] = {0,0,0,0,0}, zAccAvg[5] = {0,0,0,0,0};
 
 float gVal=0, robotTh=0;
