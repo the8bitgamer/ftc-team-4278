@@ -6,7 +6,7 @@
  */
 
 /*
- * $Id: common.h 112 2012-10-04 17:44:38Z xander $
+ * $Id: common.h 98 2012-08-04 09:02:53Z xander $
  */
 
 /** \file common.h
@@ -16,7 +16,7 @@
  * drivers.
  * License: You may use this code as you wish, provided you give credit where its due.
  *
- * THIS CODE WILL ONLY WORK WITH ROBOTC VERSION 3.51 AND HIGHER.
+ * THIS CODE WILL ONLY WORK WITH ROBOTC VERSION 3.08 AND HIGHER.
  *
  * Changelog:
  * - 0.1: Initial release
@@ -51,7 +51,7 @@
  * - 0.15: Removed motor mux and sensor mux functions and types out
  * - 0.16: Added max() and min() functions by Mike Henning, Max Bareiss
  *
- * \author Xander Soldaat (xander_at_botbench.com)
+ * \author Xander Soldaat (mightor_at_gmail.com)
  * \date 27 April 2011
  * \version 0.16
  */
@@ -72,8 +72,8 @@
 #endif
 
 #include "firmwareVersion.h"
-#if (kRobotCVersionNumeric < 351)
-#error "These drivers are only supported on RobotC version 3.51 or higher"
+#if (kFirmwareVersion < 912)
+#error "These drivers are only supported on RobotC version 3.08 or higher"
 #endif
 
 #ifndef MAX_ARR_SIZE
@@ -96,7 +96,6 @@
  * This define returns the smallest of the three numbers
  */
 #define min3(a, b, c) (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c)
-
 
 /**
  * This function returns the bigger of the two numbers
@@ -136,8 +135,8 @@ typedef int tIntArray[MAX_ARR_SIZE];
 
 void clearI2CError(tSensors link, ubyte address);
 bool waitForI2CBus(tSensors link);
-bool writeI2C(tSensors link, tByteArray &request, tByteArray &reply, int replylen);
-bool writeI2C(tSensors link, tByteArray &request);
+bool writeI2C(tSensors link, tByteArray &data, int replylen);
+bool readI2C(tSensors link, tByteArray &data, int replylen);
 
 
 /**
@@ -158,7 +157,7 @@ void clearI2CError(tSensors link, ubyte address) {
 #endif // __COMMON_H_DEBUG__
 
   for (int i = 0; i < 5; i++) {
-    sendI2CMsg(link, &error_array[0], 0);
+    sendI2CMsg(link, error_array[0], 0);
     wait1Msec(5);
   }
 }
@@ -178,23 +177,22 @@ bool waitForI2CBus(tSensors link)
     switch (nI2CStatus[link])
     //switch(i2cstatus)
     {
-	    case NO_ERR:
-	      return true;
+    case NO_ERR:
+      return true;
 
-	    case STAT_COMM_PENDING:
-	      break;
+    case STAT_COMM_PENDING:
+      break;
 
-	    case ERR_COMM_CHAN_NOT_READY:
-	      break;
+    case ERR_COMM_CHAN_NOT_READY:
+      break;
 
-	    case ERR_COMM_BUS_ERR:
-	#ifdef __COMMON_H_DEBUG__
-	      PlaySound(soundLowBuzz);
-	      while (bSoundActive) {}
-	#endif // __COMMON_H_DEBUG__
-        return false;
+    case ERR_COMM_BUS_ERR:
+#ifdef __COMMON_H_DEBUG__
+      PlaySound(soundLowBuzz);
+      while (bSoundActive) {}
+#endif // __COMMON_H_DEBUG__
+      return false;
     }
-    EndTimeSlice();
   }
 }
 
@@ -203,102 +201,39 @@ bool waitForI2CBus(tSensors link)
  * Write to the I2C bus. This function will clear the bus and wait for it be ready
  * before any bytes are sent.
  * @param link the port number
- * @param request the data to be sent
- * @return true if no error occured, false if it did
- */
-bool writeI2C(tSensors link, tByteArray &request) {
-
-#if (__COMMON_H_SENSOR_CHECK__ == 1)
-  //TSensorTypes type = SensorType[link];
-
-  switch (SensorType[link])
-  {
-    case sensorI2CCustom:                 break;
-    case sensorI2CCustom9V:               break;
-    case sensorI2CCustomFast:             break;
-    case sensorI2CCustomFast9V:           break;
-    case sensorI2CCustomFastSkipStates9V: break;
-    case sensorI2CCustomFastSkipStates:   break;
-    default:
-	    hogCPU();
-	    PlaySound(soundException);
-	    eraseDisplay();
-	    nxtDisplayCenteredTextLine(0, "3rd Party Driver");
-	    nxtDisplayCenteredTextLine(1, "ERROR");
-	    nxtDisplayCenteredTextLine(2, "You have not");
-	    nxtDisplayCenteredTextLine(3, "setup the sensor");
-	    nxtDisplayCenteredTextLine(4, "port correctly. ");
-	    nxtDisplayCenteredTextLine(5, "Please refer to");
-	    nxtDisplayCenteredTextLine(6, "one of the");
-	    nxtDisplayCenteredTextLine(7, "examples.");
-	    wait1Msec(10000);
-	    StopAllTasks();
-  }
-#endif
-
-  if (!waitForI2CBus(link)) {
-    clearI2CError(link, request[1]);
-
-    // Let's try the bus again, see if the above packets flushed it out
-    // clearI2CBus(link);
-    if (!waitForI2CBus(link))
-      return false;
-  }
-
-  sendI2CMsg(link, &request[0], 0);
-
-  if (!waitForI2CBus(link)) {
-    clearI2CError(link, request[1]);
-    sendI2CMsg(link, &request[0], 0);
-    if (!waitForI2CBus(link))
-      return false;
-  }
-  return true;
-}
-
-
-/**
- * Write to the I2C bus. This function will clear the bus and wait for it be ready
- * before any bytes are sent.
- * @param link the port number
- * @param request the data to be sent
- * @param reply array to hold received data
+ * @param data the data to be sent
  * @param replylen the number of bytes (if any) expected in reply to this command
  * @return true if no error occured, false if it did
  */
-bool writeI2C(tSensors link, tByteArray &request, tByteArray &reply, int replylen) {
-  // clear the input data buffer
+bool writeI2C(tSensors link, tByteArray &data, int replylen) {
 
 #if (__COMMON_H_SENSOR_CHECK__ == 1)
-  //TSensorTypes type = SensorType[link];
+  TSensorTypes type = SensorType[link];
 
-  switch (SensorType[link])
-  {
-    case sensorI2CCustom:                 break;
-    case sensorI2CCustom9V:               break;
-    case sensorI2CCustomFast:             break;
-    case sensorI2CCustomFast9V:           break;
-    case sensorI2CCustomFastSkipStates9V: break;
-    case sensorI2CCustomFastSkipStates:   break;
-    default:
-	    hogCPU();
-	    PlaySound(soundException);
-	    eraseDisplay();
-	    nxtDisplayCenteredTextLine(0, "3rd Party Driver");
-	    nxtDisplayCenteredTextLine(1, "ERROR");
-	    nxtDisplayCenteredTextLine(2, "You have not");
-	    nxtDisplayCenteredTextLine(3, "setup the sensor");
-	    nxtDisplayCenteredTextLine(4, "port correctly. ");
-	    nxtDisplayCenteredTextLine(5, "Please refer to");
-	    nxtDisplayCenteredTextLine(6, "one of the");
-	    nxtDisplayCenteredTextLine(7, "examples.");
-	    wait1Msec(10000);
-	    StopAllTasks();
+  if ((type != sensorI2CCustom) &&
+      (type != sensorI2CCustom9V) &&
+      (type != sensorI2CCustomFast) &&
+      (type != sensorI2CCustomFast9V) &&
+      (type != sensorI2CCustomFastSkipStates9V) &&
+      (type != sensorI2CCustomFastSkipStates)) {
+    hogCPU();
+    PlaySound(soundException);
+    eraseDisplay();
+    nxtDisplayCenteredTextLine(0, "3rd Party Driver");
+    nxtDisplayCenteredTextLine(1, "ERROR");
+    nxtDisplayCenteredTextLine(2, "You have not");
+    nxtDisplayCenteredTextLine(3, "setup the sensor");
+    nxtDisplayCenteredTextLine(4, "port correctly. ");
+    nxtDisplayCenteredTextLine(5, "Please refer to");
+    nxtDisplayCenteredTextLine(6, "one of the");
+    nxtDisplayCenteredTextLine(7, "examples.");
+    wait1Msec(10000);
+    StopAllTasks();
   }
 #endif
 
   if (!waitForI2CBus(link)) {
-    clearI2CError(link, request[1]);
+    clearI2CError(link, data[1]);
 
     // Let's try the bus again, see if the above packets flushed it out
     // clearI2CBus(link);
@@ -306,84 +241,65 @@ bool writeI2C(tSensors link, tByteArray &request, tByteArray &reply, int replyle
       return false;
   }
 
-  sendI2CMsg(link, &request[0], replylen);
+  sendI2CMsg(link, data[0], replylen);
 
   if (!waitForI2CBus(link)) {
-    clearI2CError(link, request[1]);
-    sendI2CMsg(link, &request[0], replylen);
+    clearI2CError(link, data[1]);
+    sendI2CMsg(link, data[0], replylen);
     if (!waitForI2CBus(link))
       return false;
   }
+  return true;
+}
+
+
+/**
+ * Read from the I2C bus.  This function will wait for the bus to be ready before reading
+ * from it.
+ * @param link the port number
+ * @param data holds the data from the reply
+ * @param replylen the number of bytes in the reply
+ * @return true if no error occured, false if it did
+ */
+bool readI2C(tSensors link, tByteArray &data, int replylen) {
+
+#if (__COMMON_H_SENSOR_CHECK__ == 1)
+  TSensorTypes type = SensorType[link];
+  if ((type != sensorI2CCustom) &&
+      (type != sensorI2CCustom9V) &&
+      (type != sensorI2CCustomFast) &&
+      (type != sensorI2CCustomFast9V) &&
+      (type != sensorI2CCustomFastSkipStates9V) &&
+      (type != sensorI2CCustomFastSkipStates)) {
+    hogCPU();
+    PlaySound(soundException);
+    eraseDisplay();
+    nxtDisplayCenteredTextLine(0, "3rd Party Driver");
+    nxtDisplayCenteredTextLine(1, "ERROR");
+    nxtDisplayCenteredTextLine(2, "You have not");
+    nxtDisplayCenteredTextLine(3, "setup the sensor");
+    nxtDisplayCenteredTextLine(4, "port correctly. ");
+    nxtDisplayCenteredTextLine(5, "Please refer to");
+    nxtDisplayCenteredTextLine(6, "one of the");
+    nxtDisplayCenteredTextLine(7, "examples.");
+    wait1Msec(10000);
+    StopAllTasks();
+  }
+#endif
+
+  // clear the input data buffer
+  memset(data, 0, sizeof(tByteArray));
+
+  // wait for the bus to be done receiving data
+  if (!waitForI2CBus(link))
+    return false;
 
   // ask for the input to put into the data array
-  readI2CReply(link, &reply[0], replylen);
+  readI2CReply(link, data[0], replylen);
 
   return true;
 }
 
-/*
-bool I2CreadInt(tSensors link, ubyte address, ubyte reg, int &retval, tByteArray request, tByteArray reply, bool msbfirst = true)
-{
-  request[0] = 2;            // Message size
-  request[1] = address; // I2C Address
-  request[2] = reg;
-
-  if (!writeI2C(link, request, reply, 2))
-    return false;
-
-  retval = (msbfirst) ? reply[1] + (reply[0] << 8) : reply[0] + (reply[1] << 8);
-
-  return true;
-}
-
-
-bool I2CreadLong(tSensors link, ubyte address, ubyte reg, int &retval, tByteArray request, tByteArray reply, bool msbfirst = true)
-{
-  request[0] = 2;            // Message size
-  request[1] = address; // I2C Address
-  request[2] = reg;
-
-  if (!writeI2C(link, request, reply, 4))
-    return false;
-
-  if (msbfirst)
-    retval = (reply[0] << 24) + (reply[1] << 16) + (reply[2] <<  8) + reply[3];
-  else
-    retval = (reply[3] << 24) + (reply[2] << 16) + (reply[1] <<  8) + reply[0];
-
-  return true;
-}
-
-
-bool I2CreadSByte(tSensors link, ubyte address, ubyte reg, sbyte &retval, tByteArray request, tByteArray reply)
-{
-  request[0] = 2;            // Message size
-  request[1] = address; // I2C Address
-  request[2] = reg;
-
-  if (!writeI2C(link, request, reply, 1))
-    return false;
-
-  retval =  (reply[0] >= 128) ? (int)reply[0] - 256 : (int)reply[0];
-
-  return true;
-}
-
-
-bool I2CreadUByte(tSensors link, ubyte address, ubyte reg, ubyte &retval, tByteArray request, tByteArray reply)
-{
-  request[0] = 2;            // Message size
-  request[1] = address; // I2C Address
-  request[2] = reg;
-
-  if (!writeI2C(link, request, reply, 1))
-    return false;
-
-  retval =  reply[0];
-
-  return true;
-}
-*/
 
 /**
  * Create a unique ID (UID) for an NXT.  This based on the last 3 bytes
@@ -401,10 +317,39 @@ long getUID() {
 }
 
 
+/**
+ * Returns a rounded int from a float.
+ * @param number the float to be rounded up or down.
+ * @return rounded integer
+ */
+int round(float number) {
+  return sgn(number) * floor(abs(number) + 0.5);
+}
+
+
+/**
+ * Returns the arctan2 of X and Y
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @return the angle in radians
+ */
+float atan2(float x, float y)
+{
+  float a;
+  if (x>0)           a = atan(y/x);
+  if (y>=0 && x<0)   a = atan(y/x) + PI;
+  if (y<0 && x<0)    a = atan(y/x) - PI;
+  if (y>0 && x==0)   a = PI/2.0;
+  if (y<0 && x==0)   a =-PI/2.0;
+  if (x==0 && y==0)  a = 0;
+
+  return a;
+}
+
 #endif // __COMMON_H__
 
 /*
- * $Id: common.h 112 2012-10-04 17:44:38Z xander $
+ * $Id: common.h 98 2012-08-04 09:02:53Z xander $
  */
 /* @} */
 /* @} */

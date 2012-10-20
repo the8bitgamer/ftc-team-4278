@@ -9,7 +9,7 @@ float xOff=0, yOff=0, zOff=0, xScl=0, yScl=0, zScl=0; //Off = offset, Scl = scal
 float xAccAvg[5] = {0,0,0,0,0}, yAccAvg[5] = {0,0,0,0,0}, zAccAvg[5] = {0,0,0,0,0};
 
 float gVal=0, robotTh=0;
-#define gyrThresh 1.0
+#define gyrThresh 0
 
 int lastIterTime = 0;
 tSensors snsGyr, snsAcc;
