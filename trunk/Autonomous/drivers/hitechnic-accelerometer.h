@@ -123,7 +123,6 @@ bool HTACreadAllAxes(tMUXSensor muxsensor, int &x, int &y, int &z) {
 
   // Convert 2 bytes into a signed 10 bit value.  If the 8 high bits are more than 127, make
   // it a signed value before combing it with the lower 2 bits.
-  // Gotta love conditional assignments!
   x = (HTAC_I2CReply[0] > 127) ? (HTAC_I2CReply[0] - 256) * 4 + HTAC_I2CReply[3]
                                    : HTAC_I2CReply[0] * 4 + HTAC_I2CReply[3];
 

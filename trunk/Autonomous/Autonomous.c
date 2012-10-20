@@ -1,7 +1,7 @@
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  HTMotor,  none)
 #pragma config(Sensor, S1,     SMUX,           sensorI2CCustom)
 #pragma config(Sensor, S2,     sGyr,           sensorI2CHiTechnicGyro)
-#pragma config(Sensor, S3,     sAcc,           sensorI2CCustom)
+#pragma config(Sensor, S3,     sAcc,           sensorI2CCustomFastSkipStates)
 #pragma config(Motor,  mtr_S4_C1_1,     mBLz,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C1_2,     mFLz,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C2_1,     mArm,          tmotorTetrix, openLoop)
@@ -14,10 +14,13 @@
 
 task main()
 {
-			BackgroundIntegration();
-	HTGYROstartCal(sGyr);
+	BackgroundIntegration();
 	while(true) {
 		wait1Msec(10);
-
+		//nxtDisplayTextLine(6, "lasif: %f", SensorValue[sAcc]);
+		//int xAcc, yAcc, zAcc;
+		//HTACreadAllAxes(sAcc, xAcc, yAcc, zAcc);
+		//nxtDisplayTextLine(6, "sf: %f", yAcc);
+		EndTimeSlice();
 	}
 }
