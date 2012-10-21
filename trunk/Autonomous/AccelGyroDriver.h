@@ -7,21 +7,22 @@
 #include "drivers\hitechnic-accelerometer.h"
 #include "drivers\hitechnic-gyro.h"
 
-float robotTh=0;
+float robotRot=0;
 
 task GyroIntegrate()
 {
 	HTGYROstartCal(sGyr);
 	int lastIterTime=0;
 	while(true) {
-		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotTh += (9.0/2.0) * HTGYROreadRot(sGyr) * (float)(nPgmTime - lastIterTime) / 1000.0;
-		nxtDisplayTextLine(0, "Rot: %f", robotTh);
+		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= (35.0/45.0)*(100.0/45.0)*(76.0/90.0)*(86.0/90.0)*(85.0/90.0)*(4.0/3.0)*(9.0/2.0) * HTGYROreadRot(sGyr) * (float)(nPgmTime - lastIterTime) / 1000.0;
+		nxtDisplayTextLine(0, "Rot: %f", robotRot);
 		lastIterTime = nPgmTime;
 		EndTimeSlice();
 	}
 }
 
 float robotX, robotY;
+bool resetData = false;
 
 task AccelIntegrate()
 {
@@ -35,6 +36,12 @@ task AccelIntegrate()
 
   while(true)
   {
+  	if(resetData) {
+  		xAxis=0; yAxis=0; zAxis=0; xAcc=0; yAcc=0; xVel=0; yVel=0; xPos=0; yPos=0; xScl = 0.973236; yScl = 0.977995;
+      float xAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; float yAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+      resetData = false;
+	  }
+
     HTACreadAllAxes(sAcc, xAxis, yAxis, zAxis);
     xAcc = (xAxis - xBias)*xScl/aToN; yAcc = (yAxis-yBias)*yScl/aToN;
 
@@ -58,13 +65,15 @@ task AccelIntegrate()
     nxtDisplayTextLine(3, "xV: %f",xVel);
     nxtDisplayTextLine(4, "yV: %f",yVel);
     nxtDisplayTextLine(5, "xP: %f",xPos);
-    nxtDisplayTextLine(6, "yP: %f",yPos);
+    nxtDisplayTextLine(6, "yP: %f",-yPos);
     nxtDisplayTextLine(7, "t:  %f",dT);
     lastTime = nPgmTime;
 
-    robotX = xPos; robotY = yPos;
+    robotX = xPos; robotY = -yPos;
   }
 }
+
+void resetPositionData() {resetData = true; robotRot = 0;}
 
 void BackgroundIntegration()
 {

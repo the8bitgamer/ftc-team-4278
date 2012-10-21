@@ -39,7 +39,7 @@ void calculateGyro()
 
 float getTheta(int x, int y)
 {
-  return atan2(-x, y)+(PI/2);
+  return atan2(y,x);
 }
 
 float getMagnitude(int x, int y)
