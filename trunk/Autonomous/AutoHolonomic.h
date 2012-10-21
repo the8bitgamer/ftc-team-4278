@@ -1,3 +1,6 @@
+#include "drivers/hitechnic-sensormux.h"
+#include "drivers/hitechnic-colour-v2.h"
+
 #define xyAccuracy 0.15
 #define rotAccuracy 1
 
@@ -49,6 +52,21 @@ void moveToRot(float rot) {
 	stopAllDrive(); ClearTimer(T1);
 	while(time1[T1] < 500) EndTimeSlice();
 	resetPositionData(); targetRot = robotRot;
+}
+
+const tMUXSensor colorSns = msensor_S1_3;
+
+void moveToWhite(float x, float y, float mag)
+{
+	targetMag = mag;
+	while(true) {
+		if(HTCS2readColor(colorSns) == 3) break;
+		targetTh = atan2(y,x);
+
+		EndTimeSlice();
+	}
+	stopAllDrive(); ClearTimer(T1);
+	while(time1[T1] < 500) EndTimeSlice();
 }
 
 task HolonomicControl()
