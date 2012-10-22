@@ -69,13 +69,15 @@ void closeAutonomous() {
 
 task main()
 {
-	/*int irCol = getIRColumn();
+	/*hogCPU();
+	int irCol = getIRColumn();
 	int irRow = cols[irCol-1];
 	switch(irRow) {
 		case 1: StartTask(armLow); break;
 		case 2: StartTask(armMid); break;
 		case 3: StartTask(armHi); break;
 	}
+	releaseCPU();
 	if(irCol == 1) autoCol1();
 	if(irCol == 2) autoCol2();
 	if(irCol == 3) autoCol3();*/
