@@ -45,7 +45,7 @@ void moveToRot(float rot) {
 	targetRot = rot;
 	while(true) {
 		if(abs(robotRot-targetRot) < rotAccuracy) break;
-		gRot = abs(robotRot - targetRot)/(robotRot - targetRot) * -0.25;
+		gRot = sgn(robotRot - targetRot) * -0.25;
 		EndTimeSlice();
 	}
 	gRot = 0;

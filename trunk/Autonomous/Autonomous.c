@@ -13,10 +13,9 @@
 
 #include "AccelGyroDriver.h"
 #include "AutoHolonomic.h"
+#include "ArmControl.h"
 #include "drivers/hitechnic-sensormux.h"
 #include "drivers/hitechnic-irseeker-v2.h"
-
-#define mArm motor[motorArms]
 
 int cols[3] = {0,0,0};
 void getIRColumnTargetData() {
@@ -43,7 +42,6 @@ int getIRColumn()
 }
 
 void autoCol1() {
-
 }
 
 void autoCol2() {
@@ -57,21 +55,35 @@ void autoCol3() {
 	moveToRot(45);
 }
 
-task main()
-{
-	//nMotorEncoder[motorArms] = 0; nMotorEncoder[motorArmsE2];
+void initializeRobot() {
+	nMotorEncoder[motorArms] = 0; nMotorEncoder[motorArmE2] = 0;
 	getIRColumnTargetData();
-	wait1Msec(750);
+	nxtDisplayTextLine(6, "LOCKED");
+	wait1Msec(500);
 
 	BackgroundIntegration();
 	StartTask(HolonomicControl);
+}
+
+void closeAutonomous() {
+
+}
+
+task main()
+{
 	//int irCol = getIRColumn();
 	//int irRow = cols[irCol-1];
+	/*switch(irRow) {
+		case 1: StartTask(armLow); break;
+		case 2: StartTask(armMid); break;
+		case 3: StartTask(armHi); break;
+	}*/
 	//if(irCol == 1) autoCol1();
 	//if(irCol == 2) autoCol2();
 	//if(irCol == 3) autoCol3();
 
 	//moveToWhite(0, 2, .3);
 
-	ClearTimer(T1); while(time1[T1] < 5000){EndTimeSlice();}
+	ClearTimer(T1); while(time1[T1] < 2500){EndTimeSlice();}
+	closeAutonomous();
 }

@@ -8,6 +8,7 @@
 #include "drivers\hitechnic-gyro.h"
 
 float robotRot=0;
+bool debugAccelGyro = true;
 
 task GyroIntegrate()
 {
@@ -15,7 +16,7 @@ task GyroIntegrate()
 	int lastIterTime=0;
 	while(true) {
 		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= (35.0/45.0)*(100.0/45.0)*(76.0/90.0)*(86.0/90.0)*(85.0/90.0)*(4.0/3.0)*(9.0/2.0) * HTGYROreadRot(sGyr) * (float)(nPgmTime - lastIterTime) / 1000.0;
-		nxtDisplayTextLine(0, "Rot: %f", robotRot);
+		if(debugAccelGyro) nxtDisplayTextLine(0, "Rot: %f", robotRot);
 		lastIterTime = nPgmTime;
 		EndTimeSlice();
 	}
@@ -60,13 +61,15 @@ task AccelIntegrate()
    	xVel += xAccSum*dT*(abs(xAccSum) > aThresh ? 1.0 : 0.0); yVel += yAccSum*dT*(abs(yAccSum) > aThresh ? 1.0 : 0.0);
    	xPos += xVel*dT*posToFeet*(abs(xVel) > vThresh ? 1.0 : 0.0); yPos += yVel*dT*posToFeet*(abs(yVel) > vThresh ? 1.0:0.0);
 
-    nxtDisplayTextLine(1, "xA: %f",xAccSum);
-    nxtDisplayTextLine(2, "yA: %f",yAccSum);
-    nxtDisplayTextLine(3, "xV: %f",xVel);
-    nxtDisplayTextLine(4, "yV: %f",yVel);
-    nxtDisplayTextLine(5, "xP: %f",xPos);
-    nxtDisplayTextLine(6, "yP: %f",-yPos);
-    nxtDisplayTextLine(7, "t:  %f",dT);
+    if(debugAccelGyro) {
+    	nxtDisplayTextLine(1, "xA: %f",xAccSum);
+    	nxtDisplayTextLine(2, "yA: %f",yAccSum);
+    	nxtDisplayTextLine(3, "xV: %f",xVel);
+    	nxtDisplayTextLine(4, "yV: %f",yVel);
+    	nxtDisplayTextLine(5, "xP: %f",xPos);
+    	nxtDisplayTextLine(6, "yP: %f",-yPos);
+    	nxtDisplayTextLine(7, "t:  %f",dT);
+    }
     lastTime = nPgmTime;
 
     robotX = xPos; robotY = -yPos;
