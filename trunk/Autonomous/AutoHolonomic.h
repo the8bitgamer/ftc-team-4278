@@ -12,10 +12,6 @@
 float targetTh = 0, targetMag = 0, targetRot = 0;
 float gRot = 0;
 
-int lockTime = 0;
-
-void pause(int msec) {lockTime = nPgmTime + msec;}
-
 void stopAllDrive() {
 	mBackLeft = 0;
 	mBackRight = 0;
@@ -72,28 +68,27 @@ void moveToWhite(float x, float y, float mag)
 task HolonomicControl()
 {
 	while(true) {
-	  float th = targetTh;//getTheta(joyX, joyY);
-	  float v = targetMag;//getMagnitude(joyX, joyY);
-	  float rot = gRot;
+		float th = targetTh;//getTheta(joyX, joyY);
+		float v = targetMag;//getMagnitude(joyX, joyY);
+		float rot = gRot;
 
-	  //nxtDisplayTextLine(0, "targetTh %f", th);
+		//nxtDisplayTextLine(0, "targetTh %f", th);
 
-	  float mBackLeftTmp = (cos(th+(PI/4))*v - rot/(1.5));
-	  float mFrontRightTmp = (cos(th+(PI/4))*v + rot/1.5);
-	  float mBackRightTmp = -1 * (sin(th+(PI/4))*v - rot/1.5);
-	  float mFrontLeftTmp = -1 * (sin(th+(PI/4))*v + rot/1.5);
+		float mBackLeftTmp = (cos(th+(PI/4))*v - rot/(1.5));
+		float mFrontRightTmp = (cos(th+(PI/4))*v + rot/1.5);
+		float mBackRightTmp = -1 * (sin(th+(PI/4))*v - rot/1.5);
+		float mFrontLeftTmp = -1 * (sin(th+(PI/4))*v + rot/1.5);
 
-	  float max = 1;
-	  if(abs(mBackLeftTmp) > abs(max)) max = mBackLeftTmp;
-	  if(abs(mFrontRightTmp) > abs(max)) max = mFrontRightTmp;
-	  if(abs(mBackRightTmp) > abs(max)) max = mBackRightTmp;
-	  if(abs(mFrontLeftTmp) > abs(max)) max = mFrontLeftTmp;
-	  max = abs(max);
+		float max = 1;
+		if(abs(mBackLeftTmp) > abs(max)) max = mBackLeftTmp;
+		if(abs(mFrontRightTmp) > abs(max)) max = mFrontRightTmp;
+		if(abs(mBackRightTmp) > abs(max)) max = mBackRightTmp;
+		if(abs(mFrontLeftTmp) > abs(max)) max = mFrontLeftTmp;
+		max = abs(max);
 
-	  float mLocked = (nPgmTime > lockTime ? 1.0 : 0.0);
-	  mBackLeft = 100 * mBackLeftTmp / max * mLocked;
-	  mFrontRight = 100 * mFrontRightTmp / max * mLocked;
-	  mBackRight = 100 * mBackRightTmp / max * mLocked;
-	  mFrontLeft = 100 * mFrontLeftTmp / max * mLocked;
-  }
+		mBackLeft = 100 * mBackLeftTmp / max;
+		mFrontRight = 100 * mFrontRightTmp / max;
+		mBackRight = 100 * mBackRightTmp / max;
+		mFrontLeft = 100 * mFrontLeftTmp / max;
+	}
 }

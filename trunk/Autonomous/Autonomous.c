@@ -1,14 +1,14 @@
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  HTMotor,  none)
-#pragma config(Sensor, S1,     SMUX,           sensorI2CCustom)
-#pragma config(Sensor, S2,     sGyr,           sensorI2CHiTechnicGyro)
-#pragma config(Sensor, S3,     sAcc,           sensorI2CCustomFastSkipStates)
-#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
-#pragma config(Motor,  mtr_S4_C1_1,     motorBL,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S4_C1_2,     motorFL,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S4_C2_1,     motorArmE2,    tmotorTetrix, PIDControl, reversed, encoder)
-#pragma config(Motor,  mtr_S4_C2_2,     motorArms,     tmotorTetrix, PIDControl, reversed, encoder)
-#pragma config(Motor,  mtr_S4_C3_1,     motorBR,       tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S4_C3_2,     motorFR,       tmotorTetrix, openLoop, reversed)
+#pragma config(Sensor, S1,	   SMUX,		   sensorI2CCustom)
+#pragma config(Sensor, S2,	   sGyr,		   sensorI2CHiTechnicGyro)
+#pragma config(Sensor, S3,	   sAcc,		   sensorI2CCustomFastSkipStates)
+#pragma config(Sensor, S4,	   ,			   sensorI2CMuxController)
+#pragma config(Motor,  mtr_S4_C1_1,		motorBL,	   tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S4_C1_2,		motorFL,	   tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S4_C2_1,		motorArmE2,	   tmotorTetrix, PIDControl, reversed, encoder)
+#pragma config(Motor,  mtr_S4_C2_2,		motorArms,	   tmotorTetrix, PIDControl, reversed, encoder)
+#pragma config(Motor,  mtr_S4_C3_1,		motorBR,	   tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S4_C3_2,		motorFR,	   tmotorTetrix, openLoop, reversed)
 
 #include "AccelGyroDriver.h"
 #include "AutoHolonomic.h"
@@ -73,9 +73,9 @@ task main()
 	int irCol = getIRColumn();
 	int irRow = cols[irCol-1];
 	switch(irRow) {
-		case 1: StartTask(armLow); break;
-		case 2: StartTask(armMid); break;
-		case 3: StartTask(armHi); break;
+	case 1: StartTask(armLow); break;
+	case 2: StartTask(armMid); break;
+	case 3: StartTask(armHi); break;
 	}
 	releaseCPU();
 	if(irCol == 1) autoCol1();
