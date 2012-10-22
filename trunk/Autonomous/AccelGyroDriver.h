@@ -15,11 +15,13 @@ task GyroIntegrate()
 	HTGYROstartCal(sGyr);
 	int lastIterTime=0;
 	while(true) {
+		hogCPU();
 		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= 7.903104 *
 			HTGYROreadRot(sGyr) * (float)(nPgmTime - lastIterTime) / 1000.0;
 		if(debugAccelGyro) nxtDisplayTextLine(0, "Rot: %f", robotRot);
-		if(debugAccelGyro) nxtDisplayTextLine(7, "t:  %f",(float)(nPgmTime - lastIterTime);
+		if(debugAccelGyro) nxtDisplayTextLine(7, "t:  %f",(float)(nPgmTime - lastIterTime));
 		lastIterTime = nPgmTime;
+		releaseCPU();
 		EndTimeSlice();
 	}
 }
@@ -39,6 +41,7 @@ task AccelIntegrate()
 
   while(true)
   {
+    hogCPU();
   	if(resetData) {
   		xAxis=0; yAxis=0; zAxis=0; xAcc=0; yAcc=0; xVel=0; yVel=0; xPos=0; yPos=0; xScl = 0.973236; yScl = 0.977995;
       float xAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; float yAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -74,6 +77,8 @@ task AccelIntegrate()
     lastTime = nPgmTime;
 
     robotX = xPos; robotY = -yPos;
+    releaseCPU();
+    EndTimeSlice();
   }
 }
 
