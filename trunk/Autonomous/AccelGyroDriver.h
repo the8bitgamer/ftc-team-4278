@@ -1,4 +1,4 @@
-#define gyrThresh 0.15
+#define gyrThresh 0.05
 #define aToN 20.0
 #define aThresh 0.1
 #define vThresh 0.1
@@ -15,8 +15,10 @@ task GyroIntegrate()
 	HTGYROstartCal(sGyr);
 	int lastIterTime=0;
 	while(true) {
-		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= (35.0/45.0)*(100.0/45.0)*(76.0/90.0)*(86.0/90.0)*(85.0/90.0)*(4.0/3.0)*(9.0/2.0) * HTGYROreadRot(sGyr) * (float)(nPgmTime - lastIterTime) / 1000.0;
+		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= 7.903104 *
+			HTGYROreadRot(sGyr) * (float)(nPgmTime - lastIterTime) / 1000.0;
 		if(debugAccelGyro) nxtDisplayTextLine(0, "Rot: %f", robotRot);
+		if(debugAccelGyro) nxtDisplayTextLine(7, "t:  %f",(float)(nPgmTime - lastIterTime);
 		lastIterTime = nPgmTime;
 		EndTimeSlice();
 	}
@@ -68,7 +70,6 @@ task AccelIntegrate()
     	nxtDisplayTextLine(4, "yV: %f",yVel);
     	nxtDisplayTextLine(5, "xP: %f",xPos);
     	nxtDisplayTextLine(6, "yP: %f",-yPos);
-    	nxtDisplayTextLine(7, "t:  %f",dT);
     }
     lastTime = nPgmTime;
 
