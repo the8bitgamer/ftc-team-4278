@@ -2,7 +2,7 @@
 #define midEnc 12600.0
 #define hiEnc 19100.0
 
-#define armThresh 25.0
+#define armThresh 200.0
 #define mArm motor[motorArms]
 
 task armLow() {

@@ -38,7 +38,7 @@ void moveToPos(float x, float y, float mag) {
 
 void moveToRot(float rot) {
 	resetPositionData();
-	targetRot = rot;
+	targetRot = rot+(robotRot < rot?-3.3:3.3);
 	while(true) {
 		if(abs(robotRot-targetRot) < rotAccuracy) break;
 		gRot = sgn(robotRot - targetRot) * -0.25;

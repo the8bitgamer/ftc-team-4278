@@ -28,6 +28,7 @@ void getIRColumnTargetData() {
 			if(row > 3) row = 1; if(row < 1) row = 3;
 		}
 		cols[col] = row;
+		PlaySound(soundShortBlip);
 		while(nNxtButtonPressed == 3){}
 	}
 }
@@ -55,7 +56,7 @@ void autoCol3() {
 
 void initializeRobot() {
 	nMotorEncoder[motorArms] = 0; nMotorEncoder[motorArmE2] = 0;
-	getIRColumnTargetData();
+	//getIRColumnTargetData();
 	nxtDisplayTextLine(6, "LOCKED");
 
 	debugAccelGyro = false;
@@ -84,8 +85,27 @@ task main()
 
 	//moveToWhite(0, 2, .3);
 	//resetPositionData();
-	debugAccelGyro = false;
-	StartTask(armMid);
+	//debugAccelGyro = false;
+
+	//StartTask(armMid);
+	moveToRot(45);
+	moveToPos(-.5,.5,.5);
+	moveToPos(.5,-.5,.5);
+	moveToRot(0);
+	//moveToPos(0,1,.5);
+
+	/*debugAccelGyro = false;
+	int lastT = 0;
+	while(true) {
+		hogCPU();
+		nxtDisplayTextLine(5, "%i", (nPgmTime-lastT));
+		nxtDisplayTextLine(6, "lT: %i", lastT);
+		nxtDisplayTextLine(7, "npgm: %i", nPgmTime);
+		lastT = nPgmTime;
+		releaseCPU();
+		EndTimeSlice();
+	}*/
+
 	ClearTimer(T1); while(time1[T1] < 15000){EndTimeSlice();}
 	closeAutonomous();
 }

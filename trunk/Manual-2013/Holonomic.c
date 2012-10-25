@@ -91,7 +91,7 @@ void computeMovement()
 
 void checkButtons()
 {
-  if(joy1Btn(10)) {HTGYROstartCal(S2); PlaySound(soundBeepBeep);}
+  if(joy1Btn(10)) {HTGYROstartCal(S2); robotAngle = 0;}
   if(joy1Btn(5)) {mArm = (sensitivity == 1 ? 95 : 35);}
   if(joy1Btn(6)) {mArm = (sensitivity == 1 ? -95 : -35);}
   if(!joy1Btn(5) && !joy1Btn(6)) {mArm = 0;}
@@ -105,7 +105,7 @@ task main()
 {
   HTGYROstartCal(S2);
   lastTime = nPgmTime;
-	bDisplayDiagnostics = false;
+	//bDisplayDiagnostics = false;
 
   while(true)
   {
@@ -115,8 +115,8 @@ task main()
     checkButtons();
     //nxtDisplayTextLine(3, ""+HTGYROreadRot(S2));
     //nxtDisplayTextLine(4, ""+robotAngle);
-    nxtDisplayTextLine(3, "%i", nMotorEncoder[motorArms]);
-    nxtDisplayTextLine(4, "%i", nMotorEncoder[motorF]);
+    //nxtDisplayTextLine(3, "%i", nMotorEncoder[motorArms]);
+    //nxtDisplayTextLine(4, "%i", nMotorEncoder[motorF]);
     wait1Msec(2);
   }
 }
