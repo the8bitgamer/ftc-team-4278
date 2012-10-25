@@ -57,10 +57,11 @@ void initializeRobot() {
 	nMotorEncoder[motorArms] = 0; nMotorEncoder[motorArmE2] = 0;
 	getIRColumnTargetData();
 	nxtDisplayTextLine(6, "LOCKED");
-	wait1Msec(500);
 
+	debugAccelGyro = false;
 	BackgroundIntegration();
 	StartTask(HolonomicControl);
+	debugAccelGyro = true;
 }
 
 void closeAutonomous() {
@@ -69,21 +70,20 @@ void closeAutonomous() {
 
 task main()
 {
-	/*hogCPU();
-	int irCol = getIRColumn();
+	initializeRobot();
+	/*int irCol = getIRColumn();
 	int irRow = cols[irCol-1];
 	switch(irRow) {
-	case 1: StartTask(armLow); break;
-	case 2: StartTask(armMid); break;
-	case 3: StartTask(armHi); break;
+		case 1: StartTask(armLow); break;
+		case 2: StartTask(armMid); break;
+		case 3: StartTask(armHi); break;
 	}
-	releaseCPU();
 	if(irCol == 1) autoCol1();
 	if(irCol == 2) autoCol2();
 	if(irCol == 3) autoCol3();*/
 
 	//moveToWhite(0, 2, .3);
-
-	ClearTimer(T1); while(time1[T1] < 2500){EndTimeSlice();}
+	//resetPositionData();
+	ClearTimer(T1); while(time1[T1] < 10000){EndTimeSlice();}
 	closeAutonomous();
 }

@@ -106,13 +106,13 @@ float HTGYROstartCal(tSensors link) {
   }
 
   // Take 50 readings and average them out
-  for (int i = 0; i < 50; i++) {
+  for (int i = 0; i < 250; i++) {
     _avgdata += SensorValue[link];
     wait1Msec(5);
   }
 
   // Store new offset
-  HTGYRO_offsets[link][0] = (_avgdata / 50.0);
+  HTGYRO_offsets[link][0] = (_avgdata / 250.0);
 
   // Return new offset value
   return HTGYRO_offsets[link][0];

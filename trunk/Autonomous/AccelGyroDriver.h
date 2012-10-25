@@ -1,4 +1,4 @@
-#define gyrThresh 0.05
+#define gyrThresh 0.0
 #define aToN 20.0
 #define aThresh 0.1
 #define vThresh 0.1
@@ -10,16 +10,22 @@
 float robotRot=0;
 bool debugAccelGyro = true;
 
+bool calibrationComplete = false;
+
 task GyroIntegrate()
 {
 	HTGYROstartCal(sGyr);
+	calibrationComplete = true;
 	int lastIterTime=0;
 	while(true) {
 		hogCPU();
-		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= 7.903104 *
-			HTGYROreadRot(sGyr) * (float)(nPgmTime - lastIterTime) / 1000.0;
+		float dT = (float)(nPgmTime - lastIterTime);
+		lastIterTime = nPgmTime;
+
+		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= (89.0/90.0)*(92.0/90.0)*(85.0/90.0)*(375.0/360.0)*(160.0/180.0)*(45.0/20.0)*HTGYROreadRot(sGyr) * dT / 1000.0;
+
 		if(debugAccelGyro) nxtDisplayTextLine(0, "Rot: %f", robotRot);
-		if(debugAccelGyro) nxtDisplayTextLine(7, "t:  %f",(float)(nPgmTime - lastIterTime));
+		if(debugAccelGyro) nxtDisplayTextLine(7, "t:  %f", dT);
 		lastIterTime = nPgmTime;
 		releaseCPU();
 		EndTimeSlice();
@@ -88,4 +94,5 @@ void BackgroundIntegration()
 {
 	StartTask(GyroIntegrate);
 	StartTask(AccelIntegrate);
+	while(!calibrationComplete) EndTimeSlice();
 }
