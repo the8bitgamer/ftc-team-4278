@@ -56,7 +56,7 @@ void autoCol3() {
 
 void initializeRobot() {
 	nMotorEncoder[motorArms] = 0; nMotorEncoder[motorArmE2] = 0;
-	//getIRColumnTargetData();
+	getIRColumnTargetData();
 	nxtDisplayTextLine(6, "LOCKED");
 
 	debugAccelGyro = false;
@@ -88,10 +88,10 @@ task main()
 	//debugAccelGyro = false;
 
 	//StartTask(armMid);
+	moveToRot(45);
 	moveToPos(-.5,.5,.5);
 	moveToPos(.5,-.5,.5);
 	moveToRot(0);
-	moveToPos(0,1,.5);
 
 	ClearTimer(T1); while(time1[T1] < 15000){EndTimeSlice();}
 	closeAutonomous();
