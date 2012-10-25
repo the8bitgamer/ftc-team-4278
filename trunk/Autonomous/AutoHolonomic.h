@@ -68,11 +68,9 @@ void moveToWhite(float x, float y, float mag)
 task HolonomicControl()
 {
 	while(true) {
-		float th = targetTh;//getTheta(joyX, joyY);
-		float v = targetMag;//getMagnitude(joyX, joyY);
+		float th = targetTh;
+		float v = targetMag;
 		float rot = gRot;
-
-		//nxtDisplayTextLine(0, "targetTh %f", th);
 
 		float mBackLeftTmp = (cos(th+(PI/4))*v - rot/(1.5));
 		float mFrontRightTmp = (cos(th+(PI/4))*v + rot/1.5);

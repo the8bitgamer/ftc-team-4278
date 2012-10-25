@@ -27,9 +27,6 @@ task GyroIntegrate()
 		if(debugAccelGyro) nxtDisplayTextLine(0, "Rot: %f", robotRot);
 		if(debugAccelGyro) nxtDisplayTextLine(1, "Imd: %f", HTGYROreadRot(sGyr));
 		if(debugAccelGyro) nxtDisplayTextLine(7, "t:  %f", dT);
-		//nxtDisplayTextLine(0, "t:    %f", dT);
-		//nxtDisplayTextLine(1, "lt:   %i", lastIterTime);
-		//nxtDisplayTextLine(2, "npgm: %i", nPgmTime);
 
 		lastIterTime = nPgmTime;
 		releaseCPU();

@@ -88,23 +88,10 @@ task main()
 	//debugAccelGyro = false;
 
 	//StartTask(armMid);
-	moveToRot(45);
 	moveToPos(-.5,.5,.5);
 	moveToPos(.5,-.5,.5);
 	moveToRot(0);
-	//moveToPos(0,1,.5);
-
-	/*debugAccelGyro = false;
-	int lastT = 0;
-	while(true) {
-		hogCPU();
-		nxtDisplayTextLine(5, "%i", (nPgmTime-lastT));
-		nxtDisplayTextLine(6, "lT: %i", lastT);
-		nxtDisplayTextLine(7, "npgm: %i", nPgmTime);
-		lastT = nPgmTime;
-		releaseCPU();
-		EndTimeSlice();
-	}*/
+	moveToPos(0,1,.5);
 
 	ClearTimer(T1); while(time1[T1] < 15000){EndTimeSlice();}
 	closeAutonomous();
