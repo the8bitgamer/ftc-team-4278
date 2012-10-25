@@ -28,7 +28,7 @@ float robotAngle = 0;
 float lastTime = 0;
 bool fieldOrientation = true;
 int sensitivity = 1;
-//0.75 1.00 1.25
+
 void calculateGyro()
 {
   if(abs(HTGYROreadRot(S2)) > 1.0)

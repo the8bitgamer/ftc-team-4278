@@ -84,6 +84,8 @@ task main()
 
 	//moveToWhite(0, 2, .3);
 	//resetPositionData();
-	ClearTimer(T1); while(time1[T1] < 10000){EndTimeSlice();}
+	debugAccelGyro = false;
+	StartTask(armMid);
+	ClearTimer(T1); while(time1[T1] < 15000){EndTimeSlice();}
 	closeAutonomous();
 }
