@@ -71,13 +71,12 @@ void autoCol3() {
 
 void initializeRobot() {
 	nMotorEncoder[motorArms] = 0; nMotorEncoder[motorArmE2] = 0;
-	//getIRColumnTargetData();
+	getIRColumnTargetData();
 	nxtDisplayTextLine(6, "LOCKED");
 
 	debugAccelGyro = true;
 	BackgroundIntegration();
 	StartTask(HolonomicControl);
-	//debugAccelGyro = true;
 }
 
 void closeAutonomous() {
@@ -97,16 +96,6 @@ task main()
 	if(irCol == 1) autoCol1();
 	if(irCol == 2) autoCol2();
 	if(irCol == 3) autoCol3();*/
-
-	//moveToWhite(0, 2, .3);
-	//resetPositionData();
-	//debugAccelGyro = false;
-
-	//StartTask(armMid);
-	//moveToRot(45);
-	//moveToPos(-.5,.5,.5);
-	//moveToPos(.5,-.5,.5);
-	//moveToRot(0);
 
 	StartTask(armHi);
 	autoCol3();

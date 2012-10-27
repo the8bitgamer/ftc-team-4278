@@ -60,7 +60,6 @@ void moveToWhite(float x, float y, float mag)
 	while(true) {
 		HTCS2readRGB(colorSns, _r, _g, _b);
 		if(_r + _g + _b > 510) break;
-		//nxtDisplayTextLine(3, "%i, %i", _r, _g);
 		EndTimeSlice();
 	}
 	stopAllDrive(); ClearTimer(T1);

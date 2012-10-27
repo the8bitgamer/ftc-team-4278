@@ -3,6 +3,7 @@
 #define aThresh 0.1
 #define vThresh 0.1
 #define posToFeet 12
+#define gyrScalar 2.2724
 
 #include "drivers\hitechnic-accelerometer.h"
 #include "drivers\hitechnic-gyro.h"
@@ -22,7 +23,7 @@ task GyroIntegrate()
 		float dT = (float)(nPgmTime - lastIterTime);
 		lastIterTime = nPgmTime;
 
-		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= 2.2724*HTGYROreadRot(sGyr) * dT / 1000.0;
+		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= gyrScalar*HTGYROreadRot(sGyr) * dT / 1000.0;
 
 		if(debugAccelGyro) nxtDisplayTextLine(0, "Rot: %f", robotRot);
 		if(debugAccelGyro) nxtDisplayTextLine(1, "Imd: %f", HTGYROreadRot(sGyr));
