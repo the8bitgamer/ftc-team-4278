@@ -54,11 +54,13 @@ const tMUXSensor colorSns = msensor_S1_3;
 
 void moveToWhite(float x, float y, float mag)
 {
+	targetTh = atan2(y,x);
+	int _r, _g, _b;
 	targetMag = mag;
 	while(true) {
-		if(HTCS2readColor(colorSns) == 3) break;
-		targetTh = atan2(y,x);
-
+		HTCS2readRGB(colorSns, _r, _g, _b);
+		if(_r + _g + _b > 510) break;
+		//nxtDisplayTextLine(3, "%i, %i", _r, _g);
 		EndTimeSlice();
 	}
 	stopAllDrive(); ClearTimer(T1);

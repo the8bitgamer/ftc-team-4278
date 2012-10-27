@@ -42,27 +42,42 @@ int getIRColumn()
 }
 
 void autoCol1() {
+	moveToWhite(0, 1, .5);
+	moveToRot(50);
+	moveToPos(-0.55, 0, 0.3);
+	moveToWhite(-1, 0, .3);
+	robotRot = 0;
+	moveToRot(12.5);
+	moveToPos(0, 0.6, 1);
 }
 
 void autoCol2() {
-	moveToPos(1.25, 5.25, .5);
-	moveToRot(90);
+	moveToWhite(0, 1, .5);
+	moveToRot(43);
+	robotRot = 0;
+	moveToWhite(-1, 0, .25);
+	moveToRot(6);
+	moveToPos(0, 0.65, 1);
 }
 
 void autoCol3() {
-	moveToPos(3, 3, .5);
-	moveToRot(45);
+	moveToWhite(0, 1, .45);
+	moveToRot(40);
+	robotRot = 0;
+	moveToWhite(1, 0, .25);
+	moveToRot(-3);
+	moveToPos(0, 0.7, 1);
 }
 
 void initializeRobot() {
 	nMotorEncoder[motorArms] = 0; nMotorEncoder[motorArmE2] = 0;
-	getIRColumnTargetData();
+	//getIRColumnTargetData();
 	nxtDisplayTextLine(6, "LOCKED");
 
-	debugAccelGyro = false;
+	debugAccelGyro = true;
 	BackgroundIntegration();
 	StartTask(HolonomicControl);
-	debugAccelGyro = true;
+	//debugAccelGyro = true;
 }
 
 void closeAutonomous() {
@@ -88,11 +103,13 @@ task main()
 	//debugAccelGyro = false;
 
 	//StartTask(armMid);
-	moveToRot(45);
-	moveToPos(-.5,.5,.5);
-	moveToPos(.5,-.5,.5);
-	moveToRot(0);
+	//moveToRot(45);
+	//moveToPos(-.5,.5,.5);
+	//moveToPos(.5,-.5,.5);
+	//moveToRot(0);
 
-	ClearTimer(T1); while(time1[T1] < 15000){EndTimeSlice();}
+	StartTask(armHi);
+	autoCol3();
+ 	ClearTimer(T1); while(time1[T1] < 15000){EndTimeSlice();}
 	closeAutonomous();
 }

@@ -1,6 +1,6 @@
-#define lowEnc 5600.0
-#define midEnc 12600.0
-#define hiEnc 19100.0
+#define lowEnc 5100.0
+#define midEnc 13000.0
+#define hiEnc 19900.0
 
 #define armThresh 200.0
 #define mArm motor[motorArms]
@@ -10,7 +10,8 @@ task armLow() {
 	float mMaxSpeed = 60.0;
 	while(abs(nMotorEncoder[motorArms]-lowEnc) > armThresh) {
 		float encoderOffset = (nMotorEncoder[motorArms] - lowEnc);
-		mArm = (sgn(encoderOffset) * mMinSpeed) + (((mMaxSpeed-mMinSpeed)/lowEnc) * encoderOffset);
+		int j = (int)((sgn(encoderOffset) * mMinSpeed) + (((mMaxSpeed-mMinSpeed)/lowEnc) * encoderOffset));
+		mArm = j;
 		EndTimeSlice();
 	}
 	mArm = 0;
@@ -36,7 +37,8 @@ task armHi() {
 	float mMaxSpeed = 90.0;
 	while(abs(nMotorEncoder[motorArms]-hiEnc) > armThresh) {
 		float encoderOffset = (-1.0)*nMotorEncoder[motorArms] - hiEnc;
-		mArm = (sgn(encoderOffset) * mMinSpeed) + (((mMaxSpeed-mMinSpeed)/hiEnc) * encoderOffset);
+		int j = (int)((sgn(encoderOffset) * mMinSpeed) + (((mMaxSpeed-mMinSpeed)/hiEnc) * encoderOffset));
+		mArm = j;
 		EndTimeSlice();
 	}
 	mArm = 0;

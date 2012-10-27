@@ -22,7 +22,7 @@ task GyroIntegrate()
 		float dT = (float)(nPgmTime - lastIterTime);
 		lastIterTime = nPgmTime;
 
-		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= 2.386*HTGYROreadRot(sGyr) * dT / 1000.0;
+		if(abs(HTGYROreadRot(sGyr)) > gyrThresh) robotRot -= 2.2724*HTGYROreadRot(sGyr) * dT / 1000.0;
 
 		if(debugAccelGyro) nxtDisplayTextLine(0, "Rot: %f", robotRot);
 		if(debugAccelGyro) nxtDisplayTextLine(1, "Imd: %f", HTGYROreadRot(sGyr));
@@ -44,6 +44,7 @@ task AccelIntegrate()
 	float xAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, yAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 	HTACreadAllAxes(sAcc, xBias, yBias, zBias);
+
 	float lastTime;
 	lastTime = nPgmTime;
 
@@ -54,6 +55,7 @@ task AccelIntegrate()
 			xAxis=0; yAxis=0; zAxis=0; xAcc=0; yAcc=0; xVel=0; yVel=0; xPos=0; yPos=0; xScl = 0.973236; yScl = 0.977995;
 			float xAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; float yAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 			resetData = false;
+			HTACreadAllAxes(sAcc, xBias, yBias, zBias);
 		}
 
 		HTACreadAllAxes(sAcc, xAxis, yAxis, zAxis);
@@ -75,6 +77,8 @@ task AccelIntegrate()
 		xPos += xVel*dT*posToFeet*(abs(xVel) > vThresh ? 1.0 : 0.0); yPos += yVel*dT*posToFeet*(abs(yVel) > vThresh ? 1.0:0.0);
 
 		if(debugAccelGyro) {
+			nxtDisplayTextLine(1, "xA: %f",xAccSum);
+			nxtDisplayTextLine(2, "yA: %f",yAccSum);
 			nxtDisplayTextLine(3, "xV: %f",xVel);
 			nxtDisplayTextLine(4, "yV: %f",yVel);
 			nxtDisplayTextLine(5, "xP: %f",xPos);
@@ -93,7 +97,7 @@ void resetPositionData() {resetData = true;}
 void BackgroundIntegration()
 {
 	eraseDisplay();
-	StartTask(GyroIntegrate);
 	StartTask(AccelIntegrate);
+	StartTask(GyroIntegrate);
 	while(!calibrationComplete) EndTimeSlice();
 }
