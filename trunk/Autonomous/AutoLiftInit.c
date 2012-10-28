@@ -17,10 +17,10 @@ task main() {
 	motor[motorArms] = -7;
 	int mPow = -3;
 	while(!(nNxtButtonPressed == 3)) {
-		//motor[motorArms] = mPow;
-		//if(nNxtButtonPressed == 1) mPow--;
-		//if(nNxtButtonPressed == 2) mPow++;
+		motor[motorArms] = mPow;
+		if(nNxtButtonPressed == 1) mPow--;
+		if(nNxtButtonPressed == 2) mPow++;
 		nxtDisplayTextLine(3, "%i", motor[motorArms]);
-		//while(nNxtButtonPressed == 1 || nNxtButtonPressed == 2);
+		while(nNxtButtonPressed == 1 || nNxtButtonPressed == 2);
 	}
 }

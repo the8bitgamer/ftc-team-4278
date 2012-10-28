@@ -10,6 +10,7 @@
 
 #include "JoystickDriver.c"
 #include "hitechnic-gyro.h"
+#include "ArmControl.h"
 
 #define mBackLeft motor[motorBL]
 #define mBackRight motor[motorBR]
@@ -89,20 +90,35 @@ void computeMovement()
   mFrontLeft = 100 * mFrontLeftTmp / max;
 }
 
+bool armTaskRunning = false;
+
+void StopArmTasks()
+{
+	armTaskRunning = false;
+	StopTask(armLow);
+	StopTask(armMid);
+	StopTask(armHi);
+}
+
 void checkButtons()
 {
   if(joy1Btn(10)) {HTGYROstartCal(S2); robotAngle = 0;}
-  if(joy1Btn(5)) {mArm = (sensitivity == 1 ? 95 : 35);}
-  if(joy1Btn(6)) {mArm = (sensitivity == 1 ? -95 : -35);}
-  if(!joy1Btn(5) && !joy1Btn(6)) {mArm = 0;}
+  if(joy1Btn(5)) {StopArmTasks(); mArm = (sensitivity == 1 ? 95 : 35);}
+  if(joy1Btn(6)) {StopArmTasks(); mArm = (sensitivity == 1 ? -95 : -35);}
+  if(!joy1Btn(5) && !joy1Btn(6) && !armTaskRunning) {mArm = 0;}
   if(joy1Btn(2)) {fieldOrientation = true; nxtDisplayTextLine(2, "True ");}
   if(joy1Btn(4)) {fieldOrientation = false; nxtDisplayTextLine(2, "False");}
   if(joy1Btn(1)) sensitivity = 2;
   if(joy1Btn(3)) sensitivity = 1;
+  if(joystick.joy1_TopHat == 6) {StopArmTasks(); armTaskRunning = true; StartTask(armLow);}
+  if(joystick.joy1_TopHat == 2) {StopArmTasks(); armTaskRunning = true; StartTask(armMid);}
+  if(joystick.joy1_TopHat == 0) {StopArmTasks(); armTaskRunning = true; StartTask(armHi);}
+  //writeDebugStream("%i", joystick.joy1_TopHat);
 }
 
 task main()
 {
+  clearDebugStream();
   HTGYROstartCal(S2);
   lastTime = nPgmTime;
 	//bDisplayDiagnostics = false;
@@ -117,6 +133,6 @@ task main()
     //nxtDisplayTextLine(4, ""+robotAngle);
     //nxtDisplayTextLine(3, "%i", nMotorEncoder[motorArms]);
     //nxtDisplayTextLine(4, "%i", nMotorEncoder[motorF]);
-    wait1Msec(2);
+    EndTimeSlice();//wait1Msec(2);
   }
 }
