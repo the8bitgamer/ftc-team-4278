@@ -110,9 +110,9 @@ void checkButtons()
   if(joy1Btn(4)) {fieldOrientation = false; nxtDisplayTextLine(2, "False");}
   if(joy1Btn(1)) sensitivity = 2;
   if(joy1Btn(3)) sensitivity = 1;
-  if(joystick.joy1_TopHat == 6) {StopArmTasks(); armTaskRunning = true; StartTask(armLow);}
-  if(joystick.joy1_TopHat == 2) {StopArmTasks(); armTaskRunning = true; StartTask(armMid);}
-  if(joystick.joy1_TopHat == 0) {StopArmTasks(); armTaskRunning = true; StartTask(armHi);}
+  if(joystick.joy1_TopHat == 6) {hogCPU(); StopArmTasks(); armTaskRunning = true; StartTask(armLow); releaseCPU();}
+  if(joystick.joy1_TopHat == 2) {hogCPU(); StopArmTasks(); armTaskRunning = true; StartTask(armMid); releaseCPU();}
+  if(joystick.joy1_TopHat == 0) {hogCPU(); StopArmTasks(); armTaskRunning = true; StartTask(armHi);  releaseCPU();}
   //writeDebugStream("%i", joystick.joy1_TopHat);
 }
 
