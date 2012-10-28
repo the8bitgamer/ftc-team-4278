@@ -13,8 +13,7 @@ bool debugAccelGyro = true;
 
 bool calibrationComplete = false;
 
-task GyroIntegrate()
-{
+task GyroIntegrate() {
 	HTGYROstartCal(sGyr);
 	calibrationComplete = true;
 	int lastIterTime=0;
@@ -38,8 +37,7 @@ task GyroIntegrate()
 float robotX, robotY;
 bool resetData = false;
 
-task AccelIntegrate()
-{
+task AccelIntegrate() {
 	int xAxis=0, yAxis=0, zAxis=0, xBias=0, yBias=0, zBias=0;
 	float xAcc=0, yAcc=0, xVel=0, yVel=0, xPos=0, yPos=0, xScl = 0.973236, yScl = 0.977995;
 	float xAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, yAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -49,8 +47,7 @@ task AccelIntegrate()
 	float lastTime;
 	lastTime = nPgmTime;
 
-	while(true)
-	{
+	while(true) {
 		hogCPU();
 		if(resetData) {
 			xAxis=0; yAxis=0; zAxis=0; xAcc=0; yAcc=0; xVel=0; yVel=0; xPos=0; yPos=0; xScl = 0.973236; yScl = 0.977995;

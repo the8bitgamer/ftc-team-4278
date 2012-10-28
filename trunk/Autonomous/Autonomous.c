@@ -18,8 +18,7 @@
 
 int cols[3] = {0,0,0};
 void getIRColumnTargetData() {
-	for(int col=0; col<3; col++)
-	{
+	for(int col=0; col<3; col++) {
 		int row = 0;
 		while(nNxtButtonPressed != 3) {
 			nxtDisplayTextLine(2+col, "IR Col %d ==> R%d", col+1, row);
@@ -33,8 +32,7 @@ void getIRColumnTargetData() {
 	}
 }
 
-int getIRColumn()
-{
+int getIRColumn() {
 	int col1 = HTIRS2readACDir(msensor_S1_1);
 	int col2 = HTIRS2readACDir(msensor_S1_2);
 	int x = (col1==9?(col2==2?1:2):3);
@@ -83,8 +81,7 @@ void closeAutonomous() {
 
 }
 
-task main()
-{
+task main() {
 	initializeRobot();
 	/*int irCol = getIRColumn();
 	int irRow = cols[irCol-1];
