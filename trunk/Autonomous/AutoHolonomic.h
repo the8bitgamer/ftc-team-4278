@@ -1,5 +1,7 @@
 #include "drivers/hitechnic-sensormux.h"
 #include "drivers/hitechnic-colour-v2.h"
+#include "drivers/hitechnic-sensormux.h"
+#include "drivers/lego-light.h"
 
 #define xyAccuracy 0.15
 #define rotAccuracy 1
@@ -39,9 +41,9 @@ void moveToPos(float x, float y, float mag) {
 void moveToRot(float rot) {
 	resetPositionData();
 	targetRot = rot+(robotRot < rot?-3.3:3.3);
+	gRot = sgn(robotRot - targetRot) * -0.25;
 	while(true) {
 		if(abs(robotRot-targetRot) < rotAccuracy) break;
-		gRot = sgn(robotRot - targetRot) * -0.25;
 		EndTimeSlice();
 	}
 	gRot = 0;
@@ -50,21 +52,38 @@ void moveToRot(float rot) {
 	resetPositionData(); targetRot = robotRot;
 }
 
-const tMUXSensor colorSns = msensor_S1_3;
+const tMUXSensor LEGOLS = msensor_S1_3;
 
 void moveToWhite(float x, float y, float mag)
+{
+	targetTh = atan2(y,x);
+	int raw = 0;
+  int nrm = 0;
+  bool active = true;
+  LSsetActive(LEGOLS);
+	targetMag = mag;
+	while(true) {
+		raw = LSvalRaw(LEGOLS);
+		if(raw > 1380) break;
+		EndTimeSlice();
+	}
+	stopAllDrive(); ClearTimer(T1);
+	while(time1[T1] < 500) EndTimeSlice();
+}
+
+/*void moveToWhite(float x, float y, float mag)
 {
 	targetTh = atan2(y,x);
 	int _r, _g, _b;
 	targetMag = mag;
 	while(true) {
 		HTCS2readRGB(colorSns, _r, _g, _b);
-		if(_r + _g + _b > 510) break;
+		if(_r + _g + _b > 400) break;
 		EndTimeSlice();
 	}
 	stopAllDrive(); ClearTimer(T1);
 	while(time1[T1] < 500) EndTimeSlice();
-}
+}*/
 
 task HolonomicControl()
 {

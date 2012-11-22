@@ -1,45 +1,37 @@
-#define lowEnc 5100.0
-#define midEnc 13000.0
-#define hiEnc 19900.0
+#define lowEnc 8100.0
+#define midEnc 14500.0
+#define hiEnc 22050.0
 
 #define armThresh 200.0
-#define motArm motor[motorArms]
+#define motArmR motor[motorAmrR]
+#define motArmL motor[motorAmrL]
 
 task armLow() {
-	float mMinSpeed = 20.0;
-	float mMaxSpeed = 60.0;
-	while(abs(nMotorEncoder[motorArms]-lowEnc) > armThresh) {
-		float encoderOffset = (nMotorEncoder[motorArms] - lowEnc);
-		int j = (int)((sgn(encoderOffset) * mMinSpeed) + (((mMaxSpeed-mMinSpeed)/lowEnc) * encoderOffset));
-		motArm = j;
-		EndTimeSlice();
-	}
-	motArm = 0;
+	int l = 65*(nMotorEncoder[motorAmrR]<lowEnc?1:-1)+(nMotorEncoder[motorAmrR]<lowEnc?-10:10);
+	int r = 65*(nMotorEncoder[motorAmrR]<lowEnc?1:-1);
+	motArmL = l;
+	motArmR = r;
+	while(abs(nMotorEncoder[motorAmrR]-lowEnc) > 200) {nxtDisplayTextLine(3, "%i", nMotorEncoder[motorAmrR]); EndTimeSlice();}
+	motArmL = 0;
+	motArmR = 0;
 }
 
 task armMid() {
-	while(abs(nMotorEncoder[motorArms]-midEnc) > armThresh) {
-		float encoderOffset = (nMotorEncoder[motorArms] - midEnc);
-		float xz = sgn(encoderOffset) * 50;
-		motArm = xz;
-		nxtDisplayTextLine(3, "%f", abs(encoderOffset));
-		nxtDisplayTextLine(4, "%i", nMotorEncoder[motorArms]);
-		nxtDisplayTextLine(5, "%f", xz);
-		nxtDisplayTextLine(6, "%i", motor[motorArms]);
-		EndTimeSlice();
-	}
-	motArm = 0;
-	nxtDisplayTextLine(7, "Done.");
+	int l = 65*(nMotorEncoder[motorAmrR]<midEnc?1:-1)+(nMotorEncoder[motorAmrR]<midEnc?-10:10);
+	int r = 65*(nMotorEncoder[motorAmrR]<midEnc?1:-1);
+	motArmL = l;
+	motArmR = r;
+	while(abs(nMotorEncoder[motorAmrR]-midEnc) > 200) {nxtDisplayTextLine(3, "%i", nMotorEncoder[motorAmrR]); EndTimeSlice();}
+	motArmL = 0;
+	motArmR = 0;
 }
 
 task armHi() {
-	float mMinSpeed = 30.0;
-	float mMaxSpeed = 90.0;
-	while(abs(nMotorEncoder[motorArms]-hiEnc) > armThresh) {
-		float encoderOffset = (-1.0)*nMotorEncoder[motorArms] - hiEnc;
-		int j = (int)((sgn(encoderOffset) * mMinSpeed) + (((mMaxSpeed-mMinSpeed)/hiEnc) * encoderOffset));
-		motArm = j;
-		EndTimeSlice();
-	}
-	motArm = 0;
+	int l = 65*(nMotorEncoder[motorAmrR]<hiEnc?1:-1)+(nMotorEncoder[motorAmrR]<hiEnc?-10:10);
+	int r = 65*(nMotorEncoder[motorAmrR]<hiEnc?1:-1);
+	motArmL = l;
+	motArmR = r;
+	while(abs(nMotorEncoder[motorAmrR]-hiEnc) > 200) {nxtDisplayTextLine(3, "%i", nMotorEncoder[motorAmrR]); EndTimeSlice();}
+	motArmL = 0;
+	motArmR = 0;
 }
