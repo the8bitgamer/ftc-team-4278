@@ -98,8 +98,10 @@ void StopArmTasks() {
 void checkButtons() {
 	if(joy1Btn(10)) {HTGYROstartCal(S2); robotAngle = 0;}
 	if(joy1Btn(5)) {StopArmTasks(); mAmrR = -10; mAmrL = -10;}
-	if(joy1Btn(6)) {StopArmTasks(); mAmrR =  75; mAmrL =  75;}
-	if(!joy1Btn(5) && !joy1Btn(6) && !armTaskRunning) {mAmrR = 0; mAmrL = 0;}
+	if(joy1Btn(6)) {StopArmTasks(); mAmrR =  85; mAmrL =  85;}
+	if(joy1Btn(7)) {StopArmTasks(); mAmrR = -10; mAmrL = -10;}
+	if(joy1Btn(8)) {StopArmTasks(); mAmrR =  10; mAmrL =  10;}
+	if(!joy1Btn(5) && !joy1Btn(6) && !joy1Btn(7) && !joy1Btn(8) && !armTaskRunning) {mAmrR = 0; mAmrL = 0;}
 	if(joy1Btn(2)) {fieldOrientation = true; nxtDisplayTextLine(2, "True ");}
 	if(joy1Btn(4)) {fieldOrientation = false; nxtDisplayTextLine(2, "False");}
 	if(joy1Btn(1)) sensitivity = 2;

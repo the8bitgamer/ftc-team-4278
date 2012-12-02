@@ -40,10 +40,13 @@ void moveToPos(float x, float y, float mag) {
 
 void moveToRot(float rot) {
 	resetPositionData();
-	targetRot = rot+(robotRot < rot?-3.3:3.3);
+	targetRot = rot;
 	gRot = sgn(robotRot - targetRot) * -0.25;
+	int lSign = sgn(robotRot-targetRot);
+	ClearTimer(T2);
 	while(true) {
-		if(abs(robotRot-targetRot) < rotAccuracy) break;
+		if(abs(robotRot-targetRot) < rotAccuracy && time1(T2) > 250) break;
+		if(sgn(robotRot-targetRot) != lSign*-1 && time1(T2) > 250) break;
 		EndTimeSlice();
 	}
 	gRot = 0;
@@ -71,19 +74,22 @@ void moveToWhite(float x, float y, float mag)
 	while(time1[T1] < 500) EndTimeSlice();
 }
 
-/*void moveToWhite(float x, float y, float mag)
+const tMUXSensor colorSns = msensor_S1_3;
+
+void moveToWhiteCl(float x, float y, float mag)
 {
 	targetTh = atan2(y,x);
 	int _r, _g, _b;
 	targetMag = mag;
 	while(true) {
 		HTCS2readRGB(colorSns, _r, _g, _b);
-		if(_r + _g + _b > 400) break;
+		if(_r + _g + _b == 255*3) continue;
+		if(_r + _g + _b > 425) break;
 		EndTimeSlice();
 	}
 	stopAllDrive(); ClearTimer(T1);
 	while(time1[T1] < 500) EndTimeSlice();
-}*/
+}
 
 task HolonomicControl()
 {

@@ -8,12 +8,18 @@
 
 const tMUXSensor colorPort = msensor_S1_4;
 
-task armHi() {
+void sPaws(int msec) {
+	ClearTimer(T1);
+	while(time1[T1] < msec) EndTimeSlice();
+}
+
+task armLow() {
 	int _r, _g, _b;
-	int l = 85*(nMotorEncoder[motorAmrR]<lowEnc?1:-1)+(nMotorEncoder[motorAmrR]<lowEnc?-10:10);
-	int r = 85*(nMotorEncoder[motorAmrR]<lowEnc?1:-1);
+	int l = 60*(nMotorEncoder[motorAmrR]<lowEnc?1:-1)+(nMotorEncoder[motorAmrR]<lowEnc?-10:10);
+	int r = 60*(nMotorEncoder[motorAmrR]<lowEnc?1:-1);
 	motArmL = l;
 	motArmR = r;
+	sPaws(500);
 	while(true) {
 		HTCS2readRGB(colorPort, _r, _g, _b);
 		nxtDisplayTextLine(3, "r:%i", _r);
@@ -25,26 +31,30 @@ task armHi() {
 	motArmL = 0;
 	motArmR = 0;
 }
+
 task armMid() {
 	int _r, _g, _b;
-	int l = 85*(nMotorEncoder[motorAmrR]<lowEnc?1:-1)+(nMotorEncoder[motorAmrR]<lowEnc?-10:10);
-	int r = 85*(nMotorEncoder[motorAmrR]<lowEnc?1:-1);
+	int l = 60*(nMotorEncoder[motorAmrR]<lowEnc?1:-1)+(nMotorEncoder[motorAmrR]<lowEnc?-10:10);
+	int r = 60*(nMotorEncoder[motorAmrR]<lowEnc?1:-1);
 	motArmL = l;
 	motArmR = r;
+	sPaws(500);
 	while(true) {
 		HTCS2readRGB(colorPort, _r, _g, _b);
-		if(_g < 40 && _r < 40 && _b < 40) break;
+		if(_g > 90 && _r < 80 && _b < 80) break;
 		EndTimeSlice();
 	}
 	motArmL = 0;
 	motArmR = 0;
 }
-task armLow() {
+
+task armHi() {
 	int _r, _g, _b;
-	int l = 85*(nMotorEncoder[motorAmrR]<lowEnc?1:-1)+(nMotorEncoder[motorAmrR]<lowEnc?-10:10);
-	int r = 85*(nMotorEncoder[motorAmrR]<lowEnc?1:-1);
+	int l = 60*(nMotorEncoder[motorAmrR]<lowEnc?1:-1)+(nMotorEncoder[motorAmrR]<lowEnc?-10:10);
+	int r = 60*(nMotorEncoder[motorAmrR]<lowEnc?1:-1);
 	motArmL = l;
 	motArmR = r;
+	sPaws(500);
 	while(true) {
 		HTCS2readRGB(colorPort, _r, _g, _b);
 		if(_r > 100 && _g < 50 && _b < 50) break;

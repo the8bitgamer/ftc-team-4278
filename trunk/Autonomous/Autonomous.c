@@ -38,56 +38,55 @@ int getIRColumn() {
 	int x = -1;
 	ClearTimer(T4);
 	while(x == -1 && time1(T4) < 5000) {
+	//while(true) {
 		int col1 = HTIRS2readACDir(msensor_S1_1);
 		int col2 = HTIRS2readACDir(msensor_S1_2);
+		eraseDisplay();
 		nxtDisplayTextLine(3, "%i, %i", col1, col2);
-		if(col1 == 3 && (col2 == 7 || col2 == 9)) x = 3;
-		if(col1 == 2) x = 2;
-		if((col1 == 0 || col1 == 1) && (col2 == 0 || col2 == 7)) x = 1;
+		if(col1 == 1 && col2 == 7) x = 1;
+		if((col1 == 2 || col1 == 3) && col2 == 8) x = 2;
+		if(col1 == 3 && col2 == 9) x = 3;
 		nxtDisplayTextLine(4, "%i", x);
 	}
 	return (x==-1?3:x);
 }
 
-void sPaws(int msec) {
-	ClearTimer(T1);
-	while(time1[T1] < msec) EndTimeSlice();
-}
-
 void autoCol1() {
 	//StartTask(armMid);
-	moveToWhite(0, 1, .75);
-	moveToRot(10);
-	moveToPos(-.5, 0, .5);
-	moveToRot(18);
+	moveToWhiteCl(0, 1, .75);
+	//moveToRot(-15);
 	//moveToWhite(0, 1, .3);)
-	sPaws(500);
-
-	moveToPos(0, 1.5, 1);
-	motor[motorAmrL] = -65;
- 	motor[motorAmrR] = -65;
-	ClearTimer(T1); while(time1[T1] < 1000){EndTimeSlice();}
-	motor[motorAmrL] = 0;
- 	motor[motorAmrR] = 0;
-	moveToPos(0, -1.5, 1);
+	moveToPos(-1.1, 0, 1);
+	StartTask(armHi);
+	sPaws(3500);
+	moveToRot(23);
+	moveToPos(0, 4.5, 1);
+	//moveToRot(15);
+	//moveToPos(0, 1, 1);
+	motor[motorAmrL] = -50;
+ 	motor[motorAmrR] = -50;
+	ClearTimer(T1); while(time1[T1] < 250){EndTimeSlice();}
+	moveToPos(0, -1, 1);
+	ClearTimer(T1); while(time1[T1] < 250){EndTimeSlice();}
+	motor[motorAmrL] = -0;
+ 	motor[motorAmrR] = -0;
 }
 
 void autoCol2() {
-	moveToWhite(0, 1, .7);
+	moveToWhiteCl(0, 1, .7);
 
 	//targetMag = 0.5;
 	//targetTh = 0;
 	//ClearTimer(T1); while(time1[T1] < 300){EndTimeSlice();}
 	//targetMag = 0.0;
 
+	StartTask(armMid);
+	sPaws(1500);
 	moveToRot(72);
-	//robotRot = 0;
-	sPaws(1000);
-
-	moveToPos(0, 1.2, 1);
-	motor[motorAmrL] = -50;
- 	motor[motorAmrR] = -50;
-	ClearTimer(T1); while(time1[T1] < 500){EndTimeSlice();}
+	moveToPos(0, 1.5, 1);
+	motor[motorAmrL] = -20;
+ 	motor[motorAmrR] = -20;
+	ClearTimer(T1); while(time1[T1] < 250){EndTimeSlice();}
 	moveToPos(0, -1, 1);
 	ClearTimer(T1); while(time1[T1] < 250){EndTimeSlice();}
 	motor[motorAmrL] = -0;
@@ -95,17 +94,18 @@ void autoCol2() {
 }
 
 void autoCol3() {
-	moveToWhite(0, 1, .75);
-	moveToPos(0, -.41, .5);
-	moveToRot(122);
-	sPaws(2000);
+	moveToWhiteCl(0, 1, .75);
+	StartTask(armHi);
+	sPaws(3500);
+	moveToPos(0, -.47, .5);
+	moveToRot(130);
 
-	moveToPos(0, 2.5, 1);
-	motor[motorAmrL] = -20;
- 	motor[motorAmrR] = -20;
-	ClearTimer(T1); while(time1[T1] < 1000){EndTimeSlice();}
+	moveToPos(0, 4.2, 1);
+	motor[motorAmrL] = -50;
+ 	motor[motorAmrR] = -50;
+	ClearTimer(T1); while(time1[T1] < 250){EndTimeSlice();}
 	moveToPos(0, -3, 1);
-	ClearTimer(T1); while(time1[T1] < 500){EndTimeSlice();}
+	ClearTimer(T1); while(time1[T1] < 250){EndTimeSlice();}
 	motor[motorAmrL] = 0;
 	motor[motorAmrR] = 0;
 	robotRot = 0;
@@ -113,9 +113,7 @@ void autoCol3() {
 }
 
 void initializeRobot() {
-
 	nMotorEncoder[motorAmrL] = 0; nMotorEncoder[motorAmrR] = 0;
-	//getIRColumnTargetData();
 	nxtDisplayTextLine(6, "LOCKED");
 
 	debugAccelGyro = false;
@@ -130,14 +128,12 @@ void closeAutonomous() {
 
 task main() {
 	initializeRobot();
-	//StartTask(armHi);
-	/*StartTask(armMid); autoCol2();
+	//StartTask(armMid);
 	int irCol = getIRColumn();
-	/*nxtDisplayTextLine(6, "%i", irCol);
-	if(irCol == 1) {StartTask(armHi); autoCol3();}
-	if(irCol == 2) {StartTask(armMid); autoCol2();}
-	if(irCol == 3) {StartTask(armHi); autoCol3();}*/
-	StartTask(armMid); autoCol2();
+	nxtDisplayTextLine(6, "%i", irCol);
+	if(irCol == 1) {autoCol1();}
+	if(irCol == 2) {autoCol2();}
+	if(irCol == 3) {autoCol3();}
 	ClearTimer(T1); while(time1[T1] < 10000){EndTimeSlice();}
 	closeAutonomous();
 }
