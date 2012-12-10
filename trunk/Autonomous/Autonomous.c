@@ -76,7 +76,7 @@ void getAutoUserData() {
 }
 
 void getAutoNumber() {
-	switch(autoType) {
+	/*switch(autoType) {
 		case autoFront:
 			if(autoColTarget == 1) currentAuton = autoVF1;
 			if(autoColTarget == 2) currentAuton = autoVF2;
@@ -89,7 +89,7 @@ void getAutoNumber() {
 			if(autoColTarget == 1) currentAuton = autoVD1;
 			if(autoColTarget == 2) currentAuton = autoVD2;
 			if(autoColTarget == 3) currentAuton = autoVD3;
-	}
+	}*/
 
 	currentAuton = autoVF1;
 	armTargetLevel = 3;
@@ -97,10 +97,10 @@ void getAutoNumber() {
 
 void initializeRobot() {
 	eraseDisplay();
-	getAutoUserData();
-	waitForStart();
+	//getAutoUserData();
+	//waitForStart();
 
-	if(autoUseIRData) autoColTarget = getIRColumn(autoColIRErr);
+	//if(autoUseIRData) autoColTarget = getIRColumn(autoColIRErr);
 	wait1Msec(autoMsecDelay);
 	hogCPU(); bDisplayDiagnostics = false;
 	getAutoNumber();

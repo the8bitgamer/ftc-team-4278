@@ -4,17 +4,15 @@
 #define vThresh 0.01
 #define posToFeet 15
 
+float robotTh, robotX, robotY;
+
 #include "drivers\hitechnic-accelerometer.h"
 #include "drivers\hitechnic-gyro.h"
-
-float robotTh, robotX, robotY;
 
 int xAxis=0, yAxis=0, zAxis=0, xBias=0, yBias=0, zBias=0;
 float xAcc=0, yAcc=0, xVel=0, yVel=0, xPos=0, yPos=0, xScl = 0.973236, yScl = 0.977995;
 float xAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, yAccAvg[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int lastAccelTime, lastGyroTime;
-
-bool debugAccelGyro = true;
 
 void accelIntegrator() {
 	HTACreadAllAxes(sAcc, yAxis, xAxis, zAxis);
@@ -36,14 +34,15 @@ void accelIntegrator() {
 	xVel += xAccSum*dT*(abs(xAccSum) > aThresh ? 1.0 : 0.0); yVel += yAccSum*dT*(abs(yAccSum) > aThresh ? 1.0 : 0.0);
 	xPos += xVel*dT*(posToFeet)*(abs(xVel) > vThresh ? 1.0 : 0.0); yPos += yVel*dT*(posToFeet)*(abs(yVel) > vThresh ? 1.0:0.0);
 
-	/*if(debugAccelGyro) {
+	{
 		nxtDisplayTextLine(1, "xA: %f",xAccSum);
 		nxtDisplayTextLine(2, "yA: %f",yAccSum);
 		nxtDisplayTextLine(3, "xV: %f",xVel);
 		nxtDisplayTextLine(4, "yV: %f",yVel);
 		nxtDisplayTextLine(5, "xP: %f",xPos);
 		nxtDisplayTextLine(6, "yP: %f",-yPos);
-	}*/
+	}
+
 	robotX = robotX + xPos; robotY = robotY + (-1 * yPos);
 }
 
