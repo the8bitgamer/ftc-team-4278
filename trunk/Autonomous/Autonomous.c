@@ -38,6 +38,9 @@ void getAutoUserData() {
 	int _r, _g, _b; HTCS2readRGB(msensor_S1_3, _r, _g, _b);
 	if(_r + _g + _b == 255*3) nxtDisplayTextLine(1, "TURN ON SMUX");
 
+	if(externalBatteryAvg < 12600) {nxtDisplayTextLine(0, "REPLACE TXBATT");}
+	else {nxtDisplayTextLine(0, "N:%f T:%f", ((float)nAvgBatteryLevel)/1000.0, ((float)externalBatteryAvg)/1000.0);}
+
 	while(nNxtButtonPressed != 3) {
 		if(autoType == autoFront) nxtDisplayTextLine(2, "Auton: Front ");
 		if(autoType == autoBack) nxtDisplayTextLine(2, "Auton: Back  ");
@@ -49,30 +52,32 @@ void getAutoUserData() {
 	while(nNxtButtonPressed != 3) {
 		nxtDisplayTextLine(3, "Delay: %i     ", autoMsecDelay);
 		if(nNxtButtonPressed == 1) {autoMsecDelay += 500; while(nNxtButtonPressed == 1);}
-		if(nNxtButtonPressed == 1) {autoMsecDelay -= 500; while(nNxtButtonPressed == 1);}
+		if(nNxtButtonPressed == 2) {autoMsecDelay -= 500; while(nNxtButtonPressed == 2);}
 	} while(nNxtButtonPressed == 3);
 
 	while(nNxtButtonPressed != 3) {
 		if(autoUseIRData)  nxtDisplayTextLine(4, "UseIR: Yes");
 		if(!autoUseIRData) nxtDisplayTextLine(4, "UseIR: No ");
-		if(nNxtButtonPressed != -1) {autoUseIRData = !autoUseIRData; while(nNxtButtonPressed != -1);}
+		if(nNxtButtonPressed == 1 || nNxtButtonPressed == 2) {autoUseIRData = !autoUseIRData; while(nNxtButtonPressed != -1);}
 	} while(nNxtButtonPressed == 3);
 
 	if(autoUseIRData == false) {
 		autoColTarget = 1;
 		while(nNxtButtonPressed != 3) {
 			nxtDisplayTextLine(5, "Colmn: Col%i", autoColTarget);
-			if(nNxtButtonPressed == 1) {autoColTarget--; if(autoColTarget < 1) autoColTarget = 3; while(nNxtButtonPressed == 1);}
-			if(nNxtButtonPressed == 2) {autoColTarget++; if(autoColTarget > 3) autoColTarget = 1; while(nNxtButtonPressed == 2);}
+			if(nNxtButtonPressed == 2) {autoColTarget--; if(autoColTarget < 1) autoColTarget = 3; while(nNxtButtonPressed == 2);}
+			if(nNxtButtonPressed == 1) {autoColTarget++; if(autoColTarget > 3) autoColTarget = 1; while(nNxtButtonPressed == 1);}
 		}
 	} else {
+		autoColIRErr = 1;
 		while(nNxtButtonPressed != 3) {
 			nxtDisplayTextLine(5, "OnErr: Col%i", autoColIRErr);
-			if(nNxtButtonPressed == 1) {autoColIRErr--; if(autoColIRErr < 1) autoColIRErr = 3; while(nNxtButtonPressed == 1);}
-			if(nNxtButtonPressed == 2) {autoColIRErr++; if(autoColIRErr > 3) autoColIRErr = 1; while(nNxtButtonPressed == 2);}
+			if(nNxtButtonPressed == 2) {autoColIRErr--; if(autoColIRErr < 1) autoColIRErr = 3; while(nNxtButtonPressed == 2);}
+			if(nNxtButtonPressed == 1) {autoColIRErr++; if(autoColIRErr > 3) autoColIRErr = 1; while(nNxtButtonPressed == 1);}
 		}
 	} while(nNxtButtonPressed == 3);
-	nxtDisplayTextLine(6, "Settings LOKID");
+	nxtDisplayTextLine(7, "Settings LOKI\'D");
+	nxtDisplayTextLine(2, "                ");
 }
 
 void getAutoNumber() {
