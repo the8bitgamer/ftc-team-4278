@@ -1,33 +1,33 @@
 #include "drivers/hitechnic-sensormux.h"
 #include "drivers/hitechnic-colour-v2.h"
 
-#define motArmR motor[motorAmrR]
-#define motArmL motor[motorAmrL]
+#define motorArmR motor[motorAmrR]
+#define motorArmL motor[motorAmrL]
 
-int armLevel = -1;
+int armTargetLevel = -1;
 const tMUXSensor colorSnsArm = msensor_S1_4;
 
 void RunArmState() {
-	int _ra, _ba, _ga;
-	HTCS2readRGB(colorSnsArm, _ra, _ga, _ba);
-	switch(armLevel) {
+	int _r, _b, _g;
+	HTCS2readRGB(colorSnsArm, _r, _g, _b);
+	switch(armTargetLevel) {
 		case 1:
-			if(_ba < 120 && _ba > 80 && _ga < 80 && _ra < 40) {armLevel = -1; break;}
-			motArmR = 60; motArmL = 60;
+			if(_b < 120 && _b > 80 && _g < 80 && _r < 40) {armTargetLevel = -1; break;}
+			motorArmR = 60; motorArmL = 60;
 			break;
 		case 2:
-			if(_ga > 60 && _ra < 30 && _ba < 60) {armLevel = -1; break;}
-			motArmR = 60; motArmL = 60;
+			if(_g > 60 && _r < 30 && _b < 60) {armTargetLevel = -1; break;}
+			motorArmR = 60; motorArmL = 60;
 			break;
 		case 3:
-			if(_ra > 110 && _ga < 50 && _ba < 50) {armLevel = -1; break;}
-			motArmR = 60; motArmL = 60;
+			if(_r > 110 && _g < 50 && _b < 50) {armTargetLevel = -1; break;}
+			motorArmR = 60; motorArmL = 60;
 			break;
 		case -1:
-			motArmL = 0;
-			motArmR = 0;
+			motorArmL = 0;
+			motorArmR = 0;
 		default:
-			motArmR = 0;
-			motArmL = 0;
+			motorArmR = 0;
+			motorArmL = 0;
 	}
 }

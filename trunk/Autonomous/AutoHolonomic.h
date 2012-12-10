@@ -43,10 +43,10 @@ bool moveToPos(float x, float y, float mag) {
 }
 
 const tMUXSensor colorSnsLine = msensor_S1_3;
-int _r, _g, _b;
 
 bool moveToWhite(float x, float y, float mag)
 {
+	int _r, _g, _b;
 	HolonomicComputation(atan2(y,x),mag,0);
 	HTCS2readRGB(colorSnsLine, _r, _g, _b);
 	if(_r + _g + _b > 425 && _r + _g + _b != 255*3) return true;
