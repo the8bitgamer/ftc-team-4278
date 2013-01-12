@@ -98,7 +98,7 @@ void StopArmTasks() {
 void checkButtons() {
 	if(joy1Btn(10)) {HTGYROstartCal(S2); robotAngle = 0;}
 	if(joy1Btn(5)) {StopArmTasks(); mAmrR = -10; mAmrL = -10;}
-	if(joy1Btn(6)) {StopArmTasks(); mAmrR =  85; mAmrL =  85;}
+	if(joy1Btn(6)) {StopArmTasks(); mAmrR =  55; mAmrL =  55;}
 	if(joy1Btn(7)) {StopArmTasks(); mAmrR = -10; mAmrL = -10;}
 	if(joy1Btn(8)) {StopArmTasks(); mAmrR =  10; mAmrL =  10;}
 	if(!joy1Btn(5) && !joy1Btn(6) && !joy1Btn(7) && !joy1Btn(8) && !armTaskRunning) {mAmrR = 0; mAmrL = 0;}
@@ -122,7 +122,7 @@ task main() {
 	HTGYROstartCal(S2);
 	lastTime = nPgmTime;
 	//bDisplayDiagnostics = false;
-	//waitForStart();
+	waitForStart();
 	while(true) {
 		computeMovement();
 		calculateGyro();

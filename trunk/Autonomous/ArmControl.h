@@ -13,15 +13,16 @@ void RunArmState() {
 	switch(armTargetLevel) {
 		case 1:
 			if(_b < 120 && _b > 80 && _g < 80 && _r < 40) {armTargetLevel = -1; break;}
-			motorArmR = 60; motorArmL = 60;
+			motorArmR = 45; motorArmL = 45;
 			break;
 		case 2:
-			if(_g > 60 && _r < 30 && _b < 60) {armTargetLevel = -1; break;}
-			motorArmR = 60; motorArmL = 60;
+			if(_g > 200 && _r > 200 && _b < 80) {armTargetLevel = -1; break;}
+			if(_r > 105 && _g < 50 && _b < 50) {armTargetLevel = -1; break;}
+			motorArmR = 45; motorArmL = 45;
 			break;
 		case 3:
-			if(_r > 110 && _g < 50 && _b < 50) {armTargetLevel = -1; break;}
-			motorArmR = 60; motorArmL = 60;
+			if(_r > 50 && _g < 35 && _b < 25) {armTargetLevel = -1; break;}
+			motorArmR = 45; motorArmL = 45;
 			break;
 		case -1:
 			motorArmL = 0;

@@ -26,13 +26,13 @@ void nextInstruction() {
 bool autoF1() {
 	switch(currentIns) {
 		case 1: return moveToWhite(0, 1, 0.8);
-		case 2: if(time1[T2] > 1250) return true; return moveToPos(-0.23, 0, 0.5);
-		case 3: return moveToRot(22);
+		case 2: if(time1[T2] > 1250) return true; return moveToPos(-0.26, 0, 0.5);
+		case 3: return moveToRot(23);
 		case 4: if(time1[T2] > 2000) return true; return moveToPos(0, 1, 0.8);
 		case 5:
 			motor[motorAmrL] = -30;
 			motor[motorAmrR] = -30;
-			wait1Msec(600);
+			wait1Msec(500);
 			motor[motorAmrL] = 0;
 			motor[motorAmrR] = 0;
 			return true;
@@ -46,11 +46,11 @@ bool autoF2() {
 	switch(currentIns) {
 		case 1: return moveToWhite(0, 1, 0.8);
 		case 2: return moveToRot(42);
-		case 3: if(time1[T2] > 450) return true; return moveToPos(0, .1, 1);
+		case 3: if(time1[T2] > 750) return true; return moveToPos(0, .15, 1);
 		case 4:
 			motor[motorAmrL] = -30;
 			motor[motorAmrR] = -30;
-			wait1Msec(475);
+			wait1Msec(350);
 			motor[motorAmrL] = 0;
 			motor[motorAmrR] = 0;
 			return true;
@@ -62,17 +62,19 @@ bool autoF2() {
 bool autoF3() {
 	switch(currentIns) {
 		case 1: return moveToWhite(0, 1, 0.8);
-		case 2: if(time1[T2] > 900) return true; return moveToPos(0, -.5, 0.5);
-		case 3: return moveToRot(66);
-		case 4: if(time1[T2] > 1400) return true; return moveToPos(0,.45,1);
-		case 5:
+		//case 2: if(time1[T2] > 250) return true; return moveToPos(0, .1, .6);
+		case 2: return true;
+		case 3: if(time1[T2] > 700) return true; return moveToPos(0, -.3, 0.5);
+		case 4: return moveToRot(66);
+		case 5: if(time1[T2] > 1400) return true; return moveToPos(0,.48,1);
+		case 6:
 			motor[motorAmrL] = -30;
 			motor[motorAmrR] = -30;
-			wait1Msec(475);
+			wait1Msec(500);
 			motor[motorAmrL] = 0;
 			motor[motorAmrR] = 0;
 			return true;
-		case 6: if(time1[T2] > 2750) return true; return moveToPos(0, -2, .6);
+		case 7: if(time1[T2] > 2750) return true; return moveToPos(0, -2, .6);
 		default:
 			return false;
 	}
@@ -82,7 +84,6 @@ bool autoF3() {
 bool autoD1() {
 	switch(currentIns) {
 		case 1:
-			return false;
 		default:
 			return false;
 	}

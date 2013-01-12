@@ -33,7 +33,7 @@ void holonomicComputation(float th, float v, float rot) {
 }
 
 bool moveToPos(float x, float y, float mag) {
-	holonomicComputation(atan2(y,x),mag,0);
+	holonomicComputation(atan2(y,(x + .25*y/2.0)),mag,(-1.0 * robotTh / 25.0));
 	float popeye=abs(robotX);
 	float pumpkinskin=abs(robotY);
 	float newb = abs(x);
@@ -47,7 +47,7 @@ const tMUXSensor colorSnsLine = msensor_S1_3;
 bool moveToWhite(float x, float y, float mag)
 {
 	int _r, _g, _b;
-	holonomicComputation(atan2(y,x),mag,0);
+	holonomicComputation(atan2(y,(x + .25*y/2.0)),mag,(-1.0 * robotTh / 25.0));
 	HTCS2readRGB(colorSnsLine, _r, _g, _b);
 	if(_r + _g + _b > 425 && _r + _g + _b != 255*3) return true;
 	return false;
@@ -56,5 +56,6 @@ bool moveToWhite(float x, float y, float mag)
 bool moveToRot(float rot) {
 	holonomicComputation(0,0,(rot>0?.5:-.5));
 	if(abs(robotTh - rot) < 3) return true;
+	if(abs(robotTh) > 360) {PlaySound(soundBeepBeep); while(bSoundActive); StopAllTasks();}
 	return false;
 }
