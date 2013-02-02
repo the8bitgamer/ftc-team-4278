@@ -34,6 +34,7 @@ void holonomicComputation(float th, float v, float rot) {
 
 bool moveToPos(float x, float y, float mag) {
 	holonomicComputation(atan2(y,(x + .25*y/2.0)),mag,(-1.0 * robotTh / 25.0));
+	if(abs(robotTh) > 360) {PlaySound(soundBeepBeep); while(bSoundActive); StopAllTasks();}
 	float popeye=abs(robotX);
 	float pumpkinskin=abs(robotY);
 	float newb = abs(x);
@@ -48,6 +49,7 @@ bool moveToWhite(float x, float y, float mag)
 {
 	int _r, _g, _b;
 	holonomicComputation(atan2(y,(x + .25*y/2.0)),mag,(-1.0 * robotTh / 25.0));
+    if(abs(robotTh) > 360) {PlaySound(soundBeepBeep); while(bSoundActive); StopAllTasks();}
 	HTCS2readRGB(colorSnsLine, _r, _g, _b);
 	if(_r + _g + _b > 425 && _r + _g + _b != 255*3) return true;
 	return false;
@@ -57,5 +59,6 @@ bool moveToRot(float rot) {
 	holonomicComputation(0,0,(rot>0?.5:-.5));
 	if(abs(robotTh - rot) < 3) return true;
 	if(abs(robotTh) > 360) {PlaySound(soundBeepBeep); while(bSoundActive); StopAllTasks();}
+	if(abs(rot) > 360) {PlaySound(soundBeepBeep); while(bSoundActive); StopAllTasks();}
 	return false;
 }

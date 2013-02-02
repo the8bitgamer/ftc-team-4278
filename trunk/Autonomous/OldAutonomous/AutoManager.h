@@ -27,7 +27,7 @@ bool autoF1() {
 	switch(currentIns) {
 		case 1: return moveToWhite(0, 1, 0.8);
 		case 2: if(time1[T2] > 1250) return true; return moveToPos(-0.26, 0, 0.5);
-		case 3: return moveToRot(23);
+		case 3: return moveToRot(20);
 		case 4: if(time1[T2] > 2000) return true; return moveToPos(0, 1, 0.8);
 		case 5:
 			motor[motorAmrL] = -30;
