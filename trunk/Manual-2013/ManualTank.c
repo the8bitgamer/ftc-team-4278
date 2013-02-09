@@ -15,6 +15,7 @@
 #include "ArmControl.h"
 #include "hitechnic-sensormux.h"
 #include "hitechnic-colour-v2.h"
+#include "hitechnic-irseeker-v2.h"
 
 #define mBackLeft motor[motorBL]
 #define mBackRight motor[motorBR]
@@ -115,12 +116,16 @@ task main() {
 		computeMovement();
 		calculateGyro();
 		checkButtons();
-		int _r, _g, _b;
+		int _r, _g, _b, _d1, _d2, _d3, _d4, _d5;
 		bDisplayDiagnostics = false;
+
+		HTIRS2readAllACStrength(msensor_S1_2, _d1, _d2, _d3, _d4, _d5);
 		HTCS2readRGB(colorPort, _r, _g, _b);
 		nxtDisplayTextLine(3, "r:%i", _r);
 		nxtDisplayTextLine(4, "g:%i", _g);
 		nxtDisplayTextLine(5, "b:%i", _b);
+		//nxtDisplayTextLine(3, "1:%i",HTIRS2readACDir(msensor_S1_1));
+		//nxtDisplayTextLine(4, "2:%i",HTIRS2readACDir(msensor_S1_2));
 		EndTimeSlice();
 	}
 }
