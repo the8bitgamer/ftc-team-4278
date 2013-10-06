@@ -1,5 +1,4 @@
 #include "AutoFunc.h"
-#include "SensorLink.h"
 
 task main()
 {
