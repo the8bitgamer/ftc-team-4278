@@ -11,10 +11,11 @@
 #define B5 0x20
 #define B6 0x40
 #define B7 0x80
-#define A0 0x1
-#define A1 0x2
-#define A2 0x4
-#define A3 0x8
+
+#define A0 0
+#define A1 1
+#define A2 2
+#define A3 3
 
 #define HIGH true
 #define LOW false
@@ -27,7 +28,7 @@ ubyte digitalRead(ubyte mask) {
 	return HTSPBreadIO(HTSPB, mask);
 }
 
-int analogRead(ubyte mask){
+bool analogRead(ubyte mask){
 	return HTSPBreadADC(HTSPB, mask, 10);
 }
 
@@ -46,6 +47,7 @@ B5  00100000 |
 */
 
 ubyte hiddenMask = 0x0;
+
 bool setIO(ubyte port, bool enabled) {
 	hiddenMask = (enabled ? (hiddenMask | port) : (hiddenMask & !port));
 	return HTSPBsetupIO(HTSPB, hiddenMask);
