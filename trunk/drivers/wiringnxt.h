@@ -48,7 +48,7 @@ B5  00100000 |
 
 ubyte hiddenMask = 0x0;
 
-bool setIO(ubyte port, bool enabled) {
+bool pinMode(ubyte port, bool enabled) {
 	hiddenMask = (enabled ? (hiddenMask | port) : (hiddenMask & !port));
 	return HTSPBsetupIO(HTSPB, hiddenMask);
 }
