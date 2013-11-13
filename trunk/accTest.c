@@ -1,6 +1,6 @@
 #pragma config(Sensor, S1,     HTSPB,                sensorI2CCustom9V)
 
-#include "drivers/WiringNXT.h"
+#include "drivers/wiringnxt.h"
 
 #define D 1
 #define doatest for(short i=0;i<D;i++)
