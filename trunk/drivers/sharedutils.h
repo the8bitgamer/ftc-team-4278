@@ -6,8 +6,8 @@
 #define INCH 1.0
 #define CM 0.393701
 #define MM 39.3701
-#define YARD 36
-#define FOOT 12
+#define YARD 36.0
+#define FOOT 12.0
 #define METER 39.3701
 
 #define FLOORMAT (2.0 * FOOT)
