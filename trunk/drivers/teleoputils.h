@@ -4,9 +4,14 @@
 #include "sharedutils.h"
 #include "JoystickDriver4278.c"
 
-#ifndef THRESHOLD
-#define THRESHOLD 10
-#endif
+#define THRESHOLD 10.0
+
+#define MINX  10.0
+#define SLOPE 0.4
+#define DISTA 0.4
+#define POWSCL(x) (1.0-MINX)*
+	(x-DISTA > 0 ? ((DISTA * SLOPE - 1.0) * x)/(DISTA - 1.0) -
+		(DISTA * (SLOPE - 1.0))/(DISTA - 1.0) : SLOPE * x) + MINX
 
 //Controller 1 - Left Joystick - Linear
 #define joy1x1 (abs(joystick.joy1_x1) > THRESHOLD?joystick.joy1_x1:0)
@@ -17,13 +22,9 @@
 #define joy2x1 (abs(joystick.joy2_x1) > THRESHOLD?joystick.joy2_x1:0)
 
 int expJoy(int joy){
-	if(joy>0) {
-		return exp(map((float)joy, THRESHOLD, 128.0, 2.3025851, 4.60517));
-	} else if(joy<0){
-		return -1 * exp((map((float)(-1*joy), THRESHOLD, 127.0, 2.3025851, 4.60517)));
-	} else{
-		return 0;
-	}	
+	     if(joy>0) return exp(map((float)joy, THRESHOLD, 128.0, 2.3025851, 4.60517));
+	else if(joy<0) return -1 * exp((map((float)(-1*joy), THRESHOLD, 127.0, 2.3025851, 4.60517)));
+	         else  return 0;
 }
 
 //Controller 1 - Left Joystick - Exponential
@@ -64,7 +65,7 @@ void tankDrive(int x, int y){
 
 #define joy2TopHat joystick.joy2_TopHat
 
-#elif OLDLOG
+#else OLDLOG //!NEWLOG
 //Controller 1
 #define joy1X joy1Btn()
 #define joy1Y joy1Btn()
@@ -86,8 +87,6 @@ void tankDrive(int x, int y){
 #define joy2LeftBumper joy2Btn()
 
 #define joy2TopHat joystick.joy2_TopHat
-#elif XBOX
-//We could take the time to do this, or just not.
-#endif
+#endif //NEWLOG ~! OLDLOG
 
 #endif
