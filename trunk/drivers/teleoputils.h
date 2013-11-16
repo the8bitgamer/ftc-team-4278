@@ -24,29 +24,21 @@ float powscl(int xz) {
 #define JOY_Y1 (abs(joystick.joy1_y1) > THRESHOLD ? joystick.joy1_y1 : 0)
 
 //Defines current button map layout
-#ifdef ALTLOG
-	#define JOY_X 0
-	#define JOY_Y 3
-	#define JOY_B 2
-	#define JOY_A 1
+#define JOY_X 0
+#define JOY_Y 3
+#define JOY_B 2
+#define JOY_A 1
 
-	#define JOY_RB 5
-	#define JOY_LB 4
+#define JOY_RB 5
+#define JOY_LB 4
+#define JOY_LT 6
+#define JOY_RT 7
 
-	#define JOY_R3 7
-	#define JOY_L3 6
-#else //!ALTLOG
-	#define JOY_X 0
-	#define JOY_Y 3
-	#define JOY_B 2
-	#define JOY_A 1
+#define JOY_R3 10
+#define JOY_L3 11
 
-	#define JOY_RB 5
-	#define JOY_LB 4
-
-	#define JOY_R3 7
-	#define JOY_L3 6
-#endif //ALTLOG
+#define JOY_ST 9
+#define JOY_BA 8
 
 #define JOY_BTN joystick.joy1_Buttons
 

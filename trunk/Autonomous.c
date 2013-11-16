@@ -20,10 +20,19 @@
 
 #include "drivers/autoutils.h"
 
+#define AOPINIT 0
+#define AOPCRT1 1
+#define AOPCRT2 2
+#define AOPCRT3 3
+#define AOPCRT4 4
+
+int operatingIndex = AOPINIT;
+void setOperIndex(int action) {operatingIndex = action; wait1Msec(250);}
+
 void initialize() {
 	//Init sensors
 	unlockArmMotors();
-	setOperIndex(AOPMOVE);
+	setOperIndex(AOP);
 }
 
 task main() {
