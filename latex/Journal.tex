@@ -54,4 +54,38 @@ After a fairly long strategy discussion, some ideas were thrown around as to how
 Members of the team have assumed different jobs to complete before the next meeting, such as researching lifting mechanisms, getting a BOM for the field and purchasing the materials, and researching the specifications of an IR beacon and sensor, since the team also decided that scoring the block during autonomous is absolutely imperative to the outcome of this game. It is essentially free points that even a defensive robot cannot stop. As of right now we are choosing to focus the endgame period, since lifting and raising the flag are relatively simple tasks. 
 
 We are considering purchasing the AndyMark field, as it would provide us a standardized field and a better replication of the interaction of the robot with the field during competition. 
+\newpage
+\section{Hybrid Localization Using Gyroscopes \& Odometers}
+\subsection{Odometric Data}
+We begin by assigning the following constants: 
+\[D_{ot}=\frac{\text{Distance}}{\text{odometer tick}}=\pi(\text{wheel diameter})/(\text{ticks/revolution})\]\[ \theta_{ot} = \frac{\theta}{\text{odometer tick}} = \pi\left(\frac{\text{wheel diameter}}{\text{distance between wheels}}\right)/(\text{ticks/revolution})\]
+We can calculate $(x_{\mathrm{enc}}, y_{\mathrm{enc}}, \theta_{\mathrm{enc}})$ from the odometer as follows: 
+\begin{center}
+	\begin{align}
+		\mathrm{d}l &= l^t_{\mathrm{enc}}-l^{t-1}_{\mathrm{enc}} \\
+		\mathrm{d}r &= r^t_{\mathrm{enc}}-r^{t-1}_{\mathrm{enc}} \\
+		\mathrm{d}D &= \frac{1}{2}(\mathrm{d}l+\mathrm{d}r)D_{ot} \\
+		\mathrm{d}x_{\mathrm{enc}} &= \mathrm{d}D\cos(\theta^t_{enc}) \\
+		\mathrm{d}y_{\mathrm{enc}} &= \mathrm{d}D\sin(\theta^t_{enc}) \\
+		\mathrm{d}\theta_{\mathrm{enc}} &= (\mathrm{d}r-\mathrm{d}l)\theta_{ot} \\
+		x_{\mathrm{enc}} &= x^{t-1}_{\mathrm{enc}} + \mathrm{d}x_{\mathrm{enc}} \\
+		y_{\mathrm{enc}} &= y^{t-1}_{\mathrm{enc}} + \mathrm{d}y{\mathrm{enc}} \\
+		\theta_{\mathrm{enc}} &= \theta^{t-1}_{\mathrm{enc}} + \mathrm{d}\theta_{\mathrm{enc}}
+	\end{align}
+\end{center}
+
+$l$ denotes the left side of the robot, and $r$ denotes the right side of the robot. $D$ denotes the distance. 
+
+\subsection{Localization Algorithm}
+The robots motor controller calculates position and orientation $(x_{\mathrm{enc}}, y_{\mathrm{enc}}, \theta_{\mathrm{enc}})$ from encoder ticks and sends the data to an on-board computer. The mounted gyroscope communicates with a gyro driver which integrates the rate values into an absolute angle ($\theta_{\mathrm{gyro}}$). Global position $(x_{\mathrm{rbt}}, y_{\mathrm{rbt}})$ is found by transforming the translation vector from encoder space to gyroscope space. Global angle $(\theta_{\mathrm{rbt}})$ is the gyro angle ($\theta_{\mathrm{gyro}}$). The following describes the computation as an iterative algorithm: 
+\begin{center}
+\begin{align}
+\mathrm{d}x&=x^{t}_{\mathrm{enc}}-x^{t-1}_{\mathrm{enc}} \\
+\mathrm{d}y&=y^{t}_{\mathrm{enc}}-y^{t-1}_{\mathrm{enc}} \\
+\mathrm{d}\theta&=\theta^t_{\mathrm{gyro}}-\theta^{t}_{\mathrm{enc}} \\
+x^t_{\mathrm{rbt}}&=x^{t-1}_{\mathrm{rbt}}+\cos(\mathrm{d}\theta)\mathrm{d}x-\sin(\mathrm{d}\theta)\mathrm{d}y \\
+y^t_{\mathrm{rbt}}&=y^{t-1}_{\mathrm{rbt}}+\sin(\mathrm{d}\theta)\mathrm{d}x+\cos(\mathrm{d}\theta)\mathrm{d}y \\
+\theta^t_{\mathrm{rbt}}&=\theta^t_{\mathrm{gyro}}
+\end{align}
+\end{center}
 \end{document}
