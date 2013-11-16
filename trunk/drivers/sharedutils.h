@@ -5,7 +5,7 @@
 #define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] = x;}
 #define setArmMotors(x) {motor[mArm1] = x; motor[mArm2] = -x;}
 #define setSpinMotor(x) {motor[mSpin] = x;}
-#define lockArmMotors() {servo[servoL1] = 156; servo[servoL2] = 26;}
+#define lockArmMotors() {servo[servoL1] = 155; servo[servoL2] = 20;}
 #define unlockArmMotors() {servo[servoL1] = 120; servo[servoL2] = 40;}
 
 //Distance Macros
