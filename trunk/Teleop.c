@@ -38,7 +38,7 @@ void checkJoystickButtons() {
 	for(int i = 0; i < 8; i++) {
 		if(joy1Btn(i) != btn[i]) {
 			invokeButton(i, !btn[i]);
-			btn[i] = joy1Btn(i);
+			t[i] = !btn[i];
 		}
 	}
 }
