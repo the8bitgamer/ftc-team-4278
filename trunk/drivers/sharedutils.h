@@ -16,8 +16,9 @@
 #define FOOT 12.0
 #define METER 39.3701
 
-#define FLOORMAT (2.0 * FOOT)
-#define CORNERtoPEND (5.6568542 * FOOT)
+#define WHEEL 12.5663706
+#define FLOORMAT 24.0
+#define CORNERtoPEND 67.8822504
 
 float linearScale(float x, float in_min, float in_max, float out_min, float out_max) {return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
 
