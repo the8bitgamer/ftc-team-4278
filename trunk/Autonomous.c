@@ -1,4 +1,3 @@
-
 #include "drivers/autoutils.h"
 
 void initialize() {setAutoAction(AOPMOVE);}

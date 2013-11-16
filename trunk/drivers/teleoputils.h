@@ -4,7 +4,11 @@
 #include "sharedutils.h"
 #include "JoystickDriver4278.c"
 
+//Allows threshold to be defined in teleop-file
+#ifndef THRESHOLD
 #define THRESHOLD 10.0
+#endif
+
 #define MINX  10.0
 #define SLOPE 0.5
 #define DISTA 0.6
