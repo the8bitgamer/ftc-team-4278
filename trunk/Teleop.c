@@ -24,7 +24,7 @@ void invokeButton(int button, bool pressed) {
 	switch(button) {
 		case JOY_X:  if(pressed) {lockArmMotors();} else {} break;
 		case JOY_Y:  if(pressed) {unlockArmMotors();} else {} break;
-		case JOY_A:  if(pressed) {} else {} break;
+		case JOY_A:  if(pressed) {nxtDisplayTextLine(3, "YES");} else {nxtDisplayTextLine(3, "NO");} break;
 		case JOY_B:  if(pressed) {setSpinMotor(100);}  else {setSpinMotor(0);} break;
 		case JOY_RB: if(pressed) {setArmMotors(100);}  else {setArmMotors(0);} break;
 		case JOY_LB: if(pressed) {setArmMotors(-100);} else {setArmMotors(0);} break;
@@ -33,28 +33,14 @@ void invokeButton(int button, bool pressed) {
 	}
 }
 
-//Kian: I think this is a better function to use because it 			
-//checks all buttons at in the beginning if any have 
-//changed, as opposed to checking each button individually 
-//every time.
 short butn = JOY_BTN;
-void checkJoystickButtonsShort() {
+void checkJoystickButtons() {
 	if(butn != JOY_BTN){
 		for(int i = 7; i >= 0; i--) {
 			if((butn>>i) ^ (JOY_BTN>>i)) {
 				invokeButton(i, ((butn & (1 << i)) == 0));
 				butn ^= 1<<i;
 			}
-		}
-	}
-}
-
-bool btn[8];
-void checkJoystickButtons() {
-	for(int i = 0; i < 8; i++) {
-		if(joy1Btn(i) != btn[i]) {
-			invokeButton(i, !btn[i]);
-			btn[i] = !btn[i];
 		}
 	}
 }
