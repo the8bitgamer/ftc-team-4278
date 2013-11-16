@@ -25,7 +25,7 @@ void displayDiagnostics() {
 	if(externalBatteryAvg < 0)
   	nxtDisplayTextLine(3, "Ext Batt: OFF");
  	else
-  	nxtDisplayTextLine(3, "Ext Batt:%4.1f V", externalBatteryAvg / (float) 1000);
+  	nxtDisplayTextLine(3, "Ext Batt:%4.1f V", externalBatteryAvg / (float) 1000);//Why (float)? Does 1000.0 not work?
   nxtDisplayTextLine(4, "NXT Batt:%4.1f V", nAvgBatteryLevel / (float) 1000);
 }
 

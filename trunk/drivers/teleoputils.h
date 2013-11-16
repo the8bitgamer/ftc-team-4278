@@ -48,4 +48,6 @@ float powscl(int xz) {
 	#define JOY_L3 6
 #endif //ALTLOG
 
+#define JOY_BTN joystick.joy1_Buttons
+
 #endif //__TELEOPUTILS__
