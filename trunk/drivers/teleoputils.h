@@ -50,4 +50,12 @@ float powscl(int xz) {
 
 #define JOY_BTN joystick.joy1_Buttons
 
+void waitForStart() {
+  while(true) {
+    getJoystickSettings(joystick);
+    if(!joystick.StopPgm) break;
+    displayDiagnostics();
+  }
+}
+
 #endif //__TELEOPUTILS__

@@ -44,13 +44,14 @@ typedef struct
   short   joy1_y2;           // -128 to +127
   short   joy1_Buttons;      // Bit map for 12-buttons
   short   joy1_TopHat;       // value -1 = not pressed, otherwise 0 to 7 for selected "octant".
-
+/*
   short   joy2_x1;           // -128 to +127
   short   joy2_y1;           // -128 to +127
   short   joy2_x2;           // -128 to +127
   short   joy2_y2;           // -128 to +127
   short   joy2_Buttons;      // Bit map for 12-buttons
   short   joy2_TopHat;       // value -1 = not pressed, otherwise 0 to 7 for selected "octant".
+  */
 } TJoystick;
 TJoystick joystick;      // User defined variable access
 
@@ -63,7 +64,7 @@ variableRefRAM(joystick));
 #define getJoystickSettings(joystick) 	memcpy(joystick, joystickCopy, sizeof(joystick))
 
 bool joy1Btn(int btn) {return ((joystick.joy1_Buttons & (1 << btn)) != 0);}
-bool joy2Btn(int btn) {return ((joystick.joy2_Buttons & (1 << btn)) != 0);}
+//bool joy2Btn(int btn) {return ((joystick.joy2_Buttons & (1 << btn)) != 0);}
 
 const TMailboxIDs kJoystickQueueID = mailbox1;
 TJoystick joystickCopy;  // Internal buffer to hold the last received message from the PC. Do not use
@@ -90,14 +91,14 @@ task readMsgFromPC() {
   joystickCopy.joy1_y2 = 0;
   joystickCopy.joy1_Buttons = 0;
   joystickCopy.joy1_TopHat = -1;
-
+/*
   joystickCopy.joy2_x1 = 0;
   joystickCopy.joy2_y1 = 0;
   joystickCopy.joy2_x2 = 0;
   joystickCopy.joy2_y2 = 0;
   joystickCopy.joy2_Buttons = 0;
   joystickCopy.joy2_TopHat = -1;
-
+*/
   bool bTempUserMode, bTempStopPgm;
 
   while(true) {
@@ -123,7 +124,7 @@ task readMsgFromPC() {
               joystickCopy.UserMode = bTempUserMode;
               joystickCopy.StopPgm = bTempStopPgm;
               joystickCopy.joy1_TopHat = -1;
-              joystickCopy.joy2_TopHat = -1;
+              //joystickCopy.joy2_TopHat = -1;
             }
             bDisconnected = true;
             releaseCPU();
@@ -159,33 +160,13 @@ task readMsgFromPC() {
     joystickCopy.StopPgm            = (bool)tempBuffer[2];
 
     joystickCopy.joy1_x1            = tempBuffer[3];
-    joystickCopy.joy1_y1            = tempBuffer[4];
+    joystickCopy.joy1_y1            = -tempBuffer[4];// Negate to "natural" position
     joystickCopy.joy1_x2            = tempBuffer[5];
-    joystickCopy.joy1_y2            = tempBuffer[6];
+    joystickCopy.joy1_y2            = -tempBuffer[6];// Negate to "natural" position
     joystickCopy.joy1_Buttons       = (tempBuffer[7] & 0x00FF) | (tempBuffer[8] << 8);
     joystickCopy.joy1_TopHat        = tempBuffer[9];
 
-    joystickCopy.joy2_x1            = tempBuffer[10];
-    joystickCopy.joy2_y1            = tempBuffer[11];
-    joystickCopy.joy2_x2            = tempBuffer[12];
-    joystickCopy.joy2_y2            = tempBuffer[13];
-    joystickCopy.joy2_Buttons       = (tempBuffer[14] & 0x00FF) | (tempBuffer[15] << 8);
-    joystickCopy.joy2_TopHat        = tempBuffer[16];
-
-    joystickCopy.joy1_y1            = -joystickCopy.joy1_y1; // Negate to "natural" position
-    joystickCopy.joy1_y2            = -joystickCopy.joy1_y2; // Negate to "natural" position
-
-    joystickCopy.joy2_y1            = -joystickCopy.joy2_y1; // Negate to "natural" position
-    joystickCopy.joy2_y2            = -joystickCopy.joy2_y2; // Negate to "natural" position
-
     releaseCPU(); // end of critical section
-  }
-}
-
-void waitForStart() {
-  while(true) {
-    getJoystickSettings(joystick);
-    if(!joystick.StopPgm) break;
   }
 }
 
