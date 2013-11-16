@@ -44,7 +44,7 @@ Over the course of this engineering document, we address these problems, determi
 Additionally, the code which goes into this design will be explained.
 \end{abstract}\tableofcontents\newpage
 
-\section{Preseason Overview - Meeting 1: 2013-08-31}
+\section{Preseason Overview -- Meeting 1: 2013-08-31}
 We held a preseason meeting in order to go over scheduling, recruitment of new members, and hold a quick review of what we learned from our last season. One of the main items we discussed was our scheduling, and as a team we decided to take an aggressive approach towards our first couple of regional competitions in order to secure a place in St. Louis. Because of this, we may need to cut back on scoring the maximum number of points and instead focus on scoring a high, yet consistent number of points. We found out that we need to secure our electronics and work with the field control issues that we were issues. We also plan on placing a much larger emphasis on the CAD design of our robot than we have in our two previous years as it is an efficient way to quickly discover and troubleshoot problems prior to building the system. 
 
 Our final goal is to have two weeks of drive practice before our first regional on December 14th, important for both driver and coaches, to figure out the timing of the game, as well as things that we can or cannot do in game. Organization of the team this year will be facilitated through the use of Google Groups, which will allow all the team members and their parents to be easily contacted for meetings, and will hopefully foster some discussion over build design or game strategy. 
@@ -62,13 +62,38 @@ Members of the team have assumed different jobs to complete before the next meet
 We are considering purchasing the AndyMark field, as it would provide us a standardized field and a better replication of the interaction of the robot with the field during competition. 
 
 \newpage
-<<<<<<< .mine
-\section{Software Architecture and Implementation}
-Detailed in this section is the method and reason to our software architecture. In particular, we aimed for our architecture to be stateless with respect to the current operation, to maximize efficiency of joystick checks (which are normally slow in RobotC), and to allow dynamic and easy reassignment of both controller information during teleop, as well as both movement sequencing and heuristic decision trees during autonomous.
-=======
 \section{General Design -- Meeting 3: 2013-09-14}
 Today was our second main meeting; we discussed several different raising mechanisms, since we as a team have decided that it was the most important system of our robot.
->>>>>>> .r89
+
+Our main idea for lifting is an arm that is centered around the top corner. We are designing it to be just long enough to allow us to climb the bar as well as to clear the front block scooper. As for the material, we were looking at Delrin, and wood for our prototype. Delrin has incredible tensile strength. If a material is homogeneous then the tensile and flexural strengths are identical. However, most materials have defects in them which act to concentrate the stresses locally, which in turn cause a localized weakness. We have determined that the flexural strength is greater in the Delrin over the wood as follows. We first see that method for calculating flexural strength is: \[\sigma = \frac{3FL}{2bd^2}\] and we are looking to see which sheet can take in the maximum force, $F$. It directly follows that as we increase $b$, the width measured in in, and $d$, the  thickness measured in in, the sheet can withstand a greater force. Elementary analysis allows us to see that the Delrin is superior than the wood. This will assure us that if our wood prototype works, so should our final design. It will also be able to withstand in competition. 
+
+For the flag spinner, we discussed using some external pins or some type of rubber-esque substance to push against the edge and raise it up. We believe that a rubber-esque material will work. We plan on using 3 NXT motors to provide enough torque and speed to raise the flag. Our goal is to raise the flag in under 5 seconds. 
+
+We also spent a lot of time discussing the importance of autonomous and the structure of our code. We are looking at dynamic autonomous programs that are able to dodge other robots if need be. We are looking forward to prototyping within the next several weeks. Our meetings have mainly comprised of theorizing about code and 3D modeling our robot. We are teaching the younger students as well many of the things we have learned over the years. 
+
+\newpage
+\section{Initial Field Build -- Meeting 4: 2013-09-21}
+Today we began building the field, discussed the lifting, got mail, worked on autonomous theory, cut PVC with safety glasses, and had some fun moving our very mobile robot for a while.  In the mail we received one half of the blocks necessary for the field.
+For building we:
+\begin{enumerate}
+\item Painted the wood
+\item Cut all the pvc pipes for the flag spinner
+\item Wore safety glasses
+\item Cleaned up a lot of pvc dust
+\item Screwed temporary screws to the flanges onto the wood
+\end{enumerate}
+
+Flag Spinner:
+\begin{itemize}
+\item Involves NXT motors
+\item Gearing 6:1
+\item Rubber-esque material did not work out
+\item Using extruding pins
+\end{itemize}
+
+\newpage
+\section{Software Architecture and Implementation}
+Detailed in this section is the method and reason to our software architecture. In particular, we aimed for our architecture to be stateless with respect to the current operation, to maximize efficiency of joystick checks (which are normally slow in RobotC), and to allow dynamic and easy reassignment of both controller information during teleop, as well as both movement sequencing and heuristic decision trees during autonomous.
 
 We have chosen a particular structure for our code. We have rewritten \lstinline{JoystickDriver.c}{} to better express our needs. By removing superfluous tasks from the driver, we maintained functionality while increasing our efficiency by approximately threefold. We have created a set of utility headers: \lstinline{teleoputils.h}{}, \lstinline{autoutils.h}{}, and \lstinline{sharedutils.h}{} to address the need for macros, \lstinline{#define}{} statements, and standardized functions. Both \lstinline{teleoputils.h}{} and \lstinline{autoutils.h}{} import \lstinline{sharedutils.h}{}, so that file is never explicitly included in the main code body. Drivers were pulled from HiTechnic's online library for 3rd party sensors.
 
@@ -82,7 +107,6 @@ Teleoperated mode has the following requirements: \begin{enumerate}
 	\item{\textbf{Must} use only one controller}
 \end{enumerate}
 
-<<<<<<< .mine
 In order to implement this effectively, we have implemented several macros. These macros allow us to later set the powers of the motors without much effort. 
 
 \subsubsection{Drive Code and Reasoning}
@@ -152,31 +176,6 @@ This may appear confusing at first, however, there are a couple points: \lstinli
 
 \subsubsection{Hybrid Localization Using Gyroscopes \& Odometers}
 \paragraph{Odometric Data}
-=======
-\newpage
-\section{ -- Meeting 4: 2013-09-21}
-Today we began building the field, discussed the lifting, got mail, worked on autonomous theory, cut PVC with safety glasses, and had some fun moving our very mobile robot for a while.  In the mail we received one half of the blocks necessary for the field.
-For building we:
-\begin{enumerate}
-\item Painted the wood
-\item Cut all the pvc pipes for the flag spinner
-\item Wore safety glasses
-\item Cleaned up a lot of pvc dust
-\item Screwed temporary screws to the flanges onto the wood
-\end{enumerate}
-
-Flag Spinner:
-\begin{itemize}
-\item Involves NXT motors
-\item Gearing 6:1
-\item Rubber-esque material did not work out
-\item Using extruding pins
-\end{itemize}
-
-\newpage
-\section{Hybrid Localization Using Gyroscopes \& Odometers}
-\subsection{Odometric Data}
->>>>>>> .r89
 We begin by assigning the following constants: 
 \[D_{ot}=\frac{\text{Distance}}{\text{odometer tick}}=\pi(\text{wheel diameter})/(\text{ticks/revolution})\]\[ \theta_{ot} = \frac{\theta}{\text{odometer tick}} = \pi\left(\frac{\text{wheel diameter}}{\text{distance between wheels}}\right)/(\text{ticks/revolution})\]
 We can calculate $(x_{\mathrm{enc}}, y_{\mathrm{enc}}, \theta_{\mathrm{enc}})$ from the odometer as follows: 
