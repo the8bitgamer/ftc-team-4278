@@ -16,14 +16,9 @@
 #define A1 1
 #define A2 2
 #define A3 3
-#define AI0 0x10
-#define AI1 0x15
 
 #define HIGH true
 #define LOW false
-
-#define INPUT 0
-#define OUTPUT 1
 
 bool digitalWrite(ubyte mask) {
 	return HTSPBwriteIO(HTSPB, mask);
@@ -35,12 +30,6 @@ ubyte digitalRead(ubyte mask) {
 
 bool analogRead(ubyte mask){
 	return HTSPBreadADC(HTSPB, mask, 10);
-}
-
-//8193 is the maximum voltage - I was sure what to put since 
-//this is a DC current running. - Kian
-bool analogWrite(byte mask, int value){
-    return HTSPBwriteAnalog(HTSPB, mask, DAC_MODE_DCOUT, 8193, value);
 }
 
 /*

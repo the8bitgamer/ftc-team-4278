@@ -13,6 +13,6 @@ bool collisionCheck() {/*Check if we've collided with something => erroneous gyr
 void lockdownRobot() {/*Turn off motors, movement, end program*/}
 
 int operatingIndex = AOPINIT;
-void setAutoAction(int action) {operatingIndex = action; wait1Msec(250);}
+void setOperIndex(int action) {operatingIndex = action; wait1Msec(250);}
 
 #endif

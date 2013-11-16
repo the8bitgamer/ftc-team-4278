@@ -5,88 +5,45 @@
 #include "JoystickDriver4278.c"
 
 #define THRESHOLD 10.0
-
 #define MINX  10.0
-#define SLOPE 0.4
-#define DISTA 0.4
-#define POWSCL(x) (1.0-MINX)*
-	(x-DISTA > 0 ? ((DISTA * SLOPE - 1.0) * x)/(DISTA - 1.0) -
-		(DISTA * (SLOPE - 1.0))/(DISTA - 1.0) : SLOPE * x) + MINX
+#define SLOPE 0.5
+#define DISTA 0.6
+float powscl(int xz) {
+	float sign = (float)sgn(xz);
+	float x = abs(xz)/128.0;
+	if(x < DISTA)
+		return 100*sign * (x*SLOPE);
+	else
+		return 100*sign * ((DISTA*SLOPE*(x-1.0) - x + DISTA) / (DISTA - 1.0));
+}
 
 //Controller 1 - Left Joystick - Linear
-#define joy1x1 (abs(joystick.joy1_x1) > THRESHOLD?joystick.joy1_x1:0)
-#define joy1y1 (abs(joystick.joy1_y1) > THRESHOLD?joystick.joy1_y1:0)
-
-//Controller 2 - Left Joystick - Linear
-#define joy2x1 (abs(joystick.joy2_x1) > THRESHOLD?joystick.joy2_x1:0)
-#define joy2x1 (abs(joystick.joy2_x1) > THRESHOLD?joystick.joy2_x1:0)
-
-int expJoy(int joy){
-	     if(joy>0) return exp(map((float)joy, THRESHOLD, 128.0, 2.3025851, 4.60517));
-	else if(joy<0) return -1 * exp((map((float)(-1*joy), THRESHOLD, 127.0, 2.3025851, 4.60517)));
-	         else  return 0;
-}
-
-//Controller 1 - Left Joystick - Exponential
-#define joy1x1exp (expJoy(joy1x1))
-#define joy1y1exp (expJoy(joy1y1))
-
-//Controller 2 - Left Josytick - Exponential
-#define joy2x1exp (expJoy(joy2x1))
-#define joy2x1exp (expJoy(joy2x1))
-
-//TODO: Not sure if this actually is how it works
-void tankDrive(int x, int y){
-	motorLeft(y+x);
-	motorRight(y-x);
-}
+#define JOY_X1 (abs(joystick.joy1_x1) > THRESHOLD?joystick.joy1_x1:0)
+#define JOY_Y1 (abs(joystick.joy1_y1) > THRESHOLD?joystick.joy1_y1:0)
 
 //TODO: Map consistent macros for button-checking functions on each type (XBOX not necessary)
-#ifdef NEWLOG
-//Controller 1
-#define joy1X joy1Btn()
-#define joy1Y joy1Btn()
-#define joy1B joy1Btn()
-#define joy1A joy1Btn()
+#ifdef ALTLOG
+	#define JOY_X 0
+	#define JOY_Y 3
+	#define JOY_B 2
+	#define JOY_A 1
 
-#define joy1RightBumper joy1Btn()
-#define joy1LeftBumper joy1Btn()
+	#define JOY_RB 5
+	#define JOY_LB 4
 
-#define joy1TopHat joystick.joy1_TopHat
+	#define JOY_R3 7
+	#define JOY_L3 6
+#else //!ALTLOG
+	#define JOY_X 0
+	#define JOY_Y 3
+	#define JOY_B 2
+	#define JOY_A 1
 
-//Controller 2
-#define joy2X joy2Btn()
-#define joy2Y joy2Btn()
-#define joy2B joy2Btn()
-#define joy2A joy2Btn()
+	#define JOY_RB 5
+	#define JOY_LB 4
 
-#define joy2RightBumper joy2Btn()
-#define joy2LeftBumper joy2Btn()
+	#define JOY_R3 7
+	#define JOY_L3 6
+#endif //ALTLOG
 
-#define joy2TopHat joystick.joy2_TopHat
-
-#else OLDLOG //!NEWLOG
-//Controller 1
-#define joy1X joy1Btn()
-#define joy1Y joy1Btn()
-#define joy1B joy1Btn()
-#define joy1A joy1Btn()
-
-#define joy1RightBumper joy1Btn()
-#define joy1LeftBumper joy1Btn()
-
-#define joy1TopHat joystick.joy1_TopHat
-
-//Controller 2
-#define joy2X joy2Btn()
-#define joy2Y joy2Btn()
-#define joy2B joy2Btn()
-#define joy2A joy2Btn()
-
-#define joy2RightBumper joy2Btn()
-#define joy2LeftBumper joy2Btn()
-
-#define joy2TopHat joystick.joy2_TopHat
-#endif //NEWLOG ~! OLDLOG
-
-#endif
+#endif //__TELEOPUTILS__
