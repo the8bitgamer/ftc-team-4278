@@ -2,12 +2,18 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amsfonts}
 \usepackage{listings}
+\usepackage{color}
 \usepackage[T1]{fontenc}
 \title{\textbf{Engineering Journal}}
 \author{FTC Team 4278\\de.evolution}
-\date{}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{black}{rgb}{0,0,0}
+
 \lstset{frame=tb,
-  language=Java,
+  language=C++,
   aboveskip=3mm,
   belowskip=3mm,
   showstringspaces=false,
@@ -56,15 +62,97 @@ Members of the team have assumed different jobs to complete before the next meet
 We are considering purchasing the AndyMark field, as it would provide us a standardized field and a better replication of the interaction of the robot with the field during competition. 
 
 \newpage
+<<<<<<< .mine
+\section{Software Architecture and Implementation}
+Detailed in this section is the method and reason to our software architecture. In particular, we aimed for our architecture to be stateless with respect to the current operation, to maximize efficiency of joystick checks (which are normally slow in RobotC), and to allow dynamic and easy reassignment of both controller information during teleop, as well as both movement sequencing and heuristic decision trees during autonomous.
+=======
 \section{General Design -- Meeting 3: 2013-09-14}
 Today was our second main meeting; we discussed several different raising mechanisms, since we as a team have decided that it was the most important system of our robot.
+>>>>>>> .r89
 
-Our main idea for lifting is an arm that is centered around the top corner. We are designing it to be just long enough to allow us to climb the bar as well as to clear the front block scooper. As for the material, we were looking at Delrin, and wood for our prototype. Delrin has incredible tensile strength. If a material is homogeneous then the tensile and flexural strengths are identical. However, most materials have defects in them which act to concentrate the stresses locally, which in turn cause a localized weakness. We have determined that the flexural strength is greater in the Delrin over the wood as follows. We first see that method for calculating flexural strength is: \[\sigma = \frac{3FL}{2bd^2}\] and we are looking to see which sheet can take in the maximum force, $F$. It directly follows that as we increase $b$, the width measured in in, and $d$, the  thickness measured in in, the sheet can withstand a greater force. Elementary analysis allows us to see that the Delrin is superior than the wood. This will assure us that if our wood prototype works, so should our final design. It will also be able to withstand in competition. 
+We have chosen a particular structure for our code. We have rewritten \lstinline{JoystickDriver.c}{} to better express our needs. By removing superfluous tasks from the driver, we maintained functionality while increasing our efficiency by approximately threefold. We have created a set of utility headers: \lstinline{teleoputils.h}{}, \lstinline{autoutils.h}{}, and \lstinline{sharedutils.h}{} to address the need for macros, \lstinline{#define}{} statements, and standardized functions. Both \lstinline{teleoputils.h}{} and \lstinline{autoutils.h}{} import \lstinline{sharedutils.h}{}, so that file is never explicitly included in the main code body. Drivers were pulled from HiTechnic's online library for 3rd party sensors.
 
-For the flag spinner, we discussed using some external pins or some type of rubber-esque substance to push against the edge and raise it up. We believe that a rubber-esque material will work. We plan on using 3 NXT motors to provide enough torque and speed to raise the flag. Our goal is to raise the flag in under 5 seconds. 
+\subsection{Teleoperated Mode}
 
-We also spent a lot of time discussing the importance of autonomous and the structure of our code. We are looking at dynamic autonomous programs that are able to dodge other robots if need be. We are looking forward to prototyping within the next several weeks. Our meetings have mainly comprised of theorizing about code and 3D modeling our robot. We are teaching the younger students as well many of the things we have learned over the years. 
+Teleoperated mode has the following requirements: \begin{enumerate}
+	\item{Smooth arcade driving}
+	\item{Easy reassignment of buttons}
+	\item{Stateless control of motors and robot state}
+	\item{Efficient button control and loop checking}
+	\item{\textbf{Must} use only one controller}
+\end{enumerate}
 
+<<<<<<< .mine
+In order to implement this effectively, we have implemented several macros. These macros allow us to later set the powers of the motors without much effort. 
+
+\subsubsection{Drive Code and Reasoning}
+
+Our main body of code is run through the following:
+
+\begin{lstlisting}
+task main() {
+	while(true) {
+		getJoystickSettings(joystick);
+		checkJoystickButtons();
+		setLeftMotors(powscl(JOY_Y1)-powscl(JOY_X1)/1.75);
+		setRightMotors(powscl(JOY_Y1)+powscl(JOY_X1)/1.75);
+	}
+}
+\end{lstlisting}
+
+First, grab the current joystick configuration from the controllers. Then, check to see if any buttons have changed (\lstinline{checkJoystickButtons();}{}). Then, set the motor powers for arcade drive. 
+
+\paragraph{Power scaling} The \lstinline{powscl(int)}{} function's definition is intended to compensate for the large deadband range which occurs under standard drive conditions. The controller's user really only needs two ranges: a high-precision, low power range near zero, and a low-precision, high power range near the maxima. While an exponential function could be used, it is much slower, and much more hard to tune. Instead, we draw two lines: a shallow slope for the first segment, then a large slope for the second segment of the controller. This provides both high precision and high power where needed. As the driver does not generally use the range in $[60,85]\%$, there is no concern about the nonlinearity. The function is defined as follows:
+
+\begin{lstlisting}
+float powscl(int xz) {
+	float sign = (float)sgn(xz);
+	float x = abs(xz)/128.0;
+	if(x < DISTA)
+		return 100* sign * (x*SLOPE);
+	else
+		return 100* sign * ((DISTA*SLOPE*(x-1.0) - x + DISTA) / (DISTA - 1.0));
+}
+\end{lstlisting}
+
+\paragraph{Compensation for the Old and New Joystick Configuration} It is necessary to compensate for both the old and new controller configurations. As the controller has been updated, the buttons have changed - however, competition rules premit the use of both controllers. Therefore, we must be able to accomodate this change if necessary. We have done so through the use of a define statement: if we have \lstinline{#define ALTLOG}{}, then we switch to the old button layout.
+
+\paragraph{Button Press Checking Requires a Stateless Organization} In order to easily and effectively change the functionality of the controller, a particular design was implemented:
+
+\begin{lstlisting}
+void invokeButton(int button, bool pressed) {
+	switch(button) {
+		case JOY_X:  if(pressed) {servo[servoL1] = 156; servo[servoL2] = 26;} else {} break;
+		case JOY_Y:  if(pressed) {servo[servoL1] = 120; servo[servoL2] = 40;} else {} break;
+		case JOY_A:  if(pressed) {} else {} break;
+		case JOY_B:  if(pressed) {motor[mSpin] = 100;} else {motor[mSpin] = 0;} break;
+		case JOY_RB: if(pressed) {setArmMotors(100);}  else {setArmMotors(0);} break;
+		case JOY_LB: if(pressed) {setArmMotors(-100);} else {setArmMotors(0);} break;
+		case JOY_R3: if(pressed) {} else {} break;
+		case JOY_L3: if(pressed) {} else {} break;
+	}
+}
+
+bool t[8];
+void checkJoystickButtons() {
+	for(int i = 0; i < 8; i++) {
+		if(joy1Btn(i) != t[i]) {
+			invokeButton(i, !t[i]);
+			t[i] = joy1Btn(i);
+		}
+	}
+}
+\end{lstlisting}
+
+This may appear confusing at first, however, there are a couple points: \lstinline{checkJoystickButtons()}{} is actually called from the main loop. It simply checks to see what buttons have changed on the controller, and calls the appropriate \lstinline{invokeButton(int, bool)}{} arguments. In doing so, we can determine exact behavior on button presses with ease. As our robot is very simple, we do not need more than a handful of buttons, so most of them remain unassigned.
+
+\newpage \subsection{Autonomous Mode}
+
+\newpage \subsection{Algorithms and Cartesian Mathematics}
+
+\subsubsection{Hybrid Localization Using Gyroscopes \& Odometers}
+\paragraph{Odometric Data}
+=======
 \newpage
 \section{ -- Meeting 4: 2013-09-21}
 Today we began building the field, discussed the lifting, got mail, worked on autonomous theory, cut PVC with safety glasses, and had some fun moving our very mobile robot for a while.  In the mail we received one half of the blocks necessary for the field.
@@ -88,11 +176,12 @@ Flag Spinner:
 \newpage
 \section{Hybrid Localization Using Gyroscopes \& Odometers}
 \subsection{Odometric Data}
+>>>>>>> .r89
 We begin by assigning the following constants: 
 \[D_{ot}=\frac{\text{Distance}}{\text{odometer tick}}=\pi(\text{wheel diameter})/(\text{ticks/revolution})\]\[ \theta_{ot} = \frac{\theta}{\text{odometer tick}} = \pi\left(\frac{\text{wheel diameter}}{\text{distance between wheels}}\right)/(\text{ticks/revolution})\]
 We can calculate $(x_{\mathrm{enc}}, y_{\mathrm{enc}}, \theta_{\mathrm{enc}})$ from the odometer as follows: 
 \begin{center}
-	\begin{align}
+	\begin{align*}
 		\mathrm{d}l &= l^t_{\mathrm{enc}}-l^{t-1}_{\mathrm{enc}} \\
 		\mathrm{d}r &= r^t_{\mathrm{enc}}-r^{t-1}_{\mathrm{enc}} \\
 		\mathrm{d}D &= \frac{1}{2}(\mathrm{d}l+\mathrm{d}r)D_{ot} \\
@@ -102,21 +191,23 @@ We can calculate $(x_{\mathrm{enc}}, y_{\mathrm{enc}}, \theta_{\mathrm{enc}})$ f
 		x_{\mathrm{enc}} &= x^{t-1}_{\mathrm{enc}} + \mathrm{d}x_{\mathrm{enc}} \\
 		y_{\mathrm{enc}} &= y^{t-1}_{\mathrm{enc}} + \mathrm{d}y{\mathrm{enc}} \\
 		\theta_{\mathrm{enc}} &= \theta^{t-1}_{\mathrm{enc}} + \mathrm{d}\theta_{\mathrm{enc}}
-	\end{align}
+	\end{align*}
 \end{center}
 
 $l$ denotes the left side of the robot, and $r$ denotes the right side of the robot. $D$ denotes the distance. 
 
-\subsection{Localization Algorithm}
+\paragraph{Localization Algorithm}
 The robots motor controller calculates position and orientation $(x_{\mathrm{enc}}, y_{\mathrm{enc}}, \theta_{\mathrm{enc}})$ from encoder ticks and sends the data to an on-board computer. The mounted gyroscope communicates with a gyro driver which integrates the rate values into an absolute angle ($\theta_{\mathrm{gyro}}$). Global position $(x_{\mathrm{rbt}}, y_{\mathrm{rbt}})$ is found by transforming the translation vector from encoder space to gyroscope space. Global angle $(\theta_{\mathrm{rbt}})$ is the gyro angle ($\theta_{\mathrm{gyro}}$). The following describes the computation as an iterative algorithm: 
+
 \begin{center}
-\begin{align}
-\mathrm{d}x&=x^{t}_{\mathrm{enc}}-x^{t-1}_{\mathrm{enc}} \\
-\mathrm{d}y&=y^{t}_{\mathrm{enc}}-y^{t-1}_{\mathrm{enc}} \\
-\mathrm{d}\theta&=\theta^t_{\mathrm{gyro}}-\theta^{t}_{\mathrm{enc}} \\
-x^t_{\mathrm{rbt}}&=x^{t-1}_{\mathrm{rbt}}+\cos(\mathrm{d}\theta)\mathrm{d}x-\sin(\mathrm{d}\theta)\mathrm{d}y \\
-y^t_{\mathrm{rbt}}&=y^{t-1}_{\mathrm{rbt}}+\sin(\mathrm{d}\theta)\mathrm{d}x+\cos(\mathrm{d}\theta)\mathrm{d}y \\
-\theta^t_{\mathrm{rbt}}&=\theta^t_{\mathrm{gyro}}
-\end{align}
+	\begin{align*}
+		\mathrm{d}x&=x^{t}_{\mathrm{enc}}-x^{t-1}_{\mathrm{enc}} \\
+		\mathrm{d}y&=y^{t}_{\mathrm{enc}}-y^{t-1}_{\mathrm{enc}} \\
+		\mathrm{d}\theta&=\theta^t_{\mathrm{gyro}}-\theta^{t}_{\mathrm{enc}} \\
+		x^t_{\mathrm{rbt}}&=x^{t-1}_{\mathrm{rbt}}+\cos(\mathrm{d}\theta)\mathrm{d}x-\sin(\mathrm{d}\theta)\mathrm{d}y \\
+		y^t_{\mathrm{rbt}}&=y^{t-1}_{\mathrm{rbt}}+\sin(\mathrm{d}\theta)\mathrm{d}x+\cos(\mathrm{d}\theta)\mathrm{d}y \\
+		\theta^t_{\mathrm{rbt}}&=\theta^t_{\mathrm{gyro}}
+	\end{align*}
 \end{center}
+
 \end{document}

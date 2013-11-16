@@ -35,11 +35,12 @@ void invokeButton(int button, bool pressed) {
 
 bool t[8];
 void checkJoystickButtons() {
-	for(int i = 0; i < 8; i++)
+	for(int i = 0; i < 8; i++) {
 		if(joy1Btn(i) != t[i]) {
 			invokeButton(i, !t[i]);
 			t[i] = joy1Btn(i);
 		}
+	}
 }
 
 task main() {
