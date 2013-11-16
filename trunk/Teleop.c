@@ -41,7 +41,7 @@ short butn = JOY_BTN;
 void checkJoystickButtonsShort() {
 	if(butn != JOY_BTN){
 		for(int i = 7; i >= 0; i--) {
-			if((butn>>i) ^ (JOY_BTN>>i) != 0) {
+			if((butn>>i) ^ (JOY_BTN>>i)) {
 				invokeButton(i, ((butn & (1 << i)) == 0));
 				butn ^= 1<<i;
 			}
