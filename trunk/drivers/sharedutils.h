@@ -8,6 +8,10 @@
 #define lockArmMotors() {servo[servoL1] = 155; servo[servoL2] = 20;}
 #define unlockArmMotors() {servo[servoL1] = 120; servo[servoL2] = 40;}
 
+#define leftEncoder abs(nMotorEncoder[mLeft1])
+#define rightEncoder abs(nMotorEncoder[mRight2])
+#define clearEncoders() {nMotorEncoder[mLeft1] = 0; nMotorEncoder[mRight1] = 0;}
+
 //Distance Macros
 #define INCH 1.0
 #define CM 0.3937
@@ -18,7 +22,6 @@
 
 #define WHEELCIRC 12.566
 #define FLOORMAT 24.0
-#define CORNERtoPEND 67.882
 
 float linearScale(float x, float in_min, float in_max, float out_min, float out_max) {return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
 

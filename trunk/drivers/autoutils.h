@@ -2,9 +2,9 @@
 #define __AUTODRIVER__
 #include "sharedutils.h"
 
-bool badGyroRange(float min, float max) {/*Check if gryo angles are within a good range*/}
-bool badAcclRange(float min, float max) {/*Check if accel position is within a good range*/}
-bool collisionCheck() {/*Check if we've collided with something => erroneous gyro, accel*/}
+bool badGyroRange(float min, float max) {return false; /*Check if gryo angles are within a good range*/}
+bool badAcclRange(float min, float max) {return false; /*Check if accel position is within a good range*/}
+bool collisionCheck() {return false; /*Check if we've collided with something => erroneous gyro, accel*/}
 
 void lockdownRobot() {
 	setLeftMotors(0);

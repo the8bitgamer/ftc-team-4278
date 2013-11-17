@@ -160,11 +160,14 @@ task readMsgFromPC() {
     joystickCopy.StopPgm            = (bool)tempBuffer[2];
 
     joystickCopy.joy1_x1            = tempBuffer[3];
-    joystickCopy.joy1_y1            = -tempBuffer[4];// Negate to "natural" position
+    joystickCopy.joy1_y1            = tempBuffer[4];// Negate to "natural" position
     joystickCopy.joy1_x2            = tempBuffer[5];
-    joystickCopy.joy1_y2            = -tempBuffer[6];// Negate to "natural" position
+    joystickCopy.joy1_y2            = tempBuffer[6];// Negate to "natural" position
     joystickCopy.joy1_Buttons       = (tempBuffer[7] & 0x00FF) | (tempBuffer[8] << 8);
     joystickCopy.joy1_TopHat        = tempBuffer[9];
+
+    joystickCopy.joy1_y1            = -joystickCopy.joy1_y1; // Negate to "natural" position
+    joystickCopy.joy1_y2            = -joystickCopy.joy1_y2; // Negate to "natural" position
 
     releaseCPU(); // end of critical section
   }
