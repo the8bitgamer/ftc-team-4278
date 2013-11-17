@@ -20,54 +20,30 @@
 
 #include "drivers/autoutils.h"
 #include "drivers/hitechnic-irseeker-v2.h"
-//crt4, crt3, crt2, crt1
-#define AOPINIT 0
-#define AOPCRT1 1
-#define AOPCRT2 2
-#define AOPCRT3 3
-#define AOPCRT4 4
-#define AOPSCORE 5
-#define AOPEND 99
-
-int subindex = 0;
-void setSubindex(int sind) {subindex = sind;}
-int operatingIndex = AOPINIT;
-void setOperIndex(int action) {operatingIndex = action; subindex = 0; wait1Msec(250);}
-
-void initialize() {
-	unlockArmMotors();
-	setOperIndex(AOPCRT2);
-}
-
-void moveCenterCrate(bool left) {
-	clearEncoders();
-	setLeftMotors((left?0:-40));setRightMotors((left?-40:0) while((left?rightEncoder:leftEncoder) < getEncoderByInches(4.5));
-	clearEncoders();
-	setLeftMotors(-40); setRightMotors(-40); while(rightEncoder < getEncoderByInches(50)); setRightMotors(0); setLeftMotors(0);
-	setOperIndex(AOPSCORE);
-}
-
-void moveOutsideCrate() {
-	clearEncoders();
-	setLeftMotors(-40); while(leftEncoder < getEncoderByInches(4.5)); setLeftMotors(0);
-	wait1Msec(500);
-
-	clearEncoders();
-	setLeftMotors(-40); setRightMotors(-40); while(rightEncoder < getEncoderByInches(50)); setRightMotors(0); setLeftMotors(0);
-	setOperIndex(AOPSCORE);
-}
 
 task main() {
 	displayDiagnostics();
-	bool error = false;
-	while(!collisionCheck() && !error) {
-		switch(operatingIndex) {
-			case AOPINIT: initialize(); break;
-			case AOPCRT1: moveCrateCenter(); break;
-			case AOPCRT2: moveCrateCenter(); break;
-			case AOPEND : wait1Msec(100); break;
-
-			default: lockdownRobot();
-		}
-	}
+initialize:
+	unlockArmMotors();
+	//IR detection and selection
+crateOne:
+	//Move and score at crate 1
+crateTwo:
+	//Move and score at crate 2
+crateThree:
+	//Move and score at crate 3
+crateFour:
+	//Move and score at crate 4
+leftBridge:
+	//Move to the left bridge
+rightBridge:
+	//Move to the right bridge
+leftError:
+	//Move on error from the left bridge
+rightError:
+	//Move on error from the right bridge
+normstop:
+	while(true) wait1Msec(100);
+estop:
+	StopAllTasks();
 }

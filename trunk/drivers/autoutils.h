@@ -2,10 +2,6 @@
 #define __AUTODRIVER__
 #include "sharedutils.h"
 
-bool badGyroRange(float min, float max) {return false; /*Check if gryo angles are within a good range*/}
-bool badAcclRange(float min, float max) {return false; /*Check if accel position is within a good range*/}
-bool collisionCheck() {return false; /*Check if we've collided with something => erroneous gyro, accel*/}
-
 void lockdownRobot() {
 	setLeftMotors(0);
 	setRightMotors(0);
@@ -14,6 +10,50 @@ void lockdownRobot() {
 	while(true) wait1Msec(5);
 }
 
-int getEncoderByInches(float inches) {return floor((1440)*(inches)/WHEELCIRC);}
+int getEncoderByInches(float inches) {return floor((1440)*(abs(inches))/WHEELCIRC);}
+float getInchesByEncoder(int encode) {return (((float)abs(encode))/360.0)*WHEELCIRC;}
+
+void rbtMoveFd(float inches) {
+	int enc = getEncoderByInches(inches);
+	clearEncoders();
+	setLeftMotors(sgn(inches)*75);
+	setRightMotors(sgn(inches)*75);
+	while(leftEncoder < enc) wait1Msec(10);
+	setLeftMotors(0); setRightMotors(0);
+}
+
+void rbtArcRight(float degs) {
+	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
+	clearEncoders();
+	setLeftMotors(sgn(degs)*55);
+	while(leftEncoder < enc) wait1Msec(10);
+	setLeftMotors(0);
+}
+
+void rbtArcLeft(float degs) {
+	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
+	clearEncoders();
+	setRightMotors(sgn(degs)*55);
+	while(rightEncoder < enc) wait1Msec(10);
+	setRightMotors(0);
+}
+
+void rbtTurnRight(float degs) {
+	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
+	clearEncoders();
+	setLeftMotors(sgn(degs)*55);
+	setRightMotors(-1*sgn(degs)*55);
+	while(leftEncoder < enc) wait1Msec(10);
+	setLeftMotors(0); setRightMotors(0);
+}
+
+void rbtTurnLeft(float degs) {
+	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
+	clearEncoders();
+	setLeftMotors(-1*sgn(degs)*55);
+	setRightMotors(sgn(degs)*55);
+	while(leftEncoder < enc) wait1Msec(10);
+	setLeftMotors(0); setRightMotors(0);
+}
 
 #endif //__AUTODRIVER__
