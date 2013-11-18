@@ -28,7 +28,7 @@ void invokeButton(int button, bool pressed) {
 		case JOY_A:  if(pressed) {} else {} break;
 		case JOY_B:  if(pressed) {setSpinMotor(100);}  else {setSpinMotor(0);} break;
 
-		case JOY_RB: if(pressed) {setArmMotors(100);}  else {setArmMotors(0);} break;
+		case JOY_RB: if(pressed) {setArmMotors(50);}  else {setArmMotors(0);} break;
 		case JOY_LB: if(pressed) {setArmMotors(-100);} else {setArmMotors(0);} break;
 		case JOY_RT: if(pressed) {unlockArmMotors();} else {} break;
 		case JOY_LT: if(pressed) {lockArmMotors();} else {} break;
@@ -71,5 +71,8 @@ task main() {
 		//nxtDisplayTextLine(4, "PY: %i PX: %i", powscl(JOY_Y1), powscl(JOY_X1);
 		setLeftMotors(powscl(JOY_Y1)-powscl(JOY_X1)/1.75);
 		setRightMotors(powscl(JOY_Y1)+powscl(JOY_X1)/1.75);
+		int t = time1[T1];
+		nxtDisplayTextLine(6, "T:%i", t);
+		ClearTimer(T1);
 	}
 }

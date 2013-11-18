@@ -13,47 +13,13 @@ void lockdownRobot() {
 int getEncoderByInches(float inches) {return floor((1440)*(abs(inches))/WHEELCIRC);}
 float getInchesByEncoder(int encode) {return (((float)abs(encode))/360.0)*WHEELCIRC;}
 
-void rbtMoveFd(float inches) {
-	int enc = getEncoderByInches(inches);
-	clearEncoders();
-	setLeftMotors(sgn(inches)*75);
-	setRightMotors(sgn(inches)*75);
-	while(leftEncoder < enc) wait1Msec(10);
-	setLeftMotors(0); setRightMotors(0);
-}
+float lastLEnc = 0; float lastREnc = 0; float dt = 0;
+float lastLEVel = 0; float lastREVel = 0;
+float iLEVel = 0; float iREVel = 0;
+float kPL = 0.5; float kPR = 0.5; float kDL = 0.0; float kDR = 0.0; float kIL = 0.0; float kIR = 0.0;
+void resetPID() {lastLEnc = 0; lastREnc = 0; dt = 0; lastLEVel = 0; lastREVel = 0; iLEVel = 0; iREVel = 0; clearEncoders();}
+void pidStep(float vLeft, float vRight) {
 
-void rbtArcRight(float degs) {
-	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
-	clearEncoders();
-	setLeftMotors(sgn(degs)*55);
-	while(leftEncoder < enc) wait1Msec(10);
-	setLeftMotors(0);
-}
-
-void rbtArcLeft(float degs) {
-	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
-	clearEncoders();
-	setRightMotors(sgn(degs)*55);
-	while(rightEncoder < enc) wait1Msec(10);
-	setRightMotors(0);
-}
-
-void rbtTurnRight(float degs) {
-	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
-	clearEncoders();
-	setLeftMotors(sgn(degs)*55);
-	setRightMotors(-1*sgn(degs)*55);
-	while(leftEncoder < enc) wait1Msec(10);
-	setLeftMotors(0); setRightMotors(0);
-}
-
-void rbtTurnLeft(float degs) {
-	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
-	clearEncoders();
-	setLeftMotors(-1*sgn(degs)*55);
-	setRightMotors(sgn(degs)*55);
-	while(leftEncoder < enc) wait1Msec(10);
-	setLeftMotors(0); setRightMotors(0);
 }
 
 #endif //__AUTODRIVER__

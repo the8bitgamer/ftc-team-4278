@@ -10,7 +10,7 @@
 
 #define leftEncoder abs(nMotorEncoder[mLeft1])
 #define rightEncoder abs(nMotorEncoder[mRight2])
-#define clearEncoders() {nMotorEncoder[mLeft1] = 0; nMotorEncoder[mRight1] = 0;}
+#define clearEncoders() {nMotorEncoder[mLeft1] = 0; nMotorEncoder[mRight2] = 0;}
 
 //Distance Macros
 #define INCH 1.0
