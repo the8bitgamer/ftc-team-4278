@@ -69,8 +69,8 @@ task main() {
 		checkJoystickButtons();
 		//nxtDisplayTextLine(3, "Y1: %i X1: %i", JOY_Y1, JOY_X1);
 		//nxtDisplayTextLine(4, "PY: %i PX: %i", powscl(JOY_Y1), powscl(JOY_X1);
-		setLeftMotors(powscl(JOY_Y1)-powscl(JOY_X1)/1.75);
-		setRightMotors(powscl(JOY_Y1)+powscl(JOY_X1)/1.75);
+		setLeftMotors(powscl(JOY_Y1)-powscl(JOY_X1)/1.1);
+		setRightMotors(powscl(JOY_Y1)+powscl(JOY_X1)/1.1);
 		int t = time1[T1];
 		nxtDisplayTextLine(6, "T:%i", t);
 		ClearTimer(T1);
