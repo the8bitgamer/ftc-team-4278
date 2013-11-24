@@ -23,59 +23,32 @@
 #include "drivers/hitechnic-irseeker-v2.h"
 
 void rbtMoveFd(float inches) {
-	int enc = getEncoderByInches(inches);
-	clearEncoders();
+	int enc = getEncoderByInches(inches); clearEncoders();
 	int norm = -1.0*sgn(inches);
 
 	while(leftEncoder < enc || rightEncoder < enc) {
-		dt = (float)time1[T1]; ClearTimer(T1);
-		nxtDisplayTextLine(0, "E%i", enc);
-		nxtDisplayTextLine(1, "L%i", leftEncoder);
-		nxtDisplayTextLine(2, "R%i", rightEncoder);
-		float avgEnc = ((float)(leftEncoder+rightEncoder))/2.0;
-		float tVel = (enc - avgEnc > 3000 ? 500 : 500*(((float)(enc-avgEnc))/3000.0));
-		float lVel = ((float)(leftEncoder-lastLEnc))/dt;
-		float rVel = ((float)(rightEncoder-lastREnc))/dt;
-		lastLEnc = leftEncoder; lastREnc = rightEncoder;
+		//nxtDisplayTextLine(0, "E%i", enc);
+		//nxtDisplayTextLine(1, "L%i", leftEncoder);
+		//nxtDisplayTextLine(2, "R%i", rightEncoder);
 
-		float pLEVel = lVel-tVel;
-		float pREVel = rVel-tVel;
-		float dLEVel = ((float)(pLEVel - lastLEVel))/dt;
-		float dREVel = ((float)(pREVel - lastREVel))/dt;
-		iLEVel += dt*((float)pLEVel);
-		iREVel += dt*((float)pREVel);
-
-		float lPow = norm*kPL*pLEVel; float rPow = norm*kPR*pREVel;
-		lPow -= kDL*dLEVel; rPow -= kDR*dREVel;
-		lPow += kIL*iLEVel; rPow += kIR*iLEVel;
-
-		setLeftMotors (lPow);
-		setRightMotors(rPow);
-
-		nxtDisplayTextLine(3, "PLe:%i", pREVel);
-		nxtDisplayTextLine(4, "PRe:%i", pREVel);
-		nxtDisplayTextLine(5, "DLe:%f", dLEVel);
-		nxtDisplayTextLine(6, "DRe:%f", dREVel);
-		nxtDisplayTextLine(7, "ILe:%f", iLEVel);
-		nxtDisplayTextLine(8, "ILe:%f", iREVel);
-
-		wait1Msec(50);
+		setLeftMotors (50*norm);
+		setRightMotors(50*norm);
 	}
 	setLeftMotors(0); setRightMotors(0);
-}
-
-void rbtArcRight(float degs) {
-	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
-	clearEncoders();
-	setLeftMotors(sgn(degs)*55);
-	while(leftEncoder < enc) wait1Msec(10);
-	setLeftMotors(0);
 }
 
 void rbtArcLeft(float degs) {
 	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setRightMotors(sgn(degs)*55);
+	setLeftMotors(-1*sgn(degs)*45);
+	while(leftEncoder < enc) wait1Msec(10);
+	setLeftMotors(0);
+}
+
+void rbtArcRight(float degs) {
+	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
+	clearEncoders();
+	setRightMotors(sgn(degs)*45);
 	while(rightEncoder < enc) wait1Msec(10);
 	setRightMotors(0);
 }
@@ -83,8 +56,8 @@ void rbtArcLeft(float degs) {
 void rbtTurnRight(float degs) {
 	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setLeftMotors(sgn(degs)*55);
-	setRightMotors(-1*sgn(degs)*55);
+	setLeftMotors( -1*sgn(degs)*35);
+	setRightMotors(sgn(degs)*35);
 	while(leftEncoder < enc) wait1Msec(10);
 	setLeftMotors(0); setRightMotors(0);
 }
@@ -92,30 +65,70 @@ void rbtTurnRight(float degs) {
 void rbtTurnLeft(float degs) {
 	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setLeftMotors(-1*sgn(degs)*55);
-	setRightMotors(sgn(degs)*55);
+	setLeftMotors(sgn(degs)*35);
+	setRightMotors(-1*sgn(degs)*35);
 	while(leftEncoder < enc) wait1Msec(10);
 	setLeftMotors(0); setRightMotors(0);
 }
+
+void dumpArm() {
+	setArmMotors(60);
+	wait1Msec(1600);
+	setArmMotors(0);
+	wait1Msec(500);
+	setArmMotors(-50);
+	wait1Msec(1100);
+	setArmMotors(0);
+}
+
 
 task main() {
 	displayDiagnostics();
 initialize:
 	unlockArmMotors();
-	rbtMoveFd(48);
+	int bridgeDist = 10;
+	goto crateFour;
 	//IR detection and selection
 crateOne:
-	//Move and score at crate 1
+	rbtArcLeft(23.5); wait1Msec(150);
+	rbtMoveFd(35); wait1Msec(150);
+	rbtArcRight(-23.5); wait1Msec(150);
+	dumpArm(); goto leftBridge;
 crateTwo:
-	//Move and score at crate 2
+	rbtArcLeft(14); wait1Msec(150);
+	rbtMoveFd(32); wait1Msec(150);
+	rbtArcRight(-14); wait1Msec(150);
+	dumpArm(); bridgeDist += 8.6;
+	goto leftBridge;
 crateThree:
-	//Move and score at crate 3
+	rbtArcRight(-8.7); wait1Msec(150);
+	rbtMoveFd(33); wait1Msec(150);
+	rbtArcLeft(11.7); wait1Msec(150);
+	dumpArm(); bridgeDist += 12.2;
+	goto rightBridge;
 crateFour:
-	//Move and score at crate 4
+	rbtArcRight(-24.5); wait1Msec(150);
+	rbtMoveFd(35); wait1Msec(150);
+	rbtArcLeft(24.5); wait1Msec(150);
+	dumpArm(); goto rightBridge;
 leftBridge:
-	//Move to the left bridge
+	rbtArcRight(90); wait1Msec(150);
+	rbtMoveFd(bridgeDist); wait1Msec(150);
+	rbtArcRight(-90); wait1Msec(150);
+	rbtMoveFd(18); wait1Msec(150);
+	rbtArcRight(-94); wait1Msec(150);
+	setLeftMotors(-100); setRightMotors(-100); wait1Msec(1250);
+	setLeftMotors(0); setRightMotors(0);
+	goto normstop;
 rightBridge:
-	//Move to the right bridge
+	rbtArcLeft(-90); wait1Msec(150);
+	rbtMoveFd(bridgeDist); wait1Msec(150);
+	rbtArcLeft(88); wait1Msec(150);
+	rbtMoveFd(18); wait1Msec(150);
+	rbtArcLeft(94); wait1Msec(150);
+	setLeftMotors(-100); setRightMotors(-100); wait1Msec(1250);
+	setLeftMotors(0); setRightMotors(0);
+	goto normstop;
 leftError:
 	//Move on error from the left bridge
 rightError:
