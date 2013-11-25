@@ -80,38 +80,17 @@ void dumpArm() {
 	wait1Msec(1100);
 	setArmMotors(0);
 }
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Start Autonomous Fucntions
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+void normstop(){
+	while(true) wait1Msec(100);
+}
 
-
-task main() {
-	displayDiagnostics();
-initialize:
-	unlockArmMotors();
-	int bridgeDist = 10;
-	goto crateFour;
-	//IR detection and selection
-crateOne:
-	rbtArcLeft(23.5); wait1Msec(150);
-	rbtMoveFd(35); wait1Msec(150);
-	rbtArcRight(-23.5); wait1Msec(150);
-	dumpArm(); goto leftBridge;
-crateTwo:
-	rbtArcLeft(14); wait1Msec(150);
-	rbtMoveFd(32); wait1Msec(150);
-	rbtArcRight(-14); wait1Msec(150);
-	dumpArm(); bridgeDist += 8.6;
-	goto leftBridge;
-crateThree:
-	rbtArcRight(-8.7); wait1Msec(150);
-	rbtMoveFd(33); wait1Msec(150);
-	rbtArcLeft(11.7); wait1Msec(150);
-	dumpArm(); bridgeDist += 12.2;
-	goto rightBridge;
-crateFour:
-	rbtArcRight(-24.5); wait1Msec(150);
-	rbtMoveFd(35); wait1Msec(150);
-	rbtArcLeft(24.5); wait1Msec(150);
-	dumpArm(); goto rightBridge;
-leftBridge:
+void estop(){
+	StopAllTasks();
+}
+void leftBridge(float bridgeDist){
 	rbtArcRight(90); wait1Msec(150);
 	rbtMoveFd(bridgeDist); wait1Msec(150);
 	rbtArcRight(-90); wait1Msec(150);
@@ -119,8 +98,10 @@ leftBridge:
 	rbtArcRight(-94); wait1Msec(150);
 	setLeftMotors(-100); setRightMotors(-100); wait1Msec(1250);
 	setLeftMotors(0); setRightMotors(0);
-	goto normstop;
-rightBridge:
+	normstop();
+}
+
+void rightBridge(float bridgeDist){
 	rbtArcLeft(-90); wait1Msec(150);
 	rbtMoveFd(bridgeDist); wait1Msec(150);
 	rbtArcLeft(88); wait1Msec(150);
@@ -128,13 +109,109 @@ rightBridge:
 	rbtArcLeft(94); wait1Msec(150);
 	setLeftMotors(-100); setRightMotors(-100); wait1Msec(1250);
 	setLeftMotors(0); setRightMotors(0);
-	goto normstop;
-leftError:
-	//Move on error from the left bridge
-rightError:
-	//Move on error from the right bridge
-normstop:
-	while(true) wait1Msec(100);
-estop:
-	StopAllTasks();
+	normstop();
+}
+
+void crateOne(){
+	rbtArcLeft(23.5); wait1Msec(150);
+	rbtMoveFd(35); wait1Msec(150);
+	rbtArcRight(-23.5); wait1Msec(150);
+	dumpArm();
+	leftBridge(10.0);
+}
+
+void crateTwo(){
+	rbtArcLeft(14); wait1Msec(150);
+	rbtMoveFd(32); wait1Msec(150);
+	rbtArcRight(-14); wait1Msec(150);
+	dumpArm();
+	leftBridge(18.0);
+}
+
+void crateThree(){
+	rbtArcRight(-8.7); wait1Msec(150);
+	rbtMoveFd(33); wait1Msec(150);
+	rbtArcLeft(11.7); wait1Msec(150);
+	dumpArm();
+	rightBridge(22.0);
+}
+
+void crateFour(){
+	rbtArcRight(-24.5); wait1Msec(150);
+	rbtMoveFd(35); wait1Msec(150);
+	rbtArcLeft(24.5); wait1Msec(150);
+	dumpArm();
+	rightBridge(10.0);
+}
+
+void initialize(){
+	unlockArmMotors();
+}
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+End Autonomous Fucntions
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
+task main() {
+	displayDiagnostics();
+	initialize();
+
+	crateOne();
+	//crateTwo();
+	//crateThree();
+	//crateFour()
+
+//Old code to keep before testing
+//initialize:
+//	unlockArmMotors();
+//	float bridgeDist = 10;
+//	goto crateFour;
+//	//IR detection and selection
+//crateOne:
+//	rbtArcLeft(23.5); wait1Msec(150);
+//	rbtMoveFd(35); wait1Msec(150);
+//	rbtArcRight(-23.5); wait1Msec(150);
+//	dumpArm(); goto leftBridge;
+//crateTwo:
+//	rbtArcLeft(14); wait1Msec(150);
+//	rbtMoveFd(32); wait1Msec(150);
+//	rbtArcRight(-14); wait1Msec(150);
+//	dumpArm(); bridgeDist += 8.6;
+//	goto leftBridge;
+//crateThree:
+//	rbtArcRight(-8.7); wait1Msec(150);
+//	rbtMoveFd(33); wait1Msec(150);
+//	rbtArcLeft(11.7); wait1Msec(150);
+//	dumpArm(); bridgeDist += 12.2;
+//	goto rightBridge;
+//crateFour:
+//	rbtArcRight(-24.5); wait1Msec(150);
+//	rbtMoveFd(35); wait1Msec(150);
+//	rbtArcLeft(24.5); wait1Msec(150);
+//	dumpArm(); goto rightBridge;
+//leftBridge:
+//	rbtArcRight(90); wait1Msec(150);
+//	rbtMoveFd(bridgeDist); wait1Msec(150);
+//	rbtArcRight(-90); wait1Msec(150);
+//	rbtMoveFd(18); wait1Msec(150);
+//	rbtArcRight(-94); wait1Msec(150);
+//	setLeftMotors(-100); setRightMotors(-100); wait1Msec(1250);
+//	setLeftMotors(0); setRightMotors(0);
+//	goto normstop;
+//rightBridge:
+//	rbtArcLeft(-90); wait1Msec(150);
+//	rbtMoveFd(bridgeDist); wait1Msec(150);
+//	rbtArcLeft(88); wait1Msec(150);
+//	rbtMoveFd(18); wait1Msec(150);
+//	rbtArcLeft(94); wait1Msec(150);
+//	setLeftMotors(-100); setRightMotors(-100); wait1Msec(1250);
+//	setLeftMotors(0); setRightMotors(0);
+//	goto normstop;
+//leftError:
+//	//Move on error from the left bridge
+//rightError:
+//	//Move on error from the right bridge
+//normstop:
+//	while(true) wait1Msec(100);
+//estop:
+//	StopAllTasks();
 }
