@@ -146,8 +146,11 @@ void crateFour(){
 	dumpArm(); rightBridge(11.5);
 }
 
-void initialize(){
+void initializeRobot(){
 	unlockArmMotors();
+}
+
+int crateButtons() {
 	int crate = 0;
 	while(!nNxtButtonPressed == BTN_CENTER) {
 		if(crate > 0) nxtDisplayTextLine(3, "Crate? %i", crate);
@@ -156,8 +159,10 @@ void initialize(){
 		if(nNxtButtonPressed == BTN_RIGHT) {crate++; while(nNxtButtonPressed == BTN_RIGHT);}
 		if(crate < 0) crate = 4; if(crate > 4) crate = 0;
 	}
-	crateSelect(crate);
+	return crate;
 }
+
+int crateIR(){};
 
 void crateSelect(int crate){
 	     if(crate == 0) crate = crateIR();
@@ -175,5 +180,8 @@ void crateSelect(int crate){
 
 task main() {
 	displayDiagnostics();
-	initialize();
+	initializeRobot();
+	int crate = crateButtons();
+	//waitForStart();
+	crateSelect(crate);
 }
