@@ -22,17 +22,11 @@
 #include "drivers/autoutils.h"
 #include "drivers/hitechnic-irseeker-v2.h"
 
-#define IR 0
-
 void rbtMoveFd(float inches) {
 	int enc = getEncoderByInches(inches); clearEncoders();
 	int norm = -1.0*sgn(inches);
 
 	while(leftEncoder < enc || rightEncoder < enc) {
-		//nxtDisplayTextLine(0, "E%i", enc);
-		//nxtDisplayTextLine(1, "L%i", leftEncoder);
-		//nxtDisplayTextLine(2, "R%i", rightEncoder);
-
 		setLeftMotors (50*norm);
 		setRightMotors(50*norm);
 	}
@@ -44,10 +38,6 @@ void rbtMoveFdTime(float inches, int msec) {
 	int norm = -1.0*sgn(inches);
 	ClearTimer(T3);
 	while(leftEncoder < enc || rightEncoder < enc || time1[T3] < msec) {
-		//nxtDisplayTextLine(0, "E%i", enc);
-		//nxtDisplayTextLine(1, "L%i", leftEncoder);
-		//nxtDisplayTextLine(2, "R%i", rightEncoder);
-
 		setLeftMotors (100*norm);
 		setRightMotors(100*norm);
 	}
@@ -97,96 +87,93 @@ void dumpArm() {
 	wait1Msec(1100);
 	setArmMotors(0);
 }
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-Start Autonomous Fucntions
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-void normstop(){
-	while(true) wait1Msec(100);
-}
 
-void estop(){
-	StopAllTasks();
-}
+void normstop() {while(true) wait1Msec(100);}
+void estop() {StopAllTasks();}
+void pause() {wait1Msec(150);}
+
+/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * Start Autonomous Fucntions
+ *!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
 void leftBridge(float bridgeDist){
-	rbtArcRight(90); wait1Msec(150);
-	rbtMoveFd(bridgeDist); wait1Msec(150);
-	rbtArcRight(-90); wait1Msec(150);
-	rbtMoveFd(18); wait1Msec(150);
-	rbtArcRight(-94); wait1Msec(150);
+	rbtArcRight(90); pause();
+	rbtMoveFd(bridgeDist); pause();
+	rbtArcRight(-90); pause();
+	rbtMoveFd(18); pause();
+	rbtArcRight(-94); pause();
 	rbtMoveFdTime(32, 5000);
 	normstop();
 }
 
 void rightBridge(float bridgeDist){
-	rbtArcLeft(-90); wait1Msec(150);
-	rbtMoveFd(bridgeDist); wait1Msec(150);
-	rbtArcLeft(88); wait1Msec(150);
-	rbtMoveFd(18); wait1Msec(150);
-	rbtArcLeft(94); wait1Msec(150);
+	rbtArcLeft(-90); pause();
+	rbtMoveFd(bridgeDist); pause();
+	rbtArcLeft(88); pause();
+	rbtMoveFd(18); pause();
+	rbtArcLeft(94); pause();
 	rbtMoveFdTime(32, 5000);
 	normstop();
 }
 
 void crateOne(){
-	rbtArcLeft(23.5); wait1Msec(150);
-	rbtMoveFd(35); wait1Msec(150);
-	rbtArcRight(-23.5); wait1Msec(150);
+	rbtArcLeft(23.5); pause();
+	rbtMoveFd(35); pause();
+	rbtArcRight(-23.5); pause();
 	dumpArm();
 	leftBridge(10.0);
 }
 
 void crateTwo(){
-	rbtArcLeft(11); wait1Msec(150);
-	rbtMoveFd(32); wait1Msec(150);
-	rbtArcRight(-14); wait1Msec(150);
+	rbtArcLeft(11); pause();
+	rbtMoveFd(32); pause();
+	rbtArcRight(-14); pause();
 	dumpArm();
 	leftBridge(21.5);
 }
 
 void crateThree(){
-	rbtArcRight(-8.7); wait1Msec(150);
-	rbtMoveFd(33); wait1Msec(150);
-	rbtArcLeft(11.7); wait1Msec(150);
-	dumpArm();
-	rightBridge(22.0);
+	rbtArcRight(-8.7); pause();
+	rbtMoveFd(33); pause();
+	rbtArcLeft(11.7); pause();
+	dumpArm(); rightBridge(22.0);
 }
 
 void crateFour(){
-	rbtArcRight(-24.5); wait1Msec(150);
-	rbtMoveFd(35); wait1Msec(150);
-	rbtArcLeft(24.5); wait1Msec(150);
-	dumpArm();
-	rightBridge(11.5);
+	rbtArcRight(-24.5); pause();
+	rbtMoveFd(35); pause();
+	rbtArcLeft(24.5); pause();
+	dumpArm(); rightBridge(11.5);
 }
 
 void initialize(){
 	unlockArmMotors();
+	int crate = 0;
+	while(!nNxtButtonPressed == BTN_CENTER) {
+		if(crate > 0) nxtDisplayTextLine(3, "Crate? %i", crate);
+		else nxtDisplayTextLine(3, "Crate? IR");
+		if(nNxtButtonPressed == BTN_LEFT)  {crate--; while(nNxtButtonPressed == BTN_LEFT);}
+		if(nNxtButtonPressed == BTN_RIGHT) {crate++; while(nNxtButtonPressed == BTN_RIGHT);}
+		if(crate < 0) crate = 4; if(crate > 4) crate = 0;
+	}
+	crateSelect(crate);
 }
 
 void crateSelect(int crate){
-	switch(crate){
-		case 0:
-			break;
-		case 1:
-			crateOne();
-			break;
-		case 2:
-			crateTwo();
-			break;
-		case 3:
-			crateThree();
-			break;
-		case 4:
-			crateFour();
-			break;
-	}
+	     if(crate == 0) crate = crateIR();
+			 if(crate == 1) crateOne();
+	else if(crate == 2) crateTwo();
+	else if(crate == 3) crateThree();
+	else if(crate == 4) crateFour();
+
+	StopAllTasks();
 }
+
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-End Autonomous Fucntions
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+ * End Autonomous Fucntions
+ *!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
 task main() {
 	displayDiagnostics();
 	initialize();
-	crateSelect(1);
 }

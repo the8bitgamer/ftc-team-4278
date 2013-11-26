@@ -24,6 +24,11 @@
 #define WHEELBASE 15.309
 #define FLOORMAT 24.0
 
+#define BTN_CENTER 3
+#define BTN_RIGHT  2
+#define BTN_LEFT   1
+#define BTN_BACK   0
+
 float linearScale(float x, float in_min, float in_max, float out_min, float out_max) {return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
 
 void displayDiagnostics() {
