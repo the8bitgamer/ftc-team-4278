@@ -173,4 +173,12 @@ task readMsgFromPC() {
   }
 }
 
+void waitForStart() {
+  while (true) {
+    getJoystickSettings(joystick);
+    if (!joystick.StopPgm) break;
+  }
+  return;
+}
+
 #endif

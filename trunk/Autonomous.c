@@ -19,6 +19,7 @@
 #pragma config(Servo,  srvo_S2_C1_6,    servo6,               tServoNone)
 //*!!Code automagically venerated by 'ROBOTC' configuration lizard               !!*//
 
+#include "drivers/JoystickDriver4278.c"
 #include "drivers/autoutils.h"
 #include "drivers/hitechnic-irseeker-v2.h"
 
@@ -27,8 +28,8 @@ void rbtMoveFd(float inches) {
 	int norm = -1.0*sgn(inches);
 
 	while(leftEncoder < enc || rightEncoder < enc) {
-		setLeftMotors (50*norm);
-		setRightMotors(50*norm);
+		setLeftMotors (40*norm);
+		setRightMotors(40*norm);
 	}
 	setLeftMotors(0); setRightMotors(0);
 }
@@ -37,7 +38,7 @@ void rbtMoveFdTime(float inches, int msec) {
 	int enc = getEncoderByInches(inches); clearEncoders();
 	int norm = -1.0*sgn(inches);
 	ClearTimer(T3);
-	while(leftEncoder < enc || rightEncoder < enc || time1[T3] < msec) {
+	while(leftEncoder < enc && rightEncoder < enc && time1[T3] < msec) {
 		setLeftMotors (100*norm);
 		setRightMotors(100*norm);
 	}
@@ -47,7 +48,7 @@ void rbtMoveFdTime(float inches, int msec) {
 void rbtArcLeft(float degs) {
 	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setLeftMotors(-1*sgn(degs)*45);
+	setLeftMotors(-1*sgn(degs)*35);
 	while(leftEncoder < enc) wait1Msec(10);
 	setLeftMotors(0);
 }
@@ -55,7 +56,7 @@ void rbtArcLeft(float degs) {
 void rbtArcRight(float degs) {
 	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setRightMotors(sgn(degs)*45);
+	setRightMotors(sgn(degs)*35);
 	while(rightEncoder < enc) wait1Msec(10);
 	setRightMotors(0);
 }
@@ -63,8 +64,8 @@ void rbtArcRight(float degs) {
 void rbtTurnRight(float degs) {
 	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setLeftMotors( -1*sgn(degs)*35);
-	setRightMotors(sgn(degs)*35);
+	setLeftMotors( -1*sgn(degs)*30);
+	setRightMotors(sgn(degs)*30);
 	while(leftEncoder < enc) wait1Msec(10);
 	setLeftMotors(0); setRightMotors(0);
 }
@@ -72,25 +73,25 @@ void rbtTurnRight(float degs) {
 void rbtTurnLeft(float degs) {
 	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setLeftMotors(sgn(degs)*35);
-	setRightMotors(-1*sgn(degs)*35);
+	setLeftMotors(sgn(degs)*30);
+	setRightMotors(-1*sgn(degs)*30);
 	while(leftEncoder < enc) wait1Msec(10);
 	setLeftMotors(0); setRightMotors(0);
 }
 
 void dumpArm() {
-	setArmMotors(60);
-	wait1Msec(1600);
+	setArmMotors(50);
+	wait1Msec(1550);
 	setArmMotors(0);
-	wait1Msec(500);
+	wait1Msec(400);
 	setArmMotors(-50);
-	wait1Msec(1100);
+	wait1Msec(900);
 	setArmMotors(0);
 }
 
 void normstop() {while(true) wait1Msec(100);}
 void estop() {StopAllTasks();}
-void pause() {wait1Msec(150);}
+void pause() {wait1Msec(175);}
 
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  * Start Autonomous Fucntions
@@ -102,7 +103,7 @@ void leftBridge(float bridgeDist){
 	rbtArcRight(-90); pause();
 	rbtMoveFd(18); pause();
 	rbtArcRight(-94); pause();
-	rbtMoveFdTime(32, 5000);
+	rbtMoveFdTime(25, 5000);
 	normstop();
 }
 
@@ -112,38 +113,38 @@ void rightBridge(float bridgeDist){
 	rbtArcLeft(88); pause();
 	rbtMoveFd(18); pause();
 	rbtArcLeft(94); pause();
-	rbtMoveFdTime(32, 5000);
+	rbtMoveFdTime(25, 5000);
 	normstop();
 }
 
 void crateOne(){
-	rbtArcLeft(23.5); pause();
+	rbtArcLeft(26.0); pause();
 	rbtMoveFd(35); pause();
-	rbtArcRight(-23.5); pause();
+	rbtArcRight(-24.0); pause();
 	dumpArm();
-	leftBridge(10.0);
+	leftBridge(11.5);
 }
 
 void crateTwo(){
-	rbtArcLeft(11); pause();
+	rbtArcLeft(16); pause();
 	rbtMoveFd(32); pause();
-	rbtArcRight(-14); pause();
+	rbtArcRight(-15); pause();
 	dumpArm();
-	leftBridge(21.5);
+	leftBridge(18.5);
 }
 
 void crateThree(){
-	rbtArcRight(-8.7); pause();
-	rbtMoveFd(33); pause();
-	rbtArcLeft(11.7); pause();
+	rbtArcRight(-8.3); pause();
+	rbtMoveFd(34); pause();
+	rbtArcLeft(14.7); pause();
 	dumpArm(); rightBridge(22.0);
 }
 
 void crateFour(){
-	rbtArcRight(-24.5); pause();
+	rbtArcRight(-22.5); pause();
 	rbtMoveFd(35); pause();
-	rbtArcLeft(24.5); pause();
-	dumpArm(); rightBridge(11.5);
+	rbtArcLeft(22.5); pause();
+	dumpArm(); rightBridge(12.0);
 }
 
 void initializeRobot(){
@@ -181,7 +182,7 @@ void crateSelect(int crate){
 task main() {
 	displayDiagnostics();
 	initializeRobot();
-	int crate = crateButtons();
-	//waitForStart();
+	int crate = 4;//crateButtons();
+	waitForStart();
 	crateSelect(crate);
 }
