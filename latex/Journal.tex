@@ -3,7 +3,6 @@
 \usepackage{amsmath,amsfonts}
 \usepackage{listings}
 \usepackage{color}
-\usepackage[T1]{fontenc}
 \title{\textsc{\textbf{Engineering and Design Journal}}}
 \author{\textsc{FTC Team 4278 de.evolution}}
 \date{}
@@ -170,7 +169,7 @@ In order to implement this effectively, we have implemented several macros. Thes
 
 Our main body of code is run through the following:
 
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=4]
 task main() {
 	while(true) {
 		getJoystickSettings(joystick);
@@ -185,7 +184,7 @@ First, grab the current joystick configuration from the controllers. Then, check
 
 \paragraph{Power scaling} The \lstinline{powscl(int)}{} function's definition is intended to compensate for the large deadband range which occurs under standard drive conditions. The controller's user really only needs two ranges: a high-precision, low power range near zero, and a low-precision, high power range near the maxima. While an exponential function could be used, it is much slower, and much more hard to tune. Instead, we draw two lines: a shallow slope for the first segment, then a large slope for the second segment of the controller. This provides both high precision and high power where needed. As the driver does not generally use the range in $[60,85]\%$, there is no concern about the nonlinearity. The function is defined as follows:
 
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=4]
 float powscl(int xz) {
 	float sign = (float)sgn(xz);
 	float x = abs(xz)/128.0;
@@ -200,7 +199,7 @@ float powscl(int xz) {
 
 \paragraph{Button Press Checking Requires a Stateless Organization} In order to easily and effectively change the functionality of the controller, a particular design was implemented:
 
-\begin{lstlisting}
+\begin{lstlisting}[tabsize=4]
 void invokeButton(int button, bool pressed) {
 	switch(button) {
 		case JOY_X:  if(pressed) {servo[servoL1] = 156; servo[servoL2] = 26;} else {} break;
@@ -219,7 +218,7 @@ void checkJoystickButtons() {
 	for(int i = 0; i < 8; i++) {
 		if(joy1Btn(i) != t[i]) {
 			invokeButton(i, !t[i]);
-			t[i] = !t[i];
+			t[i] = !t[i]; 
 		}
 	}
 }
