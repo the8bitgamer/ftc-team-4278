@@ -28,7 +28,7 @@ ubyte digitalRead(ubyte mask) {
 	return HTSPBreadIO(HTSPB, mask);
 }
 
-bool analogRead(ubyte mask){
+short analogRead(ubyte mask){
 	return HTSPBreadADC(HTSPB, mask, 10);
 }
 
