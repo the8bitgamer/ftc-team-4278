@@ -82,8 +82,9 @@ In order to alleviate this problem, we are using allowed hexagonal axles. These 
 \paragraph{Arm Support} We decided the arm needed to be strong enough to lift the robot. During the construction of the first prototype of the arm, we created a way for the arm to support the entire robot, but miscalculated the shearing strength of the wooden collars which locked the arm in place. As a result, the torque on the arm caused by gravity caused the wooden collars to strip internally. We have since replaced them with custom-built clamps, designed after hex wheel hubs. More on arm design to come.
 
 \newpage \subsection{TODO: Final Design Overview}
-
-\newpage \subsection{Wheelbase and Arm Design}
+\newpage \subsection{TODO: Wheelbase and Arm Design}
+\newpage \subsection{TODO: Gear Ratios and Mathematics}
+\newpage \subsection{TODO: Solidworks and CAD Modeling}
 
 \newpage \section{Meetings and Proceedings}
 In this section, we detail exactly what happened at select meetings, whose events bear particular significance over the development of our robot.
@@ -95,8 +96,7 @@ Our final goal is to have two weeks of drive practice before our first regional 
 
 We also decided to meet a few hours after the game was released next week so team members could think about strategies ahead of time and add to the strategy discussion of our first meeting of the season. The meeting was fairly short, but got the team in the right mindset for the upcoming season, and got everyone excited for the  new season!
 
-\newpage
-\subsection{Initial Design -- Meeting 2: 2013-09-07}
+\newpage \subsection{Initial Design -- Meeting 2: 2013-09-07}
 The team decided last week to meet a few hours after the game video and rules were released, so by the time our meeting started, everyone had an idea of how they thought the robot should work, and be built. Fortunately, most team members were on the same page and wanted to focus on scoring as many blocks into the baskets as possible, in a manner that would allow for a integration in the lifting and scoring mechanism. We decided to focus on every aspect of the game for our qualifiers, since it seems like we could consolidate all of the mechanisms into very few.
 
 After a fairly long strategy discussion, some ideas were thrown around as to how to pick up and score the blocks, since we always have a difficult time getting our game pieces, and a rough idea of a mechanism was developed that would use a roller system and a block hopper that would pick up and score the blocks. There is still significant discussion considering the way we will go about constructing a lifting mechanism, with different arguments for and against a rotating arm and a more standard but perhaps less efficient forklift, similar to ``Ring It Up!''. Some of our team members have some experience with constructing forklifts from prior FTC seasons, so we have some idea of what kind of issues we might come across with that kind of design. One thing we discussed was making sure we construct and purchase our materials with a little more regard for quality than we have in previous years, but we wanted to focus on simplicity this season as it worked out very well for us three years ago, and the ideas we are thinking of currently all seem to fit this idea.
@@ -105,8 +105,7 @@ Members of the team have assumed different jobs to complete before the next meet
 
 We are considering purchasing the AndyMark field, as it would provide us a standardized field and a better replication of the interaction of the robot with the field during competition. 
 
-\newpage
-\subsection{General Design -- Meeting 3: 2013-09-14}
+\newpage \subsection{General Design -- Meeting 3: 2013-09-14}
 Today was our second main meeting; we discussed several different raising mechanisms, since we as a team have decided that it was the most important system of our robot.
 
 Our main idea for lifting is an arm that is centered around the top corner. We are designing it to be just long enough to allow us to climb the bar as well as to clear the front block scooper. As for the material, we were looking at Delrin, and wood for our prototype. Delrin has incredible tensile strength. If a material is homogeneous then the tensile and flexural strengths are identical. However, most materials have defects in them which act to concentrate the stresses locally, which in turn cause a localized weakness. We have determined that the flexural strength is greater in the Delrin over the wood as follows. We first see that method for calculating flexural strength is: \[\sigma = \frac{3FL}{2bd^2}\] and we are looking to see which sheet can take in the maximum force, $F$. It directly follows that as we increase $b$, the width measured in in, and $d$, the  thickness measured in in, the sheet can withstand a greater force. Elementary analysis allows us to see that the Delrin is superior than the wood. This will assure us that if our wood prototype works, so should our final design. It will also be able to withstand in competition. 
@@ -115,8 +114,7 @@ For the flag spinner, we discussed using some external pins or some type of rubb
 
 We also spent a lot of time discussing the importance of autonomous and the structure of our code. We are looking at dynamic autonomous programs that are able to dodge other robots if need be. We are looking forward to prototyping within the next several weeks. Our meetings have mainly comprised of theorizing about code and 3D modeling our robot. We are sharing with the younger students much of the knowledge we have learned over the years as well. 
 
-\newpage
-\subsection{Initial Field Build -- Meeting 4: 2013-09-21}
+\newpage \subsection{Initial Field Build -- Meeting 4: 2013-09-21}
 Today we began building the field, discussed the lifting, got mail, worked on autonomous theory, cut PVC with safety glasses, and had some fun moving our very mobile robot for a while.  In the mail we received one half of the blocks necessary for the field.
 For building we:
 \begin{enumerate}
@@ -135,18 +133,7 @@ Flag Spinner:
 \item Using extruding pins
 \end{itemize}
 
-\newpage
-
-\subsection{Autonomous STUFF}
-\begin{center}
-	\begin{tabular}{|c|c|c|c|c|}
-		\hline
-		 & \textbf{Crate 1} & \textbf{Crate 2} & \textbf{Crate 3} & \textbf{Crate 4} \\ \hline
-		\textbf{Object} & 0/0 & 0/0 & 0/0 & 0/0\\ \hline
-		\textbf{Nobjct} & 0/0 & 0/0 & 0/0 & 0/0\\ 
-		\hline
-	\end{tabular}
-\end{center}
+\newpage \subsection{TODO: More meetings! (At least 8-10)}
 
 \section{Software Architecture and Implementation}
 Detailed in this section is the method and reason to our software architecture. In particular, we aimed for our architecture to be stateless with respect to the current operation, to maximize efficiency of joystick checks (which are normally slow in RobotC), and to allow dynamic and easy reassignment of both controller information during teleop, as well as both movement sequencing and heuristic decision trees during autonomous.
@@ -264,5 +251,9 @@ The robots motor controller calculates position and orientation $(x_{\mathrm{enc
 		\theta^t_{\mathrm{rbt}}&=\theta^t_{\mathrm{gyro}}
 	\end{align*}
 \end{center}
+
+\newpage \section{TODO: Outreach}
+\subsection{TODO: Helping other teams online}
+\subsection{TODO: Anything else?}
 
 \end{document}
