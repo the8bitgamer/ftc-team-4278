@@ -2,7 +2,7 @@
 #pragma config(Hubs,  S2, HTServo,  none,     none,     none)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S3,     sensorIR,       sensorHiTechnicIRSeeker1200)
+#pragma config(Sensor, S3,     sensorIR,         sensorI2CCustom)
 #pragma config(Sensor, S4,     HTSPB,                sensorI2CCustom9V)
 #pragma config(Motor,  mtr_S1_C1_1,     mRight1,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     mRight2,       tmotorTetrix, openLoop, encoder)
@@ -22,6 +22,7 @@
 
 #include "drivers/teleoputils.h"
 #include "drivers/wiringnxt.h"
+#include "drivers/hitechnic-irseeker-v2.h"
 
 void invokeButton(int button, bool pressed) {
 	switch(button) {
@@ -57,6 +58,7 @@ void checkJoystickButtons() {
 task main() {
 	displayDiagnostics();
 	unlockArmMotors();
+	HTIRS2setDSPMode(sensorIR, 0);
 	//int ac1, ac2, ac3, ac4, ac5;
 	while(true) {
 		getJoystickSettings(joystick);
@@ -75,9 +77,10 @@ task main() {
 		setRightMotors(powscl(JOY_Y1)+powscl(JOY_X1)/1.1);
 		int t = time1[T1];
 		nxtDisplayTextLine(6, "T:%i", t);
-		float accum = 0;
-		for(short i=0;i<10;i++){accum+=(analogRead(A3)*0.4);}
-		nxtDisplayTextLine(3, "A3: %f",accum/10 );
+		//float accum = 0;
+		int dir, strength;
+		HTIRS2test(sensorIR, dir, strength);
+		nxtDisplayTextLine(3, "A3: %d %d", dir, strength);
 		ClearTimer(T1);
 	}
 }

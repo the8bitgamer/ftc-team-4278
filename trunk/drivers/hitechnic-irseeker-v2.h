@@ -115,7 +115,6 @@ int HTIRS2readDCDir(tSensors link) {
   return HTIRS2_I2CReply[0];
 }
 
-
 /**
  * Read the value of the DC Direction data register and return it.
  * @param muxsensor the SMUX sensor port number
@@ -282,7 +281,6 @@ int HTIRS2readACDir(tSensors link) {
 
   return HTIRS2_I2CReply[0];
 }
-
 
 /**
  * Read the value of the AC Direction data register and return it.

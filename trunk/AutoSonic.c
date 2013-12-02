@@ -1,6 +1,6 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTMotor)
 #pragma config(Hubs,  S2, HTServo,  none,     none,     none)
-#pragma config(Sensor, S3,     sensorIR,       sensorHiTechnicIRSeeker1200)
+#pragma config(Sensor, S3,     sensorIR,         sensorI2CCustom)
 #pragma config(Sensor, S4,     HTSPB,                sensorI2CCustom9V)
 #pragma config(Motor,  mtr_S1_C1_1,     mRight1,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     mRight2,       tmotorTetrix, openLoop, encoder)
@@ -150,7 +150,7 @@ void crateOne(){
 	rbtArcRight(-25.5); pause();
 	dumpArm();
 	rbtArcRight(88.5); pause();
-	if(pathClear(29)) rightBridge(11.5);
+	if(pathClear(29)) rightBridge(16);
 	else farLeftBridge(39.5);
 }
 
@@ -160,7 +160,7 @@ void crateTwo(){
 	rbtArcRight(-15); pause();
 	dumpArm();
 	rbtArcRight(90); pause();
-	if(pathClear(50)) rightBridge(22.5);
+	if(pathClear(50)) rightBridge(29);
 	else farLeftBridge(30);
 }
 
@@ -199,11 +199,58 @@ int crateButtons() {
 	}
 	return crate;
 }
+long nNumbCyles;
+long nInits = 0;
+string sTextLines[8];
+void displayText(int nLineNumber, const string cChar, int nValueDC, int nValueAC);
 
-int crateIR(){};
+int crateIR(tSensors link, bool debug){
+	int dcS1, dcS2, dcS3, dcS4, dcS5 = 0;
+	int acS1, acS2, acS3, acS4, acS5 = 0;
+	int aSum, dSum;
+	//for(;debug;){
+if (!HTIRS2readAllDCStrength(sensorIR, dcS1, dcS2, dcS3, dcS4, dcS5)){}
+        //break; // I2C read error occurred
+      if (!HTIRS2readAllACStrength(sensorIR, acS1, acS2, acS3, acS4, acS5 )){}
+       // break; // I2C read error occurred
+
+        aSum = acS1+acS2+acS3+acS4+acS5;
+        dSum = dcS1+dcS2+dcS3+dcS4+dcS5;
+      displayText(1, "D", dSum, aSum);
+      displayText(2, "1", dcS1, acS1);
+      displayText(3, "2", dcS2, acS2);
+      displayText(4, "3", dcS3, acS3);
+      displayText(5, "4", dcS4, acS4);
+      displayText(6, "5", dcS5, acS5);
+	//}
+	if(!debug){
+		if(dSum<=2 && (aSum > 25 && aSum < 31)){return 4;}
+		else if((dSum==3 || dSum == 4 || dSum == 5) && (aSum > 27 && aSum<45) && acS3 == 0){return 3;}
+		else if((dSum==3 || dSum == 4) && (aSum > 27 && aSum<60)){return 2;}
+		else return 1;
+	}
+	return 1;
+}
+
+void displayText(int nLineNumber, const string cChar, int nValueDC, int nValueAC)
+{
+  string sTemp;
+
+  StringFormat(sTemp, "%4d  %4d", nValueDC, nValueAC);
+  // Check if the new line is the same as the previous one
+  // Only update screen if it's different.
+  if (sTemp != sTextLines[nLineNumber])
+  {
+    string sTemp2;
+
+    sTextLines[nLineNumber] = sTemp;
+    StringFormat(sTemp2, "%s:  %s", cChar, sTemp);
+    nxtDisplayTextLine(nLineNumber, sTemp2);
+  }
+}
 
 void crateSelect(int crate){
-	     if(crate == 0) crate = crateIR();
+	     if(crate == 0) crate = crateIR(sensorIR, false);
 			 if(crate == 1) crateOne();
 	else if(crate == 2) crateTwo();
 	else if(crate == 3) crateThree();
@@ -219,7 +266,7 @@ void crateSelect(int crate){
 task main() {
 	displayDiagnostics();
 	initializeRobot();
-	int crate = 1;//crateButtons();
+	int crate = 0;//crateButtons();
 	waitForStart();
 	crateSelect(crate);
 }
