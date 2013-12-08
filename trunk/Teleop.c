@@ -78,9 +78,9 @@ task main() {
 		int t = time1[T1];
 		nxtDisplayTextLine(6, "T:%i", t);
 		//float accum = 0;
-		int dir, strength;
-		HTIRS2test(sensorIR, dir, strength);
-		nxtDisplayTextLine(3, "A3: %d %d", dir, strength);
+		//int dir, strength;
+		//HTIRS2test(sensorIR, dir, strength);
+		nxtDisplayTextLine(3, "AC: %d DC: %d", HTIRS2readACDir(sensorIR), HTIRS2readDCDir(sensorIR));
 		ClearTimer(T1);
 	}
 }
