@@ -1,0 +1,82 @@
+\section{Meetings and Proceedings}
+In this section, we detail exactly what happened at select meetings, whose events bear particular significance over the development of our robot.
+
+\subsection{Preseason Overview -- Meeting 1: 2013-08-31}
+We held a preseason meeting in order to go over scheduling, recruitment of new members, and hold a quick review of what we learned from our last season. One of the main items we discussed was our scheduling, and as a team we decided to take an aggressive approach towards our first couple of regional competitions in order to secure a place in St. Louis. Because of this, we may need to cut back on scoring the maximum number of points and instead focus on scoring a high, yet consistent number of points. We found out that we need to secure our electronics and work with the field control issues that we were issues. We also plan on placing a much larger emphasis on the CAD design of our robot than we have in our two previous years as it is an efficient way to quickly discover and troubleshoot problems prior to building the system. 
+
+Our final goal is to have two weeks of drive practice before our first regional on December 14th, important for both driver and coaches, to figure out the timing of the game, as well as things that we can or cannot do in game. Organization of the team this year will be facilitated through the use of Google Groups, which will allow all the team members and their parents to be easily contacted for meetings, and will hopefully foster some discussion over build design or game strategy. 
+
+We also decided to meet a few hours after the game was released next week so team members could think about strategies ahead of time and add to the strategy discussion of our first meeting of the season. The meeting was fairly short, but got the team in the right mindset for the upcoming season, and got everyone excited for the  new season!
+
+\newpage \subsection{Initial Design -- Meeting 2: 2013-09-07}
+The team decided last week to meet a few hours after the game video and rules were released, so by the time our meeting started, everyone had an idea of how they thought the robot should work, and be built. Fortunately, most team members were on the same page and wanted to focus on scoring as many blocks into the baskets as possible, in a manner that would allow for a integration in the lifting and scoring mechanism. We decided to focus on every aspect of the game for our qualifiers, since it seems like we could consolidate all of the mechanisms into very few.
+
+After a fairly long strategy discussion, some ideas were thrown around as to how to pick up and score the blocks, since we always have a difficult time getting our game pieces, and a rough idea of a mechanism was developed that would use a roller system and a block hopper that would pick up and score the blocks. There is still significant discussion considering the way we will go about constructing a lifting mechanism, with different arguments for and against a rotating arm and a more standard but perhaps less efficient forklift, similar to ``Ring It Up!''. Some of our team members have some experience with constructing forklifts from prior FTC seasons, so we have some idea of what kind of issues we might come across with that kind of design. One thing we discussed was making sure we construct and purchase our materials with a little more regard for quality than we have in previous years, but we wanted to focus on simplicity this season as it worked out very well for us three years ago, and the ideas we are thinking of currently all seem to fit this idea.
+
+Members of the team have assumed different jobs to complete before the next meeting, such as researching lifting mechanisms, getting a BOM for the field and purchasing the materials, and researching the specifications of an IR beacon and sensor, since the team also decided that scoring the block during autonomous is absolutely imperative to the outcome of this game. It is essentially free points that even a defensive robot cannot stop. As of right now we are choosing to focus the endgame period, since lifting and raising the flag are relatively simple tasks. 
+
+We are considering purchasing the AndyMark field, as it would provide us a standardized field and a better replication of the interaction of the robot with the field during competition. 
+
+\newpage \subsection{General Design -- Meeting 3: 2013-09-14}
+Today was our second main meeting; we discussed several different raising mechanisms, since we as a team have decided that it was the most important system of our robot.
+
+Our main idea for lifting is an arm that is centered around the top corner. We are designing it to be just long enough to allow us to climb the bar as well as to clear the front block scooper. As for the material, we were looking at Delrin, and wood for our prototype. Delrin has incredible tensile strength. If a material is homogeneous then the tensile and flexural strengths are identical. However, most materials have defects in them which act to concentrate the stresses locally, which in turn cause a localized weakness. We have determined that the flexural strength is greater in the Delrin over the wood as follows. We first see that method for calculating flexural strength is: \[\sigma = \frac{3FL}{2bd^2}\] and we are looking to see which sheet can take in the maximum force, $F$. It directly follows that as we increase $b$, the width measured in in, and $d$, the  thickness measured in in, the sheet can withstand a greater force. Elementary analysis allows us to see that the Delrin is superior than the wood. This will assure us that if our wood prototype works, so should our final design. It will also be able to withstand in competition. 
+
+For the flag spinner, we discussed using some external pins or some type of rubber-esque substance to push against the edge and raise it up. We believe that a rubber-esque material will work. We plan on using 3 NXT motors to provide enough torque and speed to raise the flag. Our goal is to raise the flag in under 5 seconds. 
+
+We also spent a lot of time discussing the importance of autonomous and the structure of our code. We are looking at dynamic autonomous programs that are able to dodge other robots if need be. We are looking forward to prototyping within the next several weeks. Our meetings have mainly comprised of theorizing about code and 3D modeling our robot. We are sharing with the younger students much of the knowledge we have learned over the years as well. 
+
+\newpage \subsection{Initial Field Build -- Meeting 4: 2013-09-21}
+Today we began building the field, discussed the lifting, got mail, worked on autonomous theory, cut PVC with safety glasses, and had some fun moving our very mobile robot for a while.  In the mail we received one half of the blocks necessary for the field.
+For building we:
+\begin{enumerate}
+\item Painted the wood
+\item Cut all the pvc pipes for the flag spinner
+\item Wore safety glasses
+\item Cleaned up a lot of pvc dust
+\item Screwed temporary screws to the flanges onto the wood
+\end{enumerate}
+
+Flag Spinner:
+\begin{itemize}
+\item Involves NXT motors
+\item Gearing 6:1
+\item Rubber-esque material did not work out
+\item Using extruding pins
+\end{itemize}
+
+\newpage \subsection{First Prototype -- Meeting 5: 2013-09-28}
+Today was a day for laying out drawings, finalizing designs, and testing some of the flag spinner prototypes. 
+
+We started the day with the usual bit of socialization, before returning to work. The primary topic of discussion is the acquisition mechanism for the blocks. It has been speculated up until this point that we are going to be using a roller, and it looks like those plans may come to fruition. 
+We received several items today, including some Tetrix motors, as well as M3 screws and the other half of the blocks.
+
+A to-scale side view drawing shows that the arm we want to design and guiding channels will take up about 7 inches on either side, leaving 8 inches in the middle to mount the block grabbing mechanism on. This fits within our expectations.
+
+It is worth noting that the since we are designing the robot out of raw materials we are using metric, as opposed to the imperial u-channels, so there is some difficulty in lining up the holes if we plan to use any Tetrix. This is a prototype however, and the arm we plan to design for the final design would be out of delrin, and can be designed to fit our needs. The prototype wooden arm also has potential tolerance issues. There is about a 1 block tolerance on the size of the spinning blocks. Stability is key. 
+
+We constructed our first prototype, we assembled the outside arms from plywood. From left to right, there are two arm chasis pieces, the arm pieces and then two arm chasis pieces. The frame design is an A-frame and it works pretty well.
+
+Force is not an issue, and remains at a 16:1 ratio with torque gained. It is important to note that the force DOES double when an additional layer is added, however, with the 16:1 ratio between the movement of the bars, the speed with which the bars are raised ALSO doubles. This means that, though the force doubles, the speed at which the arm go up is also doubled. That implies that any torque issue created by adding another layer to the mechanism can be resolved by multiplying the gear ratio of the chain motor by two. The same vertical speed will be achieved.
+The prototype is very functional. We connected it to the (makeshift) motor, and ran it. The mechanism lifted very well. The following problems were noted:
+\begin{itemize}
+\item Block pickup does not work
+\item Lifting does not lock after power is lost
+\item The wooden shaft collars strip
+\item It does not move fast enough
+\item It makes the robot very back heavy
+\end{itemize}
+
+Possible solutions to these problems (in order) are:
+\begin{itemize}
+\item Switch from the roller
+\item Jam the gears
+\item Change the wood to metal
+\item Add steel to the front
+\end{itemize}
+
+Despite these issues, the lifting mechanism works well, and glides smoothly as long as they aren't stripped. Granted it is currently in prototype form, the final version (which will be produced much more carefully), should be very effective.
+
+We are currently looking into redesigning the block pickup mechanism as it does not seem to be effective. We plan on lowering teh roller to the ground and seeing what happens. 
+
+Currently, our projected maximum height is 32”, just over what we need to hang on the bar.
