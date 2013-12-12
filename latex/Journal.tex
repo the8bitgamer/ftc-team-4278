@@ -133,9 +133,43 @@ Flag Spinner:
 \item Using extruding pins
 \end{itemize}
 
-\newpage \subsection{TODO: More meetings! (At least 8-10)}
+\newpage \subsection{-- Meeting 5: 2013-09-28}
+Today was a day for laying out drawings, finalizing designs, and testing some of the flag spinner prototypes. 
 
-\section{Software Architecture and Implementation}
+We started the day with the usual bit of socialization, before returning to work. The primary topic of discussion is the acquisition mechanism for the blocks. It has been speculated up until this point that we are going to be using a roller, and it looks like those plans may come to fruition. 
+We received several items today, including some Tetrix motors, as well as M3 screws and the other half of the blocks.
+
+A to-scale side view drawing shows that the arm we want to design and guiding channels will take up about 7 inches on either side, leaving 8 inches in the middle to mount the block grabbing mechanism on. This fits within our expectations.
+
+It is worth noting that the since we are designing the robot out of raw materials we are using metric, as opposed to the imperial u-channels, so there is some difficulty in lining up the holes if we plan to use any Tetrix. This is a prototype however, and the arm we plan to design for the final design would be out of delrin, and can be designed to fit our needs. The prototype wooden arm also has potential tolerance issues. There is about a 1 block tolerance on the size of the spinning blocks. Stability is key. 
+
+We constructed our first prototype, we assembled the outside arms from plywood. From left to right, there are two arm chasis pieces, the arm pieces and then two arm chasis pieces. The frame design is an A-frame and it works pretty well.
+
+Force is not an issue, and remains at a 16:1 ratio with torque gained. It is important to note that the force DOES double when an additional layer is added, however, with the 16:1 ratio between the movement of the bars, the speed with which the bars are raised ALSO doubles. This means that, though the force doubles, the speed at which the arm go up is also doubled. That implies that any torque issue created by adding another layer to the mechanism can be resolved by multiplying the gear ratio of the chain motor by two. The same vertical speed will be achieved.
+The prototype is very functional. We connected it to the (makeshift) motor, and ran it. The mechanism lifted very well. The following problems were noted:
+\begin{itemize}
+\item Block pickup does not work
+\item Lifting does not lock after power is lost
+\item The wooden shaft collars strip
+\item It does not move fast enough
+\item It makes the robot very back heavy
+\end{itemize}
+
+Possible solutions to these problems (in order) are:
+\begin{itemize}
+\item Switch from the roller
+\item Jam the gears
+\item Change the wood to metal
+\item Add steel to the front
+\end{itemize}
+
+Despite these issues, the lifting mechanism works well, and glides smoothly as long as they aren't stripped. Granted it is currently in prototype form, the final version (which will be produced much more carefully), should be very effective.
+
+We are currently looking into redesigning the block pickup mechanism as it does not seem to be effective. We plan on lowering teh roller to the ground and seeing what happens. 
+
+Currently, our projected maximum height is 32”, just over what we need to hang on the bar.
+
+\newpage \section{Software Architecture and Implementation}
 Detailed in this section is the method and reason to our software architecture. In particular, we aimed for our architecture to be stateless with respect to the current operation, to maximize efficiency of joystick checks (which are normally slow in RobotC), and to allow dynamic and easy reassignment of both controller information during teleop, as well as both movement sequencing and heuristic decision trees during autonomous.
 
 We have chosen a particular structure for our code. We have rewritten \lstinline{JoystickDriver.c}{} to better express our needs. By removing superfluous tasks from the driver, we maintained functionality while increasing our efficiency by approximately threefold. We have created a set of utility headers: \lstinline{teleoputils.h}{}, \lstinline{autoutils.h}{}, and \lstinline{sharedutils.h}{} to address the need for macros, \lstinline{#define}{} statements, and standardized functions. Both \lstinline{teleoputils.h}{} and \lstinline{autoutils.h}{} import \lstinline{sharedutils.h}{}, so that file is never explicitly included in the main code body. Drivers were pulled from HiTechnic's online library for 3rd party sensors.
