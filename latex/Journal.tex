@@ -51,7 +51,7 @@ As a result, the second year, our effectiveness slumped slightly. Though we stil
 
 We drew many lessons from that year, and in our third year, we developed a full SolidWorks model of our design, and created a defined intent for our robot before building. We prototyped several components before implementing them. We did still run into issues, but they were not issues we could necessarily have predicted or forseen over such a short timescale. All things considered, we created a highly effective robot, breaking the world record score, and scoring a maximum of over 300 points on the field by ourselves.
 
-This year, we had to think a bit more rigorously about our design. We hearkened back to the 2011-2012 FTC Challenge, "Bowled Over!" during which we struggled to actually lift the balls off the ground. We recognized going into this year that pulling objects out of a dispenser is much easier to design and engineer around than lifing objects off the ground. However, in the usual spirit of our team, we wanted to do it all. When we set out to tackle this challenge, we decided we would find the IR beacon, move to the bridge, score tons of blocks, raise the flag, and hang our robot. We decided that the challenge was \textit{doable}, and we would meet its challenge. This, below, is what we have done\ldots
+This year, we had to think a bit more rigorously about our design. We hearkened back to the 2011-2012 FTC Challenge, ``Bowled Over!'' during which we struggled to actually lift the balls off the ground. We recognized going into this year that pulling objects out of a dispenser is much easier to design and engineer around than lifing objects off the ground. However, in the usual spirit of our team, we wanted to do it all. When we set out to tackle this challenge, we decided we would find the IR beacon, move to the bridge, score tons of blocks, raise the flag, and hang our robot. We decided that the challenge was \textit{doable}, and we would meet its challenge. This, below, is what we have done\ldots
 
 \newpage \subsection{General Structure and Design}
 We decided very early on what the style of our robot's design would be. We recognized that it is possible to determine some components' effectiveness without actually having \textit{designed} the other compoments necessarily. 
@@ -81,10 +81,21 @@ In order to alleviate this problem, we are using allowed hexagonal axles. These 
 
 \paragraph{Arm Support} We decided the arm needed to be strong enough to lift the robot. During the construction of the first prototype of the arm, we created a way for the arm to support the entire robot, but miscalculated the shearing strength of the wooden collars which locked the arm in place. As a result, the torque on the arm caused by gravity caused the wooden collars to strip internally. We have since replaced them with custom-built clamps, designed after hex wheel hubs. More on arm design to come.
 
-\newpage \subsection{TODO: Final Design Overview}
-\newpage \subsection{TODO: Wheelbase and Arm Design}
+\newpage \subsection{Wheelbase and Arm Design}
+\paragraph{Wheel selection} In selecting the wheels for our robot this year, we wanted to prioritize two things: maneuverability and traction. Wheel layout and selection is the entire decidign component in how these two motivations are balanced, and our wheel selection reflects this. We decided that our design model - block grabbing in front, dumping in back - necessitated finite control while aligning the back, but did not require such control in the front. We decided that the front needed to be able to turn quickly, and the back needed to turn precisely. These requirements fit the model of a ``fish tail'' drive perfectly.
+
+A fish tail drive consists of two traction wheels and two omni wheels, mirrored horizontally across the robot. The traction wheels we used are called Colson wheels, and the omni wheels are standard Tetrix parts. We capitalized on the new lenience in wheel selection this year by selecting a wheel which is both smooth, large, and high friction. As a result, it is nearly impossible for another robot to push us sideways, and only possible to push us along the direction of rotation with compliance from the motors.
+
+\paragraph{Robot length} While one might normally consider this to be a small or trivial detail in robot design, this actually grew to high importance for us in our design deliberation. There are a couple reasons for this: first, fish tail drive is significantly impacted by the span of the wheels. Too short, and the robot does not turn well. Too long, and the front turns too quickly.
+
+We have additional constraints on our length as well: we need to 1) be able to support a flag spinner in front of the robot
+
+\paragraph{Arm History: Roller}
+\paragraph{Arm Block Scoop}
+
 \newpage \subsection{TODO: Gear Ratios and Mathematics}
 \newpage \subsection{TODO: Solidworks and CAD Modeling}
+\newpage \subsection{TODO: Final Design Overview}
 
 \newpage \section{Meetings and Proceedings}
 In this section, we detail exactly what happened at select meetings, whose events bear particular significance over the development of our robot.
