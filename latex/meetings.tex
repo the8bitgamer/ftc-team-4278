@@ -57,6 +57,13 @@ It is worth noting that the since we are designing the robot out of raw material
 
 We constructed our first prototype, we assembled the outside arms from plywood. From left to right, there are two arm chasis pieces, the arm pieces and then two arm chasis pieces. The frame design is an A-frame and it works pretty well.
 
+\begin{center}
+\begin{figure}[H]
+\includegraphics[scale=0.5]{images/RobotV1.png}
+\caption{This is the first revision of our Solidworks. We can see the block acquistion device that is essentially a roller that will inhale blocks into our robot}
+\end{figure}
+\end{center}
+
 Force is not an issue, and remains at a 16:1 ratio with torque gained. It is important to note that the force DOES double when an additional layer is added, however, with the 16:1 ratio between the movement of the bars, the speed with which the bars are raised ALSO doubles. This means that, though the force doubles, the speed at which the arm go up is also doubled. That implies that any torque issue created by adding another layer to the mechanism can be resolved by multiplying the gear ratio of the chain motor by two. The same vertical speed will be achieved.
 The prototype is very functional. We connected it to the (makeshift) motor, and ran it. The mechanism lifted very well. The following problems were noted:
 \begin{itemize}
@@ -81,10 +88,17 @@ We are currently looking into redesigning the block pickup mechanism as it does 
 
 Currently, our projected maximum height is 32”, just over what we need to hang on the bar.
 
-\newpage \subsection{ -- Meeting 6: 2013-10-6}
+\newpage \subsection{Flag Spinner Initial Test -- Meeting 6: 2013-10-6}
 Today’s meeting was short - it was only two hours. We had a couple ideas we wanted to test, and the tests were successful. We verified our idea would work, and redrew the pictures from two days ago.
 
 The idea we were testing today was whether or not we could raise the flag by using a rubber-like substance to mesh within it and spin. We soon saw that the NXT motors were not as powerful as we would like and the force that the rubber plate was inducing was off center. This makes it unfeasible to use. 
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.25]{images/FlagSpinnerV1.png}
+\end{center}
+\end{figure}
+
 
 We plan on switching to the seemingly common extruded pins design. We plan on having two pins attached off center that are $180^\circ$ apart. We also plan on switching to a Tetrix motor with a $6:1$ gearing ratio. With this ratio, we will be able to raise the flag, theoretically, in under 10 seconds. 
 
@@ -98,4 +112,60 @@ We decided on mounting it 1.5'' above the ground because this is just enough to 
 
 It is the popular idea that we want to completely redesign the block grabbing mechanism due to its inability to give us the accuracy and visibility that we want. Visibility is an issue when we go to the opposite side of the field. 
 
-\newpage \subsection{-- Meeting 7: 2013-10-11}
+\newpage \subsection{Block Aquisition Redesign -- Meeting 7: 2013-10-11}
+We have spent a lot of time working on scoring blocks, but we overlooked the difficulty of acquiring them. We decided to spend the day looking over our acquisition device as we found it was not very effective. We are looking into changing the roller into a much lower roller made of rubber. We are also looking into changing the entire design altogether. The main ideas consist of driving into blocks and then flipping them into our arm. However, many members of the team do not like the idea of multiple moving parts. 
+
+We decided to extend the final aspect of the roller and found that it was completely ineffective. There is currently no member that continuously supports this idea. 
+
+Today, Garrison proposed that we use a bulldozer like system. A flat plate that we would use to ram into the blocks. Essentially extending our arm to be outside of the frame. We built a first prototype with this and it seems to show some promise. We are still unsure of the implications that this has for the a final working idea. 
+
+Another issue we see with this mechanism is that it is very easy for blocks to slip outside of our robot. 
+
+We currently plan to go home and think about better ideas. We will probably have an in-depth Skype conversation over this idea. We look forward to improving this design as it needs a lot of work. 
+
+The flag spinner was also entirely redesigned as follows:
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.4]{images/FlagSpinnerV2Back.png}
+\includegraphics[scale=0.5]{images/FlagSpinnerV2Front.png}
+\end{center}
+\caption{Here we can see both sides of the new, redesigned, flag spinner. The notable changes include the switch to the Tetrix motor and the removal of the rubber backing in turn for extruding pins (not shown above).}
+\end{figure}
+
+\newpage \subsection{Solidworks Redesign -- Meeting 8: 2013-10-18}
+
+After coming back with new ideas, we spent the first hour of our meeting discussing the pros and cons of our new block acquisition mechanism. We all feel that a flat sheet on the ground that we can use to run into the blocks as a bulldozer is the optimal solution. 
+
+We are designing it to be fully flush with the ground. We look forward to testing this out. In solidworks we are redesigning the base of the robot to be shorter to allow the bulldozer system to lie in front. 
+
+\begin{center}
+\begin{figure}[h]
+\includegraphics[scale=0.75]{images/RobotV2.png}
+\caption{This is the second revision of our Solidworks which includes the redesigned block acquisition device.}
+\end{figure}
+\end{center}
+
+\newpage \subsection{First Full Test and Match -- Meeting 9: 2013-10-25}
+
+Today was our first day having a fully complete robot. Although we had done several tests of our prototype before, this was the first day we had everything working together. The excitement within our team was immense. We tested our drive train with the added weight of the arm on the motor. We tied the flag mechanism with nylon as our kevlar rope has not yet been received. The kevlar provides less friction and is more like the competition.
+
+Near the bottom, we have a lot of empty space to place the electronics. We hope to use the HiTechnic SuperPro this year to do much more sensor fusion. We want to add an Arduino or Atmel processor (ATUC3b0128) to do much more powerful computation without having to deal with the timing issues that are imposed by using the task system in RobotC and the slow clock of the NXT. We have plans to include gyroscopes, accelerometers and ultrasonic sensors. We are also looking into developing our own infrared seeker, although we are still uncertain about the feasibility of that task. 
+
+With the A-frame design that we have we are able to distribute all of our weight to the back of the robot. This makes it very stable and very difficult to push us. 
+
+When we scored our first block, the entire team was ecstatic. We all felt relief that we were able to lift something and score our blocks. We were somewhat surprised as to how simple it was for us to score a block. It went on just by driving backwards and raising the arm.
+
+The arm went up very smoothly and we had no issues scoring on any of the blocks. We decided to play our first match to see how many points we were able to score.
+
+We gave Tristan the controller and on our first run we were able to score about 200 points. We scored only on the outside baskets. This added up to the balanced bonus bonuses. Overall, we are very happy with the current design of the robot. Although, we do feel that a lot of driver practice is needed, along with an improved block aquisition device. 
+
+Once we had the entire robot built we started testing the arm mechanism and it's ability to remove and score blocks. We found that although it is just in and out straight, moving linearly. We also found that it requires almost no effort to manipulate.
+
+Tristan, our driver, says that with the new Fishtail drive train that we incorporated along with the ease of use of scoring rings and removing them from the ground. We are still unable to consistently pickup 4 blocks. 
+
+There is an air of reminiscence from our first year of FTC. We feel that our strategy and simplicity of our mechanism is very similar. This brings back memories to the members who were on the team from the conception of the team. This also brings an air of confidence among the members about the ability of our robot.
+
+Now there is a lot of talk among the team members about autonomous and strategies for approaching it. We have the ability to determine which column the Infrared beacon is one within one second of our robot starting up.
+
+After we scored our first block and played our first game we decided that we had accomplished a decent amount for this extra Sunday meeting and decided to call it a day. We have high hopes for the competition and expect to place well at our first qualifier. 
