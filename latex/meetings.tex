@@ -134,7 +134,6 @@ The flag spinner was also entirely redesigned as follows:
 \end{figure}
 
 \newpage \subsection{Solidworks Redesign -- Meeting 8: 2013-10-18}
-
 After coming back with new ideas, we spent the first hour of our meeting discussing the pros and cons of our new block acquisition mechanism. We all feel that a flat sheet on the ground that we can use to run into the blocks as a bulldozer is the optimal solution. 
 
 We are designing it to be fully flush with the ground. We look forward to testing this out. In solidworks we are redesigning the base of the robot to be shorter to allow the bulldozer system to lie in front. 
@@ -147,7 +146,6 @@ We are designing it to be fully flush with the ground. We look forward to testin
 \end{center}
 
 \newpage \subsection{First Full Test and Match -- Meeting 9: 2013-10-25}
-
 Today was our first day having a fully complete robot. Although we had done several tests of our prototype before, this was the first day we had everything working together. The excitement within our team was immense. We tested our drive train with the added weight of the arm on the motor. We tied the flag mechanism with nylon as our kevlar rope has not yet been received. The kevlar provides less friction and is more like the competition.
 
 Near the bottom, we have a lot of empty space to place the electronics. We hope to use the HiTechnic SuperPro this year to do much more sensor fusion. We want to add an Arduino or Atmel processor (ATUC3b0128) to do much more powerful computation without having to deal with the timing issues that are imposed by using the task system in RobotC and the slow clock of the NXT. We have plans to include gyroscopes, accelerometers and ultrasonic sensors. We are also looking into developing our own infrared seeker, although we are still uncertain about the feasibility of that task. 
@@ -162,10 +160,74 @@ We gave Tristan the controller and on our first run we were able to score about 
 
 Once we had the entire robot built we started testing the arm mechanism and it's ability to remove and score blocks. We found that although it is just in and out straight, moving linearly. We also found that it requires almost no effort to manipulate.
 
-Tristan, our driver, says that with the new Fishtail drive train that we incorporated along with the ease of use of scoring rings and removing them from the ground. We are still unable to consistently pickup 4 blocks. 
+Tristan, our driver, says that with the new Fishtail drive train that we incorporated along with the ease of use of scoring blocks and removing them from the ground. We are still unable to consistently pickup 4 blocks. 
 
 There is an air of reminiscence from our first year of FTC. We feel that our strategy and simplicity of our mechanism is very similar. This brings back memories to the members who were on the team from the conception of the team. This also brings an air of confidence among the members about the ability of our robot.
 
 Now there is a lot of talk among the team members about autonomous and strategies for approaching it. We have the ability to determine which column the Infrared beacon is one within one second of our robot starting up.
 
 After we scored our first block and played our first game we decided that we had accomplished a decent amount for this extra Sunday meeting and decided to call it a day. We have high hopes for the competition and expect to place well at our first qualifier. 
+
+\newpage \subsection{Short Design Meeting -- Meeting 10: 2013-11-2}
+Today was mostly a day for driver practice and minor repairs. We did several hours of practice, then moved the grabbing mechanism down an inch because it was barely outside the sizing box. This created a couple functionality issues, which will be resolved in the next meeting. We also tested the autonomous accelerometer and gyroscope, but didn't get much farther than measuring the (mostly insignificant) error before we had to leave. 
+
+Today was short.
+
+\newpage \subsection{Tweaking and Autonomous Programming -- Meeting 11: 2013-11-8}
+Today several mechanical changes were made. The flat block grabber was moved down more, but the attached aligning bars were kept in the same place. The bars were also melted into a curve to stop the blocks from catching on them, but at the same time keeping them from falling out. In addition, we made our hex arm shafts, designed after the AndyMark hex wheel shaft. We used a lathe to create the same shape and then used a hex broach of 3/8'' to allow it to slide over. 
+
+Another notable change was somewhat small, but it was entirely necessary. We added a funnel like system onto our arm to stop blocks from flying out as we tried to score. This was done with two small bent Tetrix pieces that redirect the blocks into the center of our scoring mechanism. 
+
+After implementing this, the amount of blocks that we missed dropped from almost $50\%$ to nearly $2\%$. This worked phenomenally and outdid all of our expectations. 
+
+Today was a rather complex code day. Yousuf and Kian woke up early to start work at 7 AM on autonomous. Other team members were arriving past 10. Our progress was significant and extensive, leading us into a few minor problems but also into several solutions. 
+
+We decided immediately to write the code again from the bottom up, testing each component as we added it. The old code would have taken too long to get working properly. We struggled for around half an hour with a few simple glitches. We had a very silly error where RobotC simply refused to function properly. The eventual solution was ridiculous: the line of code with the error was replaced via copy and paste with a duplicate line from an old code file. This resolved the issue. 
+
+Accelerometric integration now works, and we can properly integrate our position with very little noise and error. There are no issues here. 
+
+The gyroscope integration, on the other hand, is returning garbage output. It's moderately representative of our actual rotation, but in actuality it is totally useless. The tolerance is +/- 10 degrees. I surmise this is a tasking issue, and Δt is not being set properly, resulting in error. 
+
+We attached the infrared seeker sensors, and can now start the game consistently knowing which column the tag is in. We have a 540 degree field of view, since the two sensors face opposite directions. As such, our first movement command is to go directly to the column with the IR beacon. We may need to redesign our autonomous though since we are getting a lot of noise. 
+
+Our plan is to turn perpendicular to the pendulum. Everything except the gyroscope is functional.
+
+\newpage \subsection{Autonomous Working (No IR) -- Meeting 12: 2013-11-10}
+This weekend, we successfully programmed our autonomous. The code allows the robot to deposit the autonomous block in any basket, as selected by the user interface. The logic for this decision works as follows:
+\begin{itemize}
+\item The user selects which row they would like the block placed in, if the IR beacon is in each column.
+\item The robot uses triangulation with two outward-facing IR seekers to start the game immediately knowing which column contains the beacon. (This still doesn't work yet)
+\item The robot angles to the correct basket.
+\item The robot moves and rotates, aligning itself to score with the block.
+\item The robot raises the arm, scoring the block.
+\item It then backs off to move onto the ramp.
+\end{itemize}
+
+The program for this has been written, and works with an (approximated) 90\% consistency.
+
+\newpage \subsection{Driver Practice and Lifting Locking -- Meeting 13: 2013-11-17}
+The plan for the meeting was to spend an hour or two testing the autonomous for consistency at getting on top of the ramp. Then the plan was to do driver practice for the rest of the day.
+
+Early tests of the autonomous showed some problems getting on top of the board, with the placement of the sensor being off about 30\% of the time. The most common issue occurred when the IR mounting was off center. This caused us major error. After mounting the beacon much more securely, the autonomous became very consistent at getting to the pendulem, scoring the vast majority of the time in several trials.
+
+As we began driver practice, however, some structural problems were discovered. The cross bars that we were using to brace our lift torqued during one run, causing us concern when lifting. Tristan volunteered to create the crossbars in Solidworks and spent some time taking careful measurements of the spacing between the two halves of the lift. The other major fix that was incorporated was to add two points of contact on each side in order to stop the arm from torquing under major force.
+
+We also developed a lifting locking mechanism which works by jamming a third gear into our system. This induces a lock that cannot be broken and does not need power. Figure \ref{locking} shows this system in action.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.75]{images/Gearlock.png}
+\end{center}
+\caption{The blue sections highlighted show the three gears that are all locked together. It restricts any movement and works effectively.}
+\label{locking}
+\end{figure}
+
+\newpage \subsection{Outreach -- Meeting 14: 2013-11-29}
+This year we decided to mentor an FLL team and we mentored two FLL teams. We helped them program the new EV3 and taught them some new design techniques for the attachments that they had on their robot. We spent about 4 hours running through all of the programs they had and suggesting different ways that they could go about it. We also taught them how to use sensors as a lot of their programs were unreliable. We hope to start an FTC team with these students in the upcoming years. The FLL team we mentored just won their qualifier competition and has a regional competition at Legoland on December 7th. 
+
+\newpage \subsection{Driver Practice -- Meeting 15: 2013-12-6}
+Today we mainly tested our robots abilities using time trials.  Our robot managed to pick up two to three blocks per trip, which was below our expectations.  Because of this we began experimenting with different methods of collecting blocks, such as a horizontal roller. The first material being a sheet of extremely thin sheet metal which was low enough to the ground but it was too weak, When we tried to pick up blocks the metal would buckle and make a wall impossible for anymore blocks to get up.  Our next solution was to use a thicker, flexible sheet of plastic that slid with really low friction across the ground.  The plastic sheet was just the right height to where it would fit perfectly under all of the blocks without getting deformed. 
+
+Our next task was to be able to fit three or four blocks, no more no less.  The way we solved this greatly important problem was by using a metal deterrent to block more than five blocks from being collected.  The combination of the ramp and the deterrent made it so that we extremely rarely picked up two blocks but we also very rarely picked up more than four blocks.
+
+Overall, we are currently scoring approximately 300 points alone per round. We hope that our speed will be unmatched and we will be able to score many points. 
