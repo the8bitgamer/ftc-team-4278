@@ -88,7 +88,7 @@ void dumpArm() {
 	setArmMotors(0);
 	wait1Msec(400);
 	setArmMotors(-50);
-	wait1Msec(900);
+	wait1Msec(1100);
 	setArmMotors(0);
 }
 
@@ -98,6 +98,8 @@ bool pathClear(float dist){
 	pause();
 	float read = 0;
 	for(int i=0;i<10;i++){read+=(analogRead(A3)*0.4);wait1Msec(5);}
+	nxtDisplayBigTextLine(3,"%f", read/10.0);
+	wait1Msec(2000);
 	return ((read/10)<dist?false:true);
 }
 
@@ -146,23 +148,25 @@ void farRightBridge(float bridgeDist){
 
 void crateOne(){
 	dumpArm();
-	rbtArcRight(88.5); pause();
-	if(pathClear(29)) rightBridge(16);
+	rbtMoveFd(-0.756);
+	rbtArcRight(95.5); pause();
+	if(pathClear(75)) rightBridge(13.5);
 	else farLeftBridge(39.5);
 }
 
 void crateTwo(){
 	dumpArm();
-	rbtArcRight(90); pause();
+	rbtMoveFd(-0.756);
+	rbtArcRight(93.5); pause();
 	if(pathClear(50)) rightBridge(29);
 	else farLeftBridge(30);
 }
 
 void crateThree(){
 	dumpArm();
-	rbtMoveFd(-2);
-	rbtArcLeft(-87.5); pause();
-		if(pathClear(80)) leftBridge(25);
+	rbtMoveFd(-0.756);
+	rbtArcLeft(-90); pause();
+		if(pathClear(20)) leftBridge(20);
 	else farRightBridge(24);
 }
 
@@ -171,7 +175,7 @@ void crateFour(){
 	rbtMoveFd(-0.5); pause();
 	rbtArcLeft(-87); pause();
 	if(pathClear(50)) leftBridge(14);
-	else farRightBridge(33.5);
+	else farRightBridge(35.5);
 }
 
 void initializeRobot(){
@@ -245,14 +249,15 @@ void crateSelect(int crate){
 	float in;
 	HTIRS2readEnhanced(sensorIR, dirIR, strIR);
 	clearEncoders();
-	if(dirIR == 5 && strIR >= 85){
+	if(dirIR == 5 && strIR >= 91){
 		rbtMoveFd(4.5);
 		pause();
 		rbtArcRight(-43);
 		pause();
 		rbtMoveFdTime(2.4, 1000);
+		pause();pause();
 		crateFour();
-	}else if(dirIR == 5 && strIR <=84){
+	}else if(dirIR == 5 && strIR <=90){
 		rbtArcLeft(45);
 		pause();
 		rbtMoveFd(2);
@@ -260,10 +265,31 @@ void crateSelect(int crate){
 		rbtArcRight(-90);
 		pause();
 		rbtMoveFdTime(2, 750);
-		pause();
+		pause();pause();
 		crateThree();
 	}else{
-
+			rbtArcLeft(43.4);
+		pause();
+		rbtMoveFd(18.5);
+		pause();
+		HTIRS2readEnhanced(sensorIR, dirIR, strIR);
+		if(dirIR == 3 && strIR >= 65){
+		rbtMoveFd(1.5);
+		pause();
+		rbtArcRight(-90);
+		pause();
+		rbtMoveFdTime(2.4, 1000);
+		pause();pause();
+		crateTwo();
+	}else{
+		rbtMoveFd(10);
+		pause();
+		rbtArcRight(-91.5);
+		pause();
+		rbtMoveFdTime(0.5, 1000);
+		pause();pause();
+		crateOne();
+	}
 	}
 	//while( + dc2 < 135 && in > 2300) {
 	//	nxtDisplayTextLine(3, "Distance: %d", in);
