@@ -51,7 +51,7 @@ void rbtMoveFdTime(float inches, int msec) {
 void rbtArcLeft(float degs) {
 	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setLeftMotors(-1*sgn(degs)*35);
+	setLeftMotors(-1*sgn(degs)*60);
 	while(leftEncoder < enc) wait1Msec(10);
 	setLeftMotors(0);
 }
@@ -59,7 +59,7 @@ void rbtArcLeft(float degs) {
 void rbtArcRight(float degs) {
 	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setRightMotors(sgn(degs)*35);
+	setRightMotors(sgn(degs)*60);
 	while(rightEncoder < enc) wait1Msec(10);
 	setRightMotors(0);
 }
@@ -150,7 +150,7 @@ void crateOne(){
 	dumpArm();
 	rbtMoveFd(-0.756);
 	rbtArcRight(95.5); pause();
-	if(pathClear(75)) rightBridge(13.5);
+	if(pathClear(30)) rightBridge(15.5);
 	else farLeftBridge(39.5);
 }
 
@@ -158,24 +158,24 @@ void crateTwo(){
 	dumpArm();
 	rbtMoveFd(-0.756);
 	rbtArcRight(93.5); pause();
-	if(pathClear(50)) rightBridge(29);
+	if(pathClear(50)) rightBridge(25);
 	else farLeftBridge(30);
 }
 
 void crateThree(){
 	dumpArm();
 	rbtMoveFd(-0.756);
-	rbtArcLeft(-90); pause();
-		if(pathClear(20)) leftBridge(20);
-	else farRightBridge(24);
+	rbtArcLeft(-87); pause();
+		if(pathClear(57)) leftBridge(23);
+	else farRightBridge(29.5);
 }
 
 void crateFour(){
 	dumpArm();
 	rbtMoveFd(-0.5); pause();
 	rbtArcLeft(-87); pause();
-	if(pathClear(50)) leftBridge(14);
-	else farRightBridge(35.5);
+	if(pathClear(40)) leftBridge(14);
+	else farRightBridge(38);
 }
 
 void initializeRobot(){
@@ -252,7 +252,7 @@ void crateSelect(int crate){
 	if(dirIR == 5 && strIR >= 91){
 		rbtMoveFd(4.5);
 		pause();
-		rbtArcRight(-43);
+		rbtArcRight(-42);
 		pause();
 		rbtMoveFdTime(2.4, 1000);
 		pause();pause();
@@ -260,7 +260,7 @@ void crateSelect(int crate){
 	}else if(dirIR == 5 && strIR <=90){
 		rbtArcLeft(45);
 		pause();
-		rbtMoveFd(2);
+		rbtMoveFd(1.5);
 		pause();
 		rbtArcRight(-90);
 		pause();
@@ -273,10 +273,12 @@ void crateSelect(int crate){
 		rbtMoveFd(18.5);
 		pause();
 		HTIRS2readEnhanced(sensorIR, dirIR, strIR);
-		if(dirIR == 3 && strIR >= 65){
+		nxtDisplayBigTextLine(3, "%d, %d", dirIR, strIR);
+		wait1Msec(3000);
+		if(dirIR == 3 && strIR >50 ){
 		rbtMoveFd(1.5);
 		pause();
-		rbtArcRight(-90);
+		rbtArcRight(-92);
 		pause();
 		rbtMoveFdTime(2.4, 1000);
 		pause();pause();
@@ -284,9 +286,9 @@ void crateSelect(int crate){
 	}else{
 		rbtMoveFd(10);
 		pause();
-		rbtArcRight(-91.5);
+		rbtArcRight(-86.5);
 		pause();
-		rbtMoveFdTime(0.5, 1000);
+		rbtMoveFdTime(0.25, 1000);
 		pause();pause();
 		crateOne();
 	}
