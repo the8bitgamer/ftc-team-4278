@@ -32,9 +32,19 @@
   tabsize=2
 }
 
-\begin{document}
+\begin{document}\setcounter{page}{0}{\vspace*{\fill}\maketitle\vspace*{\fill}}
 
-\vspace*{\fill}{\maketitle}\newpage \begin{abstract}
+%\begin{titlepage}
+%	\vspace*{\fill}
+%	\begin{center}
+%		{Huge [[title]]}\\[0.5cm]
+%		{Large [[author]]}\\[0.4cm]
+%		[[date]]
+%	\end{center}
+%	\vspace*{\fill}
+%\end{titlepage}
+
+\newpage \begin{abstract}
 FTC Team 4278 proposes the creation of a robot to address all aspects of the FTC 2013-14 competition, ``Block Party.'' The proposed design has the capacity to address, in the teleoperated period: (1) retrieval of blocks; (2) placement of blocks into the block crates; (3) raising the FTC flag; (4) hanging against the field bar. In addition, during the autonomous period, the robot will address the following elements: (1) placement of blocks in the correct bin, as indicated by an IR beacon; (2) maneuvering to the ramp. 
 
 In order to achieve these goals, it was determined that the robot should: (1) be very difficult to push; (2) be fast and reliable in movement; (3) have a low center of gravity; (4) have as few unique components as possible; (5) be as compact as possible; (6) pick up blocks with at most one motion; (7) place blocks in crates with at most one motion; (8) hang with at most either two motions on an existing component, or one motion on a new component; (9) be able to raise the flag with one component; (10) be electrically stable, generating as little static as possible. 
