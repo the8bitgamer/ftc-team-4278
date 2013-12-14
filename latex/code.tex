@@ -91,10 +91,46 @@ void checkJoystickButtons() {
 }
 \end{lstlisting}
 
-We solve the former issue by means of storing each button state in a single bit of data, reducing our memory footprint. Teams are encouraged to call the \lstinline{joy1Btn(int)}{} function each time they wish to check the state of a particular button, but this can become cumbersome of one wishes check multiple buttons in real-time. The ``JoystickDriver.c'' file that we must use for field communications stores each button state in a \lstinline{short}{}; this means that we are capable of running a checksum before we check each button. This not only reduces our time per iteration, but also allows for our robot to be more responsive to joystick changes due to the inherent speed of bitwise operations.
+We solve the former issue by means of storing each button state in a single bit of data, reducing our memory footprint. Teams are encouraged to call the \lstinline{joy1Btn(int)}{} function each time they wish to check the state of a particular button, but this can become cumbersome of one wishes check multiple buttons in real-time. The ``JoystickDriver.c'' file that we must use for field communications stores each button state in a single \lstinline{short}{}; this means that we are capable of running a checksum of the joystick state before we check each button. This not only reduces our time per iteration, but also allows for our robot to be more responsive to joystick changes due to the inherent speed of bitwise operations.
 
 \newpage \subsection{Autonomous Mode}
-Autonomous, much like teleop, must meet certain criteria
+Autonomous, much like teleop, must meet certain criteria: \begin{enumerate}
+	\item{Recognize which crate has been chosen with the IR beacon}
+	\item{Move to said crate in a timely manor}
+	\item{Move to onto the bridge after scoring our block}
+	\item{Avoid any other robots on the way}
+\end{enumerate}
+
+\paragraph{Crate Detection} Much like any other team, we use the HiTechnic IR Seeker to determine which crate our robot should pursue. We use a function that reads not only the position of the IR beacon relative to our location on the field, but also the strength at which it is reading. Having more than one variable to check greatly reduces the generally unavoidable environment-error the comes hand-in-hand with Infrared Light detection.
+
+\paragraph{Movement Functions} Using motor encoders, sensing how far a robot has moved is relatively simple in theory. Generally, the code becomes messy when the programmer has to remember motor encoder values and direction. To solve this issue, we have implemented general movement functions based on inches.
+\begin{lstlisting}[tabsize=4]
+void rbtMoveFdTime(float inches, int msec) {
+	int enc = getEncoderByInches(inches); clearEncoders();
+	int norm = -1.0*sgn(inches);
+	ClearTimer(DrTimer);
+	while(leftEncoder < enc && rightEncoder < enc && time1[DrTimer] < msec) {
+		setLeftMotors (100*norm);
+		setRightMotors(100*norm);
+	}
+	setLeftMotors(0); setRightMotors(0);
+}
+\end{lstlisting}
+This function allows our robot to move forward by a arbitrary number if inches and finish the motion in less than the specified time. Generally one does not want to move forward for an amount of time because the power fluctuates with battery levels. On the same hand, if one moves forwards based on just encoder values, the motor have the potential to burn out if the robot incurs a collision. Allowing the function to reach the specified distance before a certain amount of time insures that neither of these situations have a high probability of surfacing.
+
+\paragraph{Object Avoidance} Through the use of the HiTechnic SuperPro that was made legal by this year's game manual, we have been able to mount a high performance ultrasonic sensor to validate that the path we wish to take is open. If there is an obstruction, the robot moves onto the bridge via an alternate route. This feature increases the probability of a higher average score.
+
+\begin{lstlisting}[tabsize=4]
+bool pathClear(float dist){
+	pause();
+	float read = 0;
+	for(int i=0;i<10;i++){read+=(analogRead(A3)*0.4);wait1Msec(5);}
+	nxtDisplayBigTextLine(3,"%f", read/10.0);
+	wait1Msec(2000);
+	return ((read/10)<dist?false:true);
+}
+\end{lstlisting}
+
 \newpage \subsection{Algorithms and Cartesian Mathematics}
 
 \subsubsection{Hybrid Localization Using Gyroscopes \& Odometers}
