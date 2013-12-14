@@ -45,7 +45,7 @@ float powscl(int xz) {
 }
 \end{lstlisting}
 
-\paragraph{Compensation for the Old and New Joystick Configuration} It is necessary to compensate for both the old and new controller configurations. As the controller has been updated, the buttons have changed - however, competition rules premit the use of both controllers. Therefore, we must be able to accomodate this change if necessary. We have done so through the use of a define statement: if we have \lstinline{#define ALTLOG}{}, then we switch to the old button layout.
+\paragraph{Compensation for the Old and New Joystick Configuration} It is necessary to compensate for both the old and new controller configurations. As the controller has been updated, the buttons have changed - however, competition rules permit the use of both controllers. Therefore, we must be able to accommodate this change if necessary. We have done so through the use of a define statement: if we have \lstinline{#define ALTLOG}{}, then we switch to the old button layout.
 
 \paragraph{Button Press Checking Requires a Stateless Organization} In order to easily and effectively change the functionality of the controller, a particular design was implemented:
 
