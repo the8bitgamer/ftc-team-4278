@@ -281,5 +281,6 @@ task main() {
 	displayDiagnostics();
 	initializeRobot();
 	waitForStart();
+	wait1Msec(11000);
 	crateSelect();
 }
