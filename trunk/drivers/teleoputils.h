@@ -5,10 +5,7 @@
 #include "JoystickDriver4278.c"
 
 //Allows threshold to be defined in teleop-file
-#ifndef THRESHOLD
 #define THRESHOLD 10.0
-#endif
-
 #define MINX  10.0
 #define SLOPE 0.5
 #define DISTA 0.6
@@ -42,12 +39,30 @@ float powscl(int xz) {
 
 #define JOY_BTN joystick.joy1_Buttons
 
-void waitForStart() {
-  while(true) {
-    getJoystickSettings(joystick);
-    if(!joystick.StopPgm) break;
-    displayDiagnostics();
-  }
+int getLeftPowTopHat(int topHat) {
+	//topHat--;
+	if(topHat == 0) return 100;
+	if(topHat == 6) return -100;
+	if(topHat == 4) return -100;
+	if(topHat == 2) return 100;
+	//if(topHat == 1) return 80;
+	//if(topHat == 3) return -80;
+	//if(topHat == 5) return -35;
+	//if(topHat == 7) return 35;
+	return 0;
+}
+
+int getRightPowTopHat(int topHat) {
+	//topHat--;
+	if(topHat == 0) return 100;
+	if(topHat == 6) return 100;
+	if(topHat == 4) return -100;
+	if(topHat == 2) return -100;
+	//if(topHat == 1) return 35;
+	//if(topHat == 3) return -35;
+	//if(topHat == 5) return -80;
+	//if(topHat == 7) return 80;
+	return 0;
 }
 
 #endif //__TELEOPUTILS__

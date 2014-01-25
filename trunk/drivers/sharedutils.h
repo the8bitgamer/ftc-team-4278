@@ -8,8 +8,8 @@
 #define lockArmMotors() {servo[servoL1] = 155; servo[servoL2] = 20;}
 #define unlockArmMotors() {servo[servoL1] = 120; servo[servoL2] = 70;}
 
-#define leftEncoder abs(nMotorEncoder[mArm1])
-#define rightEncoder abs(nMotorEncoder[mArm2])
+#define leftEncoder abs(nMotorEncoder[mArm2])
+#define rightEncoder abs(nMotorEncoder[mArm1])
 #define clearEncoders() {nMotorEncoder[mArm1] = 0; nMotorEncoder[mArm2] = 0;}
 
 //Distance Macros
