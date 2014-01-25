@@ -174,11 +174,12 @@ task readMsgFromPC() {
 }
 
 void waitForStart() {
-  while (true) {
+  while(true) {
     getJoystickSettings(joystick);
-    if (!joystick.StopPgm) break;
+    if(!joystick.StopPgm) break;
+		nxtDisplayTextLine(6, "Waiting for start...");
+    //displayDiagnostics();
   }
-  return;
 }
 
 #endif

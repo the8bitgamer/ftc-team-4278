@@ -25,15 +25,6 @@ void dumpArm() {
 	setArmMotors(0);
 }
 
-/*bool pathClear(float dist){
-	pause();
-	float read = 0;
-	for(int i=0;i<10;i++){read+=(analogRead(A3)*0.4);wait1Msec(5);}
-	nxtDisplayBigTextLine(3,"%f", read/10.0);
-	wait1Msec(2000);
-  return ((read/10)<dist?false:true);
-}*/
-
 void lockdownRobot() {
 	setLeftMotors(0);
 	setRightMotors(0);
@@ -50,6 +41,7 @@ void rbtMoveFdTime(float inches, int msec) {
 		setLeftMotors (100*norm);
 		setRightMotors(093*norm);
 	}
+	if(time1[DrTimer] > msec) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0);
 }
 
@@ -59,6 +51,7 @@ void rbtArcLeft(float degs) {
 	setLeftMotors(-1*sgn(degs)*90);
 	ClearTimer(DrTimer);
 	while(leftEncoder < enc && time1[DrTimer] < MAX_TURN_TIME) wait1Msec(10);
+	if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0);
 }
 
@@ -67,7 +60,8 @@ void rbtArcRight(float degs) {
 	clearEncoders();
 	setRightMotors(sgn(degs)*60);
 	ClearTimer(DrTimer);
-	while(rightEncoder < enc && time1[DrTimer] < MAX_TURN_TIME) wait1Msec(10);
+	while(rightEncoder < enc && time1[DrTimer] < MAX_TURN_TIME) nxtDisplayTextLine(4, "%i", rightEncoder);
+	if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
 	setRightMotors(0);
 }
 
@@ -78,6 +72,7 @@ void rbtTurnRight(float degs) {
 	setRightMotors(sgn(degs)*30);
 	ClearTimer(DrTimer);
 	while(rightEncoder < enc && time1[DrTimer] < MAX_TURN_TIME) wait1Msec(10);
+	if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0);
 }
 
@@ -88,6 +83,7 @@ void rbtTurnLeft(float degs) {
 	setRightMotors(-1*sgn(degs)*60);
 	ClearTimer(DrTimer);
 	while(leftEncoder < enc && time1[DrTimer] < MAX_TURN_TIME) wait1Msec(10);
+	if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0);
 }
 
