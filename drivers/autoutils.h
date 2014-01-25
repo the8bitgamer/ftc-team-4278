@@ -37,7 +37,8 @@ void rbtMoveFdTime(float inches, int msec) {
 	int enc = getEncoderByInches(inches); clearEncoders();
 	int norm = -1.0*sgn(inches);
 	ClearTimer(DrTimer);
-	while(leftEncoder < enc && rightEncoder < enc && time1[DrTimer] < msec) {
+	while(leftEncoder < enc && rightEncoder < enc) {
+		if(time1[DrTimer] > msec) lockdownRobot();
 		setLeftMotors (100*norm);
 		setRightMotors(093*norm);
 	}
@@ -50,8 +51,7 @@ void rbtArcLeft(float degs) {
 	clearEncoders();
 	setLeftMotors(-1*sgn(degs)*90);
 	ClearTimer(DrTimer);
-	while(leftEncoder < enc && time1[DrTimer] < MAX_TURN_TIME) wait1Msec(10);
-	if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
+	while(leftEncoder < enc) if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0);
 }
 
@@ -60,8 +60,7 @@ void rbtArcRight(float degs) {
 	clearEncoders();
 	setRightMotors(sgn(degs)*60);
 	ClearTimer(DrTimer);
-	while(rightEncoder < enc && time1[DrTimer] < MAX_TURN_TIME) nxtDisplayTextLine(4, "%i", rightEncoder);
-	if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
+	while(rightEncoder < enc) if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
 	setRightMotors(0);
 }
 
@@ -71,8 +70,7 @@ void rbtTurnRight(float degs) {
 	setLeftMotors( -1*sgn(degs)*40);
 	setRightMotors(sgn(degs)*30);
 	ClearTimer(DrTimer);
-	while(rightEncoder < enc && time1[DrTimer] < MAX_TURN_TIME) wait1Msec(10);
-	if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
+	while(rightEncoder < enc) if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0);
 }
 
@@ -82,8 +80,7 @@ void rbtTurnLeft(float degs) {
 	setLeftMotors(sgn(degs)*60);
 	setRightMotors(-1*sgn(degs)*60);
 	ClearTimer(DrTimer);
-	while(leftEncoder < enc && time1[DrTimer] < MAX_TURN_TIME) wait1Msec(10);
-	if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
+	while(leftEncoder < enc) if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0);
 }
 
