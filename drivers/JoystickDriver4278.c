@@ -177,7 +177,7 @@ void waitForStart() {
   while(true) {
     getJoystickSettings(joystick);
     if(!joystick.StopPgm) break;
-		nxtDisplayTextLine(6, "Waiting for start...");
+		//nxtDisplayTextLine(6, "Waiting for start...");
     //displayDiagnostics();
   }
 }

@@ -2,7 +2,6 @@
 #define __TELEOPDRIVER__
 
 #include "sharedutils.h"
-#include "JoystickDriver4278.c"
 
 //Allows threshold to be defined in teleop-file
 #define THRESHOLD 10.0
@@ -18,7 +17,7 @@ float powscl(int xz) {
 
 //Controller 1 - Left Joystick - Linear
 #define JOY_X1 (abs(joystick.joy1_x1) > THRESHOLD ? joystick.joy1_x1 : 0)
-#define JOY_Y1 (abs(joystick.joy1_y1) > THRESHOLD ? joystick.joy1_y1 : 0)
+#define JOY_Y1 (abs(joystick.joy1_y1) > THRESHOLD ? -1.0*joystick.joy1_y1 : 0)
 
 //Defines current button map layout
 #define JOY_X 0

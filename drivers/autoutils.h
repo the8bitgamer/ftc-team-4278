@@ -1,5 +1,6 @@
 #ifndef __AUTODRIVER__
 #define __AUTODRIVER__
+
 #include "sharedutils.h"
 
 #define DrTimer T3
@@ -9,7 +10,6 @@
 
 void pause() {wait1Msec(PAUSE_TIME);}
 void pause(int n) {for(int i = 0; i < n; i++) pause();}
-void normstop() {while(true) wait1Msec(100);}
 void estop() {StopAllTasks();}
 
 int getEncoderByInches(float inches) {return floor((1440)*(abs(inches))/WHEELCIRC);}
@@ -30,6 +30,7 @@ void lockdownRobot() {
 	setRightMotors(0);
 	setArmMotors(0);
 	setSpinMotor(0);
+	unlockArmMotors();
 	while(true) wait1Msec(5);
 }
 
