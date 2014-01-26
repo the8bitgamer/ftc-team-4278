@@ -27,8 +27,9 @@
 #include "drivers/autoutils.h"
 #include "autoconst.h"
 
+int OPT_SIDE = 0; int OPT_AUTO = 0; int OPT_DELAY = 0; int OPT_BRIDGE = 0;
 void initializeRobot() {unlockArmMotors();}
-void moveBridge() {
+void moveToBridge() {
 	setLeftMotors(60);
 	setRightMotors(60);
 	wait1Msec(3200);
@@ -37,20 +38,13 @@ void moveBridge() {
 }
 
 void runAutoLeft() {
-	int dirIR, strIR; float stopRightEnc;
-	HTIRS2readEnhanced(sensorIR, dirIR, strIR);
-	clearEncoders();
-
-	while(dirIR != 5 && rightEncoder < 4325) {
-		HTIRS2readEnhanced(sensorIR, dirIR, strIR);
-		stopRightEnc = rightEncoder;
-		if(dirIR != 5) {setLeftMotors(60); setRightMotors(60);}
-	}
-	setLeftMotors(0); setRightMotors(0); pause(3);
-
+	int irEncDist = rbtMoveToIR(C4_ENC, 6000);
 }
 
-int OPT_SIDE = 0; int OPT_AUTO = 0; int OPT_DELAY = 0; int OPT_BRIDGE = 0;
+void runAutoRight() {
+	int irEncDist = rbtMoveToIR(C4_ENC, 6000);
+}
+
 void optionScreen() {
 	nxtDisplayTextLine(0, "NXT:  %.2f V", ((float)nAvgBatteryLevel)/1000.0);
 	if(externalBatteryAvg > 0) nxtDisplayTextLine(1, "EXT: %.2f V", ((float)externalBatteryAvg)/1000.0);
@@ -61,10 +55,11 @@ void optionScreen() {
 	if(nAvgBatteryLevel < NXT_LOW_BAT && externalBatteryAvg < EXT_LOW_BAT) nxtDisplayTextLine(2, "***NXT EXT LOW***");
 
 	while(nNxtButtonPressed != BTN_CENTER) { // SIDE: LEFT | RIGHT | BRIDGE | NONE
-		if(OPT_SIDE == 0) nxtDisplayTextLine(3, "SIDE: Left");
-		if(OPT_SIDE == 1) nxtDisplayTextLine(3, "SIDE: Right");
-		if(OPT_SIDE == 2) nxtDisplayTextLine(3, "SIDE: Bridge");
-		if(OPT_SIDE == 3) nxtDisplayTextLine(3, "SIDE: None");
+		     if(OPT_SIDE == 0) nxtDisplayTextLine(3, "SIDE: Left");
+		else if(OPT_SIDE == 1) nxtDisplayTextLine(3, "SIDE: Right");
+		else if(OPT_SIDE == 2) nxtDisplayTextLine(3, "SIDE: Bridge");
+		else if(OPT_SIDE == 3) nxtDisplayTextLine(3, "SIDE: None");
+
 		if(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) {
 			PlaySound(soundShortBlip);
 			if(nNxtButtonPressed == BTN_LEFT) OPT_SIDE--;
@@ -136,7 +131,7 @@ task main() {
 
 	if(OPT_SIDE == 0) { //Left
 	} else if(OPT_SIDE == 1) { //Right
-	} else if(OPT_SIDE == 2) moveBridge(); //Bridge
+	} else if(OPT_SIDE == 2) moveToBridge(); //Bridge
 
-	lockdownRobot();
+	lockdownRobot(); //None (or |exit)
 }
