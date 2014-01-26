@@ -127,9 +127,8 @@ int HTIRS2readDCDir(tMUXSensor muxsensor) {
   if (HTSMUXSensorTypes[muxsensor] != HTSMUXSensorCustom)
     HTSMUXconfigChannel(muxsensor, HTIRS2_config);
 
-  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 1, HTIRS2_DC_DIR)) {
+  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 1, HTIRS2_DC_DIR))
     return -1;
-  }
 
   return HTIRS2_I2CReply[0];
 }
@@ -186,9 +185,8 @@ bool HTIRS2readAllDCStrength(tMUXSensor muxsensor, int &dcS1, int &dcS2, int &dc
   if (HTSMUXSensorTypes[muxsensor] != HTSMUXSensorCustom)
     HTSMUXconfigChannel(muxsensor, HTIRS2_config);
 
-  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 5, HTIRS2_DC_SSTR1)) {
+  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 5, HTIRS2_DC_SSTR1))
     return false;
-  }
 
   dcS1 = HTIRS2_I2CReply[0];
   dcS2 = HTIRS2_I2CReply[1];
@@ -232,9 +230,8 @@ int HTIRS2readDCAverage(tMUXSensor muxsensor) {
   if (HTSMUXSensorTypes[muxsensor] != HTSMUXSensorCustom)
     HTSMUXconfigChannel(muxsensor, HTIRS2_config);
 
-  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 1, HTIRS2_DC_SAVG)) {
+  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 1, HTIRS2_DC_SAVG))
     return -1;
-  }
 
   return HTIRS2_I2CReply[0];
 }
@@ -294,9 +291,8 @@ int HTIRS2readACDir(tMUXSensor muxsensor) {
   if (HTSMUXSensorTypes[muxsensor] != HTSMUXSensorCustom)
     HTSMUXconfigChannel(muxsensor, HTIRS2_config);
 
-  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 1, HTIRS2_AC_DIR)) {
+  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 1, HTIRS2_AC_DIR))
     return -1;
-  }
 
   return HTIRS2_I2CReply[0];
 }
@@ -350,9 +346,8 @@ bool HTIRS2readAllACStrength(tMUXSensor muxsensor, int &acS1, int &acS2, int &ac
   if (HTSMUXSensorTypes[muxsensor] != HTSMUXSensorCustom)
     HTSMUXconfigChannel(muxsensor, HTIRS2_config);
 
-  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 5, HTIRS2_AC_SSTR1)) {
+  if (!HTSMUXreadPort(muxsensor, HTIRS2_I2CReply, 5, HTIRS2_AC_SSTR1))
     return false;
-  }
 
   acS1 = HTIRS2_I2CReply[0];
   acS2 = HTIRS2_I2CReply[1];
@@ -373,8 +368,7 @@ bool HTIRS2readAllACStrength(tMUXSensor muxsensor, int &acS1, int &acS2, int &ac
  * @param strength the strength (and distance) of the ball's IR signal
  * @return true if no error occured, false if it did
  */
-bool HTIRS2readEnhanced(tSensors  link, int &dir, int &strength)
-{
+bool HTIRS2readEnhanced(tSensors  link, int &dir, int &strength) {
   ubyte iMax = 0;
   long dcSigSum = 0;
 
@@ -390,12 +384,8 @@ bool HTIRS2readEnhanced(tSensors  link, int &dir, int &strength)
 
   // Find the max DC sig strength
   for (int i = 1; i < 5; i++)
-  {
     if (HTIRS2_I2CReply[i] > HTIRS2_I2CReply[iMax])
-    {
       iMax = i;
-    }
-  }
 
   // Calc base DC direction value
   dir = iMax * 2 + 1;
@@ -403,14 +393,12 @@ bool HTIRS2readEnhanced(tSensors  link, int &dir, int &strength)
   dcSigSum = HTIRS2_I2CReply[iMax] + HTIRS2_I2CReply[5];
 
   // Check signal strength of neighbouring sensor elements
-  if ((iMax > 0) && (HTIRS2_I2CReply[iMax - 1] > (HTIRS2_I2CReply[iMax] / 2)))
-  {
+  if ((iMax > 0) && (HTIRS2_I2CReply[iMax - 1] > (HTIRS2_I2CReply[iMax] / ((ubyte)2)))) {
       dir--;
       dcSigSum += HTIRS2_I2CReply[iMax - 1];
   }
 
-  if ((iMax < 4) && (HTIRS2_I2CReply[iMax + 1] > HTIRS2_I2CReply[iMax] / 2))
-  {
+  if ((iMax < 4) && (HTIRS2_I2CReply[iMax + 1] > HTIRS2_I2CReply[iMax] / ((ubyte)2))) {
       dir++;
       dcSigSum += HTIRS2_I2CReply[iMax + 1];
   }
@@ -420,8 +408,7 @@ bool HTIRS2readEnhanced(tSensors  link, int &dir, int &strength)
   strength = sqrt(dcSigSum * 500);
 
   // Decide if using AC strength
-  if (strength <= 200)
-  {
+  if (strength <= 200) {
     writeDebugStreamLine("switching to AC");
     // Use AC Dir
     HTIRS2_I2CRequest[2] = HTIRS2_OFFSET + HTIRS2_AC_DIR; // Recycle rest of cmdBuf
@@ -432,8 +419,7 @@ bool HTIRS2readEnhanced(tSensors  link, int &dir, int &strength)
     dir = HTIRS2_I2CReply[0];
 
     // Sum the sensor elements to get strength
-    if (dir > 0)
-    {
+    if (dir > 0) {
       strength = HTIRS2_I2CReply[1] + HTIRS2_I2CReply[2] +
                  HTIRS2_I2CReply[3] + HTIRS2_I2CReply[4] +
                  HTIRS2_I2CReply[5];
