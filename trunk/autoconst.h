@@ -1,3 +1,6 @@
+#define NXT_LOW_BAT  8100
+#define EXT_LOW_BAT 12800
+
 #ifndef __CALIBRATED__
 //#error "You must specify __OPTIMAL__ or __CALIBRATED__."
 #warning "You have not specified __CALIBRATED__; using __OPTIMAL__ encoder values."
@@ -13,6 +16,8 @@
 	#define RC2_ENC 2266
 	#define RC3_ENC 4935
 	#define RC4_ENC 5797
+
+	#define BRIDGE_ENC 6200
 #else
 	#define LC1_ENC  691
 	#define LC2_ENC 1900
@@ -23,6 +28,8 @@
 	#define RC2_ENC 2266
 	#define RC3_ENC 4935
 	#define RC4_ENC 5797
+
+	#define BRIDGE_ENC 6200
 #endif
 
 #define LC12_THRESH ((LC1_ENC+LC2_ENC)/2)
