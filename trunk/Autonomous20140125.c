@@ -21,9 +21,11 @@
 #pragma config(Servo,  srvo_S2_C1_6,    servo6,               tServoNone)
 //*!!Codez automagically venerated by 'ROWBOT SEA' conflagration lizard               !!*//
 
+#define __OLD_CONST__
+#define POST_BRIDGE true
+
 #include "drivers/autoutils.h"
 #include "autoconst.h"
-#define POST_BRIDGE true
 
 void initializeRobot() {unlockArmMotors();}
 
@@ -36,81 +38,81 @@ void moveBridge() {
 }
 
 void leftCrate1() {
-	rbtMoveFdTime(3.5, 2000); pause(1); //Realign
+	rbtMoveFd(3.5, 2000); pause(1); //Realign
 	rbtArcRight(96); pause(1);          //Turn to crate
-	rbtMoveFdTime(-5, 2000); pause(1);  //Run into crate
+	rbtMoveFd(-5, 2000); pause(1);  //Run into crate
 	dumpArm(); pause(1);                //Dump arm
-	rbtMoveFdTime(1, 2000); pause(1);   //Back up
+	rbtMoveFd(1, 2000); pause(1);   //Back up
 	if(POST_BRIDGE) {
 		rbtArcLeft(88); pause(1);           //Turn to bridge
-		rbtMoveFdTime(-15.5, 4000); pause(1); //Move away from crates
+		rbtMoveFd(-15.5, 4000); pause(1); //Move away from crates
 		rbtArcLeft(-90); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-18, 4000); pause(1); //Move in align w/ bridge
+		rbtMoveFd(-18, 4000); pause(1); //Move in align w/ bridge
 		rbtArcLeft(-90); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-26, 4000); pause(1); //Onto bridge
+		rbtMoveFd(-26, 4000); pause(1); //Onto bridge
 	}
 }
 
 void leftCrate2() {
-	rbtMoveFdTime(4.5, 1000);           //Realign
+	rbtMoveFd(4.5, 1000);           //Realign
 	rbtArcRight(96); pause(1);          //Turn to crate
-	rbtMoveFdTime(-5, 2000); pause(1);  //Run into crate
+	rbtMoveFd(-5, 2000); pause(1);  //Run into crate
 	dumpArm(); pause(1);                //Dump arm
-	rbtMoveFdTime(1, 2000); pause(1);   //Back up
+	rbtMoveFd(1, 2000); pause(1);   //Back up
 	if(POST_BRIDGE) {
 		rbtArcLeft(88); pause(1);           //Turn to bridge
-		rbtMoveFdTime(-26, 4000); pause(1); //Move away from crates
+		rbtMoveFd(-26, 4000); pause(1); //Move away from crates
 		rbtArcLeft(-90); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-18, 4000); pause(1); //Move in align w/ bridge
+		rbtMoveFd(-18, 4000); pause(1); //Move in align w/ bridge
 		rbtArcLeft(-95); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-26, 4000); pause(1); //Onto bridge
+		rbtMoveFd(-26, 4000); pause(1); //Onto bridge
 	}
 }
 
 void leftCrate3() {
-	rbtMoveFdTime(0.5, 1000);           //Realign
+	rbtMoveFd(0.5, 1000);           //Realign
 	rbtArcRight(96); pause(1);          //Turn to crate
-	rbtMoveFdTime(-5, 2000); pause(1);  //Run into crate
+	rbtMoveFd(-5, 2000); pause(1);  //Run into crate
 	dumpArm(); pause(1);                //Dump arm
-	rbtMoveFdTime(1, 2000); pause(1);   //Back up
+	rbtMoveFd(1, 2000); pause(1);   //Back up
 	if(POST_BRIDGE) {
 		rbtArcRight(-88); pause(1);         //Turn to bridge
-		rbtMoveFdTime(-21, 4000); pause(1); //Move away from crates
+		rbtMoveFd(-21, 4000); pause(1); //Move away from crates
 		rbtArcRight(90); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-18, 4000); pause(1); //Move in align w/ bridge
+		rbtMoveFd(-18, 4000); pause(1); //Move in align w/ bridge
 		rbtArcRight(90); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-26, 4000); pause(1); //Onto bridge
+		rbtMoveFd(-26, 4000); pause(1); //Onto bridge
 	}
 }
 
 void leftCrate4() {
 	rbtArcRight(96); pause(1);          //Turn to crate
-	rbtMoveFdTime(-5, 2000); pause(1);  //Run into crate
+	rbtMoveFd(-5, 2000); pause(1);  //Run into crate
 	dumpArm(); pause(1);                //Dump arm
-	rbtMoveFdTime(1, 2000); pause(1);   //Back up
+	rbtMoveFd(1, 2000); pause(1);   //Back up
 	if(POST_BRIDGE) {
 		rbtArcRight(-88); pause(1);         //Turn to bridge
-		rbtMoveFdTime(-12, 4000); pause(1); //Move away from crates
+		rbtMoveFd(-12, 4000); pause(1); //Move away from crates
 		rbtArcRight(90); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-18, 4000); pause(1); //Move in align w/ bridge
+		rbtMoveFd(-18, 4000); pause(1); //Move in align w/ bridge
 		rbtArcRight(90); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-26, 4000); pause(1); //Onto bridge
+		rbtMoveFd(-26, 4000); pause(1); //Onto bridge
 	}
 }
 
 /*void rightCrate1() {
-	//rbtMoveFdTime(3, 2000); pause(1);   //Realign
+	//rbtMoveFd(3, 2000); pause(1);   //Realign
 	rbtArcLeft(-96); pause(1);          //Turn to crate
-	rbtMoveFdTime(-5, 2000); pause(1);  //Run into crate
+	rbtMoveFd(-5, 2000); pause(1);  //Run into crate
 	dumpArm(); pause(1);                //Dump arm
-	rbtMoveFdTime(1, 2000); pause(1);   //Back up
+	rbtMoveFd(1, 2000); pause(1);   //Back up
 	if(POST_BRIDGE) {
 		rbtArcRight(-88); pause(1);         //Turn to bridge
-		rbtMoveFdTime(-15, 4000); pause(1); //Move away from crates
+		rbtMoveFd(-15, 4000); pause(1); //Move away from crates
 		rbtArcRight(90); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-18, 4000); pause(1); //Move in align w/ bridge
+		rbtMoveFd(-18, 4000); pause(1); //Move in align w/ bridge
 		rbtArcRight(90); pause(1);          //Turn to bridge
-		rbtMoveFdTime(-26, 4000); pause(1); //Onto bridge
+		rbtMoveFd(-26, 4000); pause(1); //Onto bridge
 	}
 }*/
 
@@ -218,7 +220,7 @@ task main() {
 		if(auto == 2) encDist = LC2_ENC;
 		if(auto == 3) encDist = LC3_ENC;
 		if(auto == 4) encDist = LC4_ENC;
-		rbtMoveFdTime(getInchesByEncoder(encDist), 5000);
+		rbtMoveFd(getInchesByEncoder(encDist), 5000);
 		if(auto == 1) leftCrate1();
 		if(auto == 2) leftCrate2();
 		if(auto == 3) leftCrate3();

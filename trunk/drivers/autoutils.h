@@ -3,8 +3,7 @@
 
 #include "sharedutils.h"
 
-#define DrTimer T3
-#define SeTimer T2
+#define DRV_TIMER T3
 #define MAX_TURN_TIME 3000
 #define PAUSE_TIME 160
 
@@ -34,25 +33,43 @@ void lockdownRobot() {
 	while(true) wait1Msec(5);
 }
 
-void rbtMoveFdTime(float inches, int msec) {
-	int enc = getEncoderByInches(inches); clearEncoders();
+int rbtMoveToIR(int max, int timeout) {
+	int dirIR, strIR; float stopRightEnc;
+	HTIRS2readEnhanced(sensorIR, dirIR, strIR);
+	clearEncoders();
+
+	ClearTimer(DRV_TIMER);
+	while(dirIR != 5 && rightEncoder < max) {
+		HTIRS2readEnhanced(sensorIR, dirIR, strIR);
+		stopRightEnc = rightEncoder;
+		if(dirIR != 5) {setLeftMotors(40); setRightMotors(40);}
+		if(time1[DRV_TIMER] > timeout) lockdownRobot();
+	}
+	setLeftMotors(0); setRightMotors(0); pause(3);
+	return rightEncoder;
+}
+
+void rbtMoveFdDist(float inches, int msec) {
+	clearEncoders();
+	int enc = getEncoderByInches(inches);
 	int norm = -1.0*sgn(inches);
-	ClearTimer(DrTimer);
+	ClearTimer(DRV_TIMER);
 	while(leftEncoder < enc && rightEncoder < enc) {
-		if(time1[DrTimer] > msec) lockdownRobot();
+		if(time1[DRV_TIMER] > msec) lockdownRobot();
 		setLeftMotors (100*norm);
 		setRightMotors(093*norm);
 	}
-	if(time1[DrTimer] > msec) lockdownRobot();
+	if(time1[DRV_TIMER] > msec) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0);
 }
+void rbtMoveFdEnc(int enc, int msec) {rbtMoveFdDist(getInchesByEncoder(enc), msec);}
 
 void rbtArcLeft(float degs) {
 	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
 	setLeftMotors(-1*sgn(degs)*90);
-	ClearTimer(DrTimer);
-	while(leftEncoder < enc) if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
+	ClearTimer(DRV_TIMER);
+	while(leftEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0);
 }
 
@@ -60,8 +77,8 @@ void rbtArcRight(float degs) {
 	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
 	setRightMotors(sgn(degs)*60);
-	ClearTimer(DrTimer);
-	while(rightEncoder < enc) if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
+	ClearTimer(DRV_TIMER);
+	while(rightEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
 	setRightMotors(0);
 }
 
@@ -70,8 +87,8 @@ void rbtTurnRight(float degs) {
 	clearEncoders();
 	setLeftMotors( -1*sgn(degs)*40);
 	setRightMotors(sgn(degs)*30);
-	ClearTimer(DrTimer);
-	while(rightEncoder < enc) if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
+	ClearTimer(DRV_TIMER);
+	while(rightEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0);
 }
 
@@ -80,8 +97,8 @@ void rbtTurnLeft(float degs) {
 	clearEncoders();
 	setLeftMotors(sgn(degs)*60);
 	setRightMotors(-1*sgn(degs)*60);
-	ClearTimer(DrTimer);
-	while(leftEncoder < enc) if(time1[DrTimer] > MAX_TURN_TIME) lockdownRobot();
+	ClearTimer(DRV_TIMER);
+	while(leftEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0);
 }
 
