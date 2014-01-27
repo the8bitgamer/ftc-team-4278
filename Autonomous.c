@@ -21,11 +21,8 @@
 #pragma config(Servo,  srvo_S2_C1_6,  servo6, tServoNone)
 //*!!Codez automagically venerated by 'ROWBOT SEA' conflagration lizard               !!*//
 
-#define POST_BRIDGE true
-#define __CALIBRATED__
-
-#include "drivers/autoutils.h"
 #include "autoconst.h"
+#include "drivers/autoutils.h"
 
 int OPT_SIDE = 0; int OPT_AUTO = 0; int OPT_DELAY = 0; int OPT_BRIDGE = 0;
 void initializeRobot() {unlockArmMotors();}
@@ -37,21 +34,21 @@ void moveToBridge() {
 	setRightMotors(0);
 }
 
-#warning "Theoretical code; check polarities"
+#warning "Theoretical code"
 void runAutoLeft() {
 	int irEncDist = -1;
-	     if(OPT_AUTO == 0) irEncDist = rbtMoveToIR(C4_ENC, 6000);
+	     if(OPT_AUTO == 0) {irEncDist = rbtMoveToIR(C4_ENC, 6000) - getEncoderByInches(IR_REALIGN); rbtMoveFdEnc(IR_REALIGN, 2000);}
 	else if(OPT_AUTO == 1) {rbtMoveFdEnc(C1_ENC, 5000); irEncDist = C1_ENC;}
 	else if(OPT_AUTO == 2) {rbtMoveFdEnc(C2_ENC, 5000); irEncDist = C2_ENC;}
 	else if(OPT_AUTO == 3) {rbtMoveFdEnc(C3_ENC, 5000); irEncDist = C3_ENC;}
 	else if(OPT_AUTO == 4) {rbtMoveFdEnc(C4_ENC, 5000); irEncDist = C4_ENC;}
 
 	rbtArcRight(90);         //Turn to crate
-	rbtMoveFdDist(-3, 1500); //Against crate
+	rbtMoveFdDist(-5, 2500); //Against crate
 	dumpArm();               //Dump blocks
 	rbtMoveFdDist(1, 1000);  //Back away
 
-	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 1 : 2;
+	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 2 : 1;
 	if(OPT_BRIDGE == 1) { //Left
 		rbtArcLeft(90);
 		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+2), 6000);
@@ -73,21 +70,21 @@ void runAutoLeft() {
 	if(OPT_BRIDGE == 4); //None
 }
 
-#warning "Theoretical code; check polarities"
+#warning "Theoretical code"
 void runAutoRight() {
 	int irEncDist = -1;
-	     if(OPT_AUTO == 0) irEncDist = rbtMoveToIR(C4_ENC, 6000);
+	     if(OPT_AUTO == 0) {irEncDist = rbtMoveToIR(C4_ENC, 6000) - getEncoderByInches(IR_REALIGN); rbtMoveFdEnc(IR_REALIGN, 2000);}
 	else if(OPT_AUTO == 1) {rbtMoveFdEnc(C1_ENC, 5000); irEncDist = C1_ENC;}
 	else if(OPT_AUTO == 2) {rbtMoveFdEnc(C2_ENC, 5000); irEncDist = C2_ENC;}
 	else if(OPT_AUTO == 3) {rbtMoveFdEnc(C3_ENC, 5000); irEncDist = C3_ENC;}
 	else if(OPT_AUTO == 4) {rbtMoveFdEnc(C4_ENC, 5000); irEncDist = C4_ENC;}
 
 	rbtArcLeft(-90);
-	rbtMoveFdDist(-3, 1500);
+	rbtMoveFdDist(-5, 2500);
 	dumpArm();
 	rbtMoveFdDist(1, 1000);
 
-	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 2 : 1;
+	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 1 : 2;
 	if(OPT_BRIDGE == 1) { //Left
 		rbtArcLeft(90);
 		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(2), 6000);
@@ -194,9 +191,8 @@ task main() {
 	waitForStart();
 	wait1Msec(OPT_DELAY);
 
-	if(OPT_SIDE == 0) { //Left
-	} else if(OPT_SIDE == 1) { //Right
-	} else if(OPT_SIDE == 2) moveToBridge(); //Bridge
-
-	lockdownRobot(); //None (or |exit)
+	     if(OPT_SIDE == 0) runAutoLeft();
+	else if(OPT_SIDE == 1) runAutoRight();
+	else if(OPT_SIDE == 2) moveToBridge();
+	lockdownRobot();
 }

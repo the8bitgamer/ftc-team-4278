@@ -5,12 +5,13 @@
 #define EXT_LOW_BAT 12800
 
 #ifndef __OLD_CONST__
-	#define C1_ENC  691
-	#define C2_ENC 1900
-	#define C3_ENC 4000
-	#define C4_ENC 5264
+	#define C1_ENC  100 //Optimal 100
+	#define C2_ENC  982 //Optimal 982
+	#define C3_ENC 3160 //Optimal 3160
+	#define C4_ENC 4306 //Optimal 4306
 
-	#define BRIDGE_ENC 6200
+	#define BRIDGE_ENC 5853
+	#define IR_REALIGN 1.5
 
 	#define C12_THRESH ((C1_ENC+C2_ENC)/2)
 	#define C23_THRESH ((C2_ENC+C3_ENC)/2)
