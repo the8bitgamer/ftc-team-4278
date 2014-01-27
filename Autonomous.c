@@ -69,7 +69,7 @@ void runAutoLeft() {
 		rbtMoveFdDist(24, 4000);
 	}
 	if(OPT_BRIDGE == 3) //Back off
-		rbtMoveFdDist(-18, 5000);
+		rbtMoveFdDist(18, 6000);
 	if(OPT_BRIDGE == 4); //None
 }
 
@@ -81,6 +81,32 @@ void runAutoRight() {
 	else if(OPT_AUTO == 2) {rbtMoveFdEnc(C2_ENC, 5000); irEncDist = C2_ENC;}
 	else if(OPT_AUTO == 3) {rbtMoveFdEnc(C3_ENC, 5000); irEncDist = C3_ENC;}
 	else if(OPT_AUTO == 4) {rbtMoveFdEnc(C4_ENC, 5000); irEncDist = C4_ENC;}
+
+	rbtArcLeft(-90);
+	rbtMoveFdDist(-3, 1500);
+	dumpArm();
+	rbtMoveFdDist(1, 1000);
+
+	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 2 : 1;
+	if(OPT_BRIDGE == 1) { //Left
+		rbtArcLeft(90);
+		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(2), 6000);
+		rbtArcLeft(-90);
+		rbtMoveFdDist(22, 3000);
+		rbtArcLeft(-90);
+		rbtMoveFdDist(24, 4000);
+	}
+	if(OPT_BRIDGE == 2) { //Right
+		rbtArcRight(-90);
+		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+2), 6000);
+		rbtArcRight(90);
+		rbtMoveFdDist(22, 3000);
+		rbtArcRight(90);
+		rbtMoveFdDist(24, 4000);
+	}
+	if(OPT_BRIDGE == 3) //Back off
+		rbtMoveFdDist(18, 6000);
+	if(OPT_BRIDGE == 4); //None
 }
 
 void optionScreen() {
