@@ -37,10 +37,12 @@ void moveToBridge() {
 	setRightMotors(0);
 }
 
+#warning "Theoretical code"
 void runAutoLeft() {
 	int irEncDist = rbtMoveToIR(C4_ENC, 6000);
 }
 
+#warning "Theoretical code"
 void runAutoRight() {
 	int irEncDist = rbtMoveToIR(C4_ENC, 6000);
 }
@@ -64,8 +66,8 @@ void optionScreen() {
 			PlaySound(soundShortBlip);
 			if(nNxtButtonPressed == BTN_LEFT) OPT_SIDE--;
 			if(nNxtButtonPressed == BTN_RIGHT) OPT_SIDE ++;
-			if(OPT_SIDE > 4) OPT_SIDE = 0;
-			if(OPT_SIDE < 0) OPT_SIDE = 4;
+			if(OPT_SIDE > 3) OPT_SIDE = 0;
+			if(OPT_SIDE < 0) OPT_SIDE = 3;
 
 			while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
 		}
@@ -76,14 +78,15 @@ void optionScreen() {
 			nxtDisplayTextLine(4, "DELY: %i", OPT_DELAY);
 			if(nNxtButtonPressed == 1 || nNxtButtonPressed == 2) {
 				PlaySound(soundShortBlip);
-				if(nNxtButtonPressed == 2) OPT_DELAY -= 1000;
-				if(nNxtButtonPressed == 1) OPT_DELAY += 1000;
-				if(OPT_DELAY < 0)     OPT_DELAY = 25000;
-				if(OPT_DELAY > 25000) OPT_DELAY = 0;
+				if(nNxtButtonPressed == 2) OPT_DELAY -= (time1[T1] < 200 ? 5000 : 1000);
+				if(nNxtButtonPressed == 1) OPT_DELAY += (time1[T1] < 200 ? 5000 : 1000);
+				if(OPT_DELAY < 0)     OPT_DELAY += 25000;
+				if(OPT_DELAY > 25000) OPT_DELAY -= 25000;
 
 				while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
+				ClearTimer(T1);
 			}
-		} PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
+		} if(OPT_SIDE != 3) PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
 
 	if(OPT_SIDE < 2) // AUTO: IR | Crate 1 | Crate 2 | Crate 3 | Crate 4
 		while(nNxtButtonPressed != BTN_CENTER) {
@@ -99,7 +102,7 @@ void optionScreen() {
 
 				while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
 			}
-		} PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
+		} if(OPT_SIDE < 2) PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
 
 	if(OPT_SIDE < 2) // BRIDGE: Closest | Left | Right | Back up | None
 		while(nNxtButtonPressed != BTN_CENTER) {
@@ -118,7 +121,7 @@ void optionScreen() {
 
 				while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
 			}
-		} PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
+		} if(OPT_SIDE < 2) PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
 
 	nxtDisplayTextLine(7, "*** LOCKED ***");
 }
