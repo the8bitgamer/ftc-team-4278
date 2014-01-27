@@ -11,8 +11,8 @@ void pause() {wait1Msec(PAUSE_TIME);}
 void pause(int n) {for(int i = 0; i < n; i++) pause();}
 void estop() {StopAllTasks();}
 
-int getEncoderByInches(float inches) {return floor((1440)*(abs(inches))/WHEELCIRC);}
-float getInchesByEncoder(int encode) {return (((float)abs(encode))/360.0)*WHEELCIRC;}
+int getEncoderByInches(float inches) {return floor((1440)*(inches)/WHEELCIRC);}
+float getInchesByEncoder(int encode) {return (((float)encode)/1440.0)*WHEELCIRC;}
 
 void dumpArm() {
 	setArmMotors(50);
@@ -100,6 +100,14 @@ void rbtTurnLeft(float degs) {
 	ClearTimer(DRV_TIMER);
 	while(leftEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0);
+}
+
+int getClosestCrate(int encDist) {
+	int minD = abs(encDist - C1_ENC); int crate = 1;
+	if(abs(encDist - C2_ENC) < minD) crate = 2;
+	if(abs(encDist - C3_ENC) < minD) crate = 3;
+	if(abs(encDist - C4_ENC) < minD) crate = 4;
+	return crate;
 }
 
 #endif //__AUTODRIVER__
