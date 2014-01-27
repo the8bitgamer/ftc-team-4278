@@ -4,8 +4,6 @@
 #define NXT_LOW_BAT  8100
 #define EXT_LOW_BAT 12800
 
-
-
 #ifndef __OLD_CONST__
 	#define C1_ENC  691
 	#define C2_ENC 1900
