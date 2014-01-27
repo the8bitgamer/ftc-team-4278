@@ -37,14 +37,50 @@ void moveToBridge() {
 	setRightMotors(0);
 }
 
-#warning "Theoretical code"
+#warning "Theoretical code; check polarities"
 void runAutoLeft() {
-	int irEncDist = rbtMoveToIR(C4_ENC, 6000);
+	int irEncDist = -1;
+	     if(OPT_AUTO == 0) irEncDist = rbtMoveToIR(C4_ENC, 6000);
+	else if(OPT_AUTO == 1) {rbtMoveFdEnc(C1_ENC, 5000); irEncDist = C1_ENC;}
+	else if(OPT_AUTO == 2) {rbtMoveFdEnc(C2_ENC, 5000); irEncDist = C2_ENC;}
+	else if(OPT_AUTO == 3) {rbtMoveFdEnc(C3_ENC, 5000); irEncDist = C3_ENC;}
+	else if(OPT_AUTO == 4) {rbtMoveFdEnc(C4_ENC, 5000); irEncDist = C4_ENC;}
+
+	rbtArcRight(90);         //Turn to crate
+	rbtMoveFdDist(-3, 1500); //Against crate
+	dumpArm();               //Dump blocks
+	rbtMoveFdDist(1, 1000);  //Back away
+
+	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 1 : 2;
+	if(OPT_BRIDGE == 1) { //Left
+		rbtArcLeft(90);
+		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+2), 6000);
+		rbtArcLeft(-90);
+		rbtMoveFdDist(22, 3000);
+		rbtArcLeft(-90);
+		rbtMoveFdDist(24, 4000);
+	}
+	if(OPT_BRIDGE == 2) { //Right
+		rbtArcRight(-90);
+		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(2), 6000);
+		rbtArcRight(90);
+		rbtMoveFdDist(22, 3000);
+		rbtArcRight(90);
+		rbtMoveFdDist(24, 4000);
+	}
+	if(OPT_BRIDGE == 3) //Back off
+		rbtMoveFdDist(-18, 5000);
+	if(OPT_BRIDGE == 4); //None
 }
 
-#warning "Theoretical code"
+#warning "Theoretical code; check polarities"
 void runAutoRight() {
-	int irEncDist = rbtMoveToIR(C4_ENC, 6000);
+	int irEncDist = -1;
+	     if(OPT_AUTO == 0) irEncDist = rbtMoveToIR(C4_ENC, 6000);
+	else if(OPT_AUTO == 1) {rbtMoveFdEnc(C1_ENC, 5000); irEncDist = C1_ENC;}
+	else if(OPT_AUTO == 2) {rbtMoveFdEnc(C2_ENC, 5000); irEncDist = C2_ENC;}
+	else if(OPT_AUTO == 3) {rbtMoveFdEnc(C3_ENC, 5000); irEncDist = C3_ENC;}
+	else if(OPT_AUTO == 4) {rbtMoveFdEnc(C4_ENC, 5000); irEncDist = C4_ENC;}
 }
 
 void optionScreen() {
@@ -56,7 +92,7 @@ void optionScreen() {
 	if(externalBatteryAvg < EXT_LOW_BAT) nxtDisplayTextLine(2, "***    EXT LOW***");
 	if(nAvgBatteryLevel < NXT_LOW_BAT && externalBatteryAvg < EXT_LOW_BAT) nxtDisplayTextLine(2, "***NXT EXT LOW***");
 
-	while(nNxtButtonPressed != BTN_CENTER) { // SIDE: LEFT | RIGHT | BRIDGE | NONE
+	while(nNxtButtonPressed != BTN_CENTER) { // SIDE: Left | Right | Bridge | None
 		     if(OPT_SIDE == 0) nxtDisplayTextLine(3, "SIDE: Left");
 		else if(OPT_SIDE == 1) nxtDisplayTextLine(3, "SIDE: Right");
 		else if(OPT_SIDE == 2) nxtDisplayTextLine(3, "SIDE: Bridge");
