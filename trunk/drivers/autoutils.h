@@ -102,12 +102,4 @@ void rbtTurnLeft(float degs) {
 	setLeftMotors(0); setRightMotors(0);
 }
 
-int getClosestCrate(int encDist) {
-	int minD = abs(encDist - C1_ENC); int crate = 1;
-	if(abs(encDist - C2_ENC) < minD) crate = 2;
-	if(abs(encDist - C3_ENC) < minD) crate = 3;
-	if(abs(encDist - C4_ENC) < minD) crate = 4;
-	return crate;
-}
-
 #endif //__AUTODRIVER__

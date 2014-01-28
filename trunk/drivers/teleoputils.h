@@ -4,10 +4,11 @@
 #include "sharedutils.h"
 
 //Allows threshold to be defined in teleop-file
-#define THRESHOLD 10.0
-#define MINX  10.0
-#define SLOPE 0.5
-#define DISTA 0.6
+#define THRESH 10.0
+#define MINX   10.0
+#define SLOPE   0.5
+#define DISTA   0.6
+
 float powscl(int xz) {
 	float sign = (float)sgn(xz);
 	float x = abs(xz)/128.0;
@@ -16,8 +17,8 @@ float powscl(int xz) {
 }
 
 //Controller 1 - Left Joystick - Linear
-#define JOY_X1 (abs(joystick.joy1_x1) > THRESHOLD ? joystick.joy1_x1 : 0)
-#define JOY_Y1 (abs(joystick.joy1_y1) > THRESHOLD ? -1.0*joystick.joy1_y1 : 0)
+#define JOY_X1 (abs(joystick.joy1_x1) > THRESH ? joystick.joy1_x1 : 0)
+#define JOY_Y1 (abs(joystick.joy1_y1) > THRESH ? -1.0*joystick.joy1_y1 : 0)
 
 //Defines current button map layout
 #define JOY_X 0
@@ -39,15 +40,10 @@ float powscl(int xz) {
 #define JOY_BTN joystick.joy1_Buttons
 
 int getLeftPowTopHat(int topHat) {
-	//topHat--;
 	if(topHat == 0) return 100;
 	if(topHat == 6) return -100;
 	if(topHat == 4) return -100;
 	if(topHat == 2) return 100;
-	//if(topHat == 1) return 80;
-	//if(topHat == 3) return -80;
-	//if(topHat == 5) return -35;
-	//if(topHat == 7) return 35;
 	return 0;
 }
 
@@ -57,10 +53,6 @@ int getRightPowTopHat(int topHat) {
 	if(topHat == 6) return 100;
 	if(topHat == 4) return -100;
 	if(topHat == 2) return -100;
-	//if(topHat == 1) return 35;
-	//if(topHat == 3) return -35;
-	//if(topHat == 5) return -80;
-	//if(topHat == 7) return 80;
 	return 0;
 }
 

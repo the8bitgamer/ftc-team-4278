@@ -11,11 +11,19 @@
 	#define C4_ENC 4306 //Optimal 4306
 
 	#define BRIDGE_ENC 5853
-	#define IR_REALIGN 1.5
+	#define IR_REALIGN 1.0
 
 	#define C12_THRESH ((C1_ENC+C2_ENC)/2)
 	#define C23_THRESH ((C2_ENC+C3_ENC)/2)
 	#define C34_THRESH ((C3_ENC+C4_ENC)/2)
+
+	int getClosestCrate(int encDist) {
+		int minD = abs(encDist - C1_ENC); int crate = 1;
+		if(abs(encDist - C2_ENC) < minD) crate = 2;
+		if(abs(encDist - C3_ENC) < minD) crate = 3;
+		if(abs(encDist - C4_ENC) < minD) crate = 4;
+		return crate;
+	}
 #else
 	#define LC1_ENC  691
 	#define LC2_ENC 1900

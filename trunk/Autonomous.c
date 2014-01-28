@@ -23,8 +23,10 @@
 
 #include "autoconst.h"
 #include "drivers/autoutils.h"
+//#include "drivers/autodummy.h"
 
 int OPT_SIDE = 0; int OPT_AUTO = 0; int OPT_DELAY = 0; int OPT_BRIDGE = 0;
+
 void initializeRobot() {unlockArmMotors();}
 void moveToBridge() {
 	setLeftMotors(60);

@@ -21,9 +21,7 @@
 #pragma config(Servo,  srvo_S2_C1_6,    servo6,               tServoNone)
 //*!!Codez automagically venerated bai 'ROWBOT SEA' conflagration lizard              !!*//
 
-#include "drivers/JoystickDriver4278.c"
-#include "drivers/autoutils.h"
-//#include "drivers/hitechnic-irseeker-v2.h"
+#include "drivers/teleoputils.h"
 
 task main() {
 	unlockArmMotors();

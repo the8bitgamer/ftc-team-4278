@@ -1,14 +1,14 @@
 #ifndef __SHAREDUTILS__
+#define __SHAREDUTILS__
+
 #include "JoystickDriver4278.c"
 #include "hitechnic-irseeker-v2.h"
 #include "wiringnxt.h"
 
-#define __SHAREDUTILS__
-
-#define setLeftMotors(x)  {motor[mLeft1]  = x; motor[mLeft2]  = x;}
-#define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] = x;}
-#define setArmMotors(x)   {motor[mArm1] = x; motor[mArm2] = -x;}
-#define setSpinMotor(x)   {motor[mSpin] = x;}
+#define setLeftMotors(x)  {motor[mLeft1]  = x; motor[mLeft2]  =  x;}
+#define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] =  x;}
+#define setArmMotors(x)   {motor[mArm1]   = x; motor[mArm2]   = -x;}
+#define setSpinMotor(x)   {motor[mSpin]   = x;}
 #define lockArmMotors()   {servo[servoL1] = 155; servo[servoL2] = 20;}
 #define unlockArmMotors() {servo[servoL1] = 120; servo[servoL2] = 70;}
 
@@ -32,29 +32,5 @@
 #define BTN_LEFT   2
 #define BTN_RIGHT  1
 #define BTN_BACK   0
-
-float linearScale(float x, float in_min, float in_max, float out_min, float out_max) {return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
-
-void displayDiagnostics() {
-	if(externalBatteryAvg < 0) nxtDisplayTextLine(3, "Ext Batt: OFF");
- 		else nxtDisplayTextLine(3, "Ext Batt:%4.1f V", externalBatteryAvg/1000.0);
-  nxtDisplayTextLine(4, "NXT Batt:%4.1f V", nAvgBatteryLevel/1000.0);
-}
-
-string sTextLines[8];
-void displayText(int nLineNumber, const string cChar, int nValueDC, int nValueAC) {
-	string sTemp;
-
-	StringFormat(sTemp, "%4d  %4d", nValueDC, nValueAC);
-	// Check if the new line is the same as the previous one
-	// Only update screen if it's different.
-	if (sTemp != sTextLines[nLineNumber])	{
-		string sTemp2;
-
-		sTextLines[nLineNumber] = sTemp;
-		StringFormat(sTemp2, "%s:  %s", cChar, sTemp);
-		nxtDisplayTextLine(nLineNumber, sTemp2);
-	}
-}
 
 #endif //__SHAREDUTILS__
