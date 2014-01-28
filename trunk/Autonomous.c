@@ -53,7 +53,7 @@ void runAutoLeft() {
 		rbtArcLeft(90);
 		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+2), 6000);
 		rbtArcLeft(-90);
-		rbtMoveFdDist(22, 3000);
+		rbtMoveFdDist(18, 3000);
 		rbtArcLeft(-90);
 		rbtMoveFdDist(24, 4000);
 	}
@@ -61,7 +61,7 @@ void runAutoLeft() {
 		rbtArcRight(-90);
 		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(2), 6000);
 		rbtArcRight(90);
-		rbtMoveFdDist(22, 3000);
+		rbtMoveFdDist(18, 3000);
 		rbtArcRight(90);
 		rbtMoveFdDist(24, 4000);
 	}
@@ -89,7 +89,7 @@ void runAutoRight() {
 		rbtArcLeft(90);
 		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(2), 6000);
 		rbtArcLeft(-90);
-		rbtMoveFdDist(22, 3000);
+		rbtMoveFdDist(18, 3000);
 		rbtArcLeft(-90);
 		rbtMoveFdDist(24, 4000);
 	}
@@ -97,7 +97,7 @@ void runAutoRight() {
 		rbtArcRight(-90);
 		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+2), 6000);
 		rbtArcRight(90);
-		rbtMoveFdDist(22, 3000);
+		rbtMoveFdDist(18, 3000);
 		rbtArcRight(90);
 		rbtMoveFdDist(24, 4000);
 	}
