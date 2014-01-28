@@ -1,5 +1,6 @@
 #ifndef __AUTOUTILS__
 #define __AUTOUTILS__
+#define __AUTODUMMY__
 
 #include "sharedutils.h"
 
