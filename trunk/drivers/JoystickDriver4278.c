@@ -24,6 +24,7 @@ variableRefRAM(joystick));
 #endif
 
 #define getJoystickSettings(joystick) 	memcpy(joystick, joystickCopy, sizeof(joystick))
+#define NOMSG_LIMIT 500
 
 bool joy1Btn(int btn) {return ((joystick.joy1_Buttons & (1 << btn)) != 0);}
 
@@ -31,8 +32,6 @@ const TMailboxIDs kJoystickQueueID = mailbox1;
 TJoystick joystickCopy;  // Internal buffer to hold the last received message from the PC. Do not use
 
 bool bDisconnected = false;
-bool bOverrideJoystickDisabling = false;
-long nNoMessageCounterLimit = 500;
 long nNoMessageCounter = 0;
 
 task readMsgFromPC() {
@@ -63,18 +62,16 @@ task readMsgFromPC() {
 
       if(nSizeOfMessage <= 0) {
         if(!bMsgFound) {
-          if(nNoMessageCounter > nNoMessageCounterLimit) {
+          if(nNoMessageCounter > NOMSG_LIMIT) {
             hogCPU();
-            if(!bOverrideJoystickDisabling) {
-              bTempUserMode = joystickCopy.UserMode;
-              bTempStopPgm = joystickCopy.StopPgm;
+            bTempUserMode = joystickCopy.UserMode;
+            bTempStopPgm = joystickCopy.StopPgm;
 
-              memset(joystickCopy, 0, sizeof(joystickCopy));
+            memset(joystickCopy, 0, sizeof(joystickCopy));
 
-              joystickCopy.UserMode = bTempUserMode;
-              joystickCopy.StopPgm = bTempStopPgm;
-              joystickCopy.joy1_TopHat = -1;
-            }
+            joystickCopy.UserMode = bTempUserMode;
+            joystickCopy.StopPgm = bTempStopPgm;
+            joystickCopy.joy1_TopHat = -1;
             bDisconnected = true;
             releaseCPU();
           }
