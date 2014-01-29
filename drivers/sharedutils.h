@@ -33,4 +33,11 @@
 #define BTN_RIGHT  1
 #define BTN_BACK   0
 
+void waitForStart() {
+  while(true) {
+    getJoystickSettings(joystick);
+    if(!joystick.StopPgm) break;
+  }
+}
+
 #endif //__SHAREDUTILS__
