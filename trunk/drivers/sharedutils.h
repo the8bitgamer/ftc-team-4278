@@ -33,6 +33,9 @@
 #define BTN_RIGHT  1
 #define BTN_BACK   0
 
+#define LEFT_POW_DIFF 0.563
+#define RIGHT_POW_DIFF 1.0
+
 void waitForStart() {
   while(true) {
     getJoystickSettings(joystick);

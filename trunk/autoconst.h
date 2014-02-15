@@ -1,8 +1,8 @@
 #ifndef __AUTOCONST__
 #define __AUTOCONST__
 
-#define NXT_LOW_BAT  8100
-#define EXT_LOW_BAT 12800
+#define NXT_LOW_BAT  8100 //mV
+#define EXT_LOW_BAT 12750 //mV
 
 #ifndef __OLD_CONST__
 	#define C1_ENC  100 //Optimal 100
@@ -11,7 +11,7 @@
 	#define C4_ENC 4306 //Optimal 4306
 
 	#define BRIDGE_ENC 5853
-	#define IR_REALIGN 1.0
+	#define IR_REALIGN 1.5
 
 	#define C12_THRESH ((C1_ENC+C2_ENC)/2)
 	#define C23_THRESH ((C2_ENC+C3_ENC)/2)
