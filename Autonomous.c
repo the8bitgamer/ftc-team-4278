@@ -29,14 +29,13 @@ int OPT_SIDE = 0; int OPT_AUTO = 0; int OPT_DELAY = 0; int OPT_BRIDGE = 0;
 
 void initializeRobot() {unlockArmMotors();}
 void moveToBridge() {
-	setLeftMotors(60);
-	setRightMotors(60);
-	wait1Msec(3200);
+	setLeftMotors(60*LEFT_POW_DIFF);
+	setRightMotors(60*RIGHT_POW_DIFF);
+	wait1Msec(3000);
 	setLeftMotors(0);
 	setRightMotors(0);
 }
 
-#warning "Theoretical code"
 void runAutoLeft() {
 	int irEncDist = -1;
 	     if(OPT_AUTO == 0) {irEncDist = rbtMoveToIR(C4_ENC, 6000) - getEncoderByInches(IR_REALIGN); rbtMoveFdEnc(IR_REALIGN, 2000);}
@@ -46,33 +45,32 @@ void runAutoLeft() {
 	else if(OPT_AUTO == 4) {rbtMoveFdEnc(C4_ENC, 5000); irEncDist = C4_ENC;}
 
 	rbtArcRight(90);         //Turn to crate
-	rbtMoveFdDist(-5, 2500); //Against crate
+	rbtMoveFdDist(4, 3000); //Against crate
 	dumpArm();               //Dump blocks
-	rbtMoveFdDist(1, 1000);  //Back away
+	rbtMoveFdDist(-1, 1000);  //Back away
 
 	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 2 : 1;
 	if(OPT_BRIDGE == 1) { //Left
 		rbtArcLeft(90);
-		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+2), 6000);
+		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+1), 6000);
 		rbtArcLeft(-90);
 		rbtMoveFdDist(18, 3000);
 		rbtArcLeft(-90);
-		rbtMoveFdDist(24, 4000);
+		rbtMoveFdDist(30, 4000);
 	}
 	if(OPT_BRIDGE == 2) { //Right
 		rbtArcRight(-90);
-		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(2), 6000);
+		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(1), 6000);
 		rbtArcRight(90);
 		rbtMoveFdDist(18, 3000);
 		rbtArcRight(90);
-		rbtMoveFdDist(24, 4000);
+		rbtMoveFdDist(30, 4000);
 	}
 	if(OPT_BRIDGE == 3) //Back off
-		rbtMoveFdDist(18, 6000);
-	if(OPT_BRIDGE == 4); //None
+		rbtMoveFdDist(-24, 6000);
+	//if(OPT_BRIDGE == 4); //None
 }
 
-#warning "Theoretical code"
 void runAutoRight() {
 	int irEncDist = -1;
 	     if(OPT_AUTO == 0) {irEncDist = rbtMoveToIR(C4_ENC, 6000) - getEncoderByInches(IR_REALIGN); rbtMoveFdEnc(IR_REALIGN, 2000);}
@@ -82,30 +80,30 @@ void runAutoRight() {
 	else if(OPT_AUTO == 4) {rbtMoveFdEnc(C4_ENC, 5000); irEncDist = C4_ENC;}
 
 	rbtArcLeft(-90);
-	rbtMoveFdDist(-5, 2500);
+	rbtMoveFdDist(4, 3000);
 	dumpArm();
-	rbtMoveFdDist(1, 1000);
+	rbtMoveFdDist(-1, 1000);
 
 	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 1 : 2;
 	if(OPT_BRIDGE == 1) { //Left
 		rbtArcLeft(90);
-		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(2), 6000);
+		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(1), 6000);
 		rbtArcLeft(-90);
 		rbtMoveFdDist(18, 3000);
 		rbtArcLeft(-90);
-		rbtMoveFdDist(24, 4000);
+		rbtMoveFdDist(30, 4000);
 	}
 	if(OPT_BRIDGE == 2) { //Right
 		rbtArcRight(-90);
-		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+2), 6000);
+		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+1), 6000);
 		rbtArcRight(90);
 		rbtMoveFdDist(18, 3000);
 		rbtArcRight(90);
-		rbtMoveFdDist(24, 4000);
+		rbtMoveFdDist(30, 4000);
 	}
 	if(OPT_BRIDGE == 3) //Back off
-		rbtMoveFdDist(18, 6000);
-	if(OPT_BRIDGE == 4); //None
+		rbtMoveFdDist(-24, 6000);
+	//if(OPT_BRIDGE == 4); //None
 }
 
 void optionScreen() {
@@ -141,8 +139,8 @@ void optionScreen() {
 				PlaySound(soundShortBlip);
 				if(nNxtButtonPressed == 2) OPT_DELAY -= (time1[T1] < 200 ? 5000 : 1000);
 				if(nNxtButtonPressed == 1) OPT_DELAY += (time1[T1] < 200 ? 5000 : 1000);
-				if(OPT_DELAY < 0)     OPT_DELAY += 25000;
-				if(OPT_DELAY > 25000) OPT_DELAY -= 25000;
+				if(OPT_DELAY < 0)     OPT_DELAY = 25000;
+				if(OPT_DELAY > 25000) OPT_DELAY = 0;
 
 				while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
 				ClearTimer(T1);
@@ -192,7 +190,6 @@ task main() {
 	optionScreen();
 	waitForStart();
 	wait1Msec(OPT_DELAY);
-
 	     if(OPT_SIDE == 0) runAutoLeft();
 	else if(OPT_SIDE == 1) runAutoRight();
 	else if(OPT_SIDE == 2) moveToBridge();
