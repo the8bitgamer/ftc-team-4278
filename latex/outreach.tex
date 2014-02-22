@@ -1,7 +1,9 @@
 \section{Outreach}
 As a team, de.evolution believes that robotics is more than just the engineering. Our first year as a team we saw that the other FTC team at our school, Domo Arigato, was entirely seniors and we were sad that it was going to disappear. This inspired us to try and spread robotics to the younger students and have people involved to keep robotics teams going and to propogate the message of FIRST throughout our community. We have started a robotics class at our high school which has turned into the team Domo Arigato. Due to the popularity of the class a second class, and subsequently an FTC team, has been started. Both the Robo Ravens and Domo Arigato, along with our own team, de.evolution, work hard to start a robotics and engineering culture at our school. The section will be structured as follows, we will begin by listing our community outreach and will in the subsequent subsections go into further detail about some of the more important work we do
+
 \subsection{Community Outreach}
 As a team, de.evolution has tried to do a lot to help spread the ideas of FIRST, robotics and engineering. The following is an extensive list of some of the community outreach that we have done:
+
 \begin{enumerate}
 \item Robotics demos to elementary school students at Solana Pacific Elementary, Del Mar Heights Elementary, Rancho Santa Fe Elementary
 \item PTC World demo in June 2013
@@ -21,9 +23,12 @@ As a team, de.evolution has tried to do a lot to help spread the ideas of FIRST,
 \item Hosting fundraisers at Souplantation for FIRST robotics
 \item Attended and presented at Rotary meetings to show our community the influence of robotics
 \end{enumerate}
+
 \subsection{Helping other teams online}
 As the majority of the members on our team are also on the FRC team \underline{The Aluminum Narwhals} we realize that having online support is one of the best ways to debug and learn about robotics. Chief Delphi, one of the prominent places for online FIRST discussion, is very popular among FRC teams. However, FTC teams do not have nearly as much online support as they may need or like. As a team we have shifted a lot of our focus to helping teams online. We have open-sourced all of our code and have created code tutorials to help out many other teams. In specific we have helped teams in the following ways:
+
 \subsubsection{Reddit}
+
 \subsection{Mentoring of FLL teams}
 Our team aided the Islamic School of San Diego's FLL Teams during their rookie years by mentoring the young kids on robotics and the engineering design process in general. Our students voluntarily watched over the excited and energetic children, assisted in teaching them key concepts, and created useful PowerPoint presentations that were presented to further educate the FLL teams.
 
@@ -33,3 +38,22 @@ The lessons taught the eager and energetic students about what causes earthquake
 
 We found that mentoring FLL teams has not only allowed us to teach the students a lot about robotics, but we gained valuable experiences by doing so.
 \includepdf[pages={-}]{DoubleWinNewspaper.pdf}
+
+\subsection{Syntax Error code optimization assistance}
+
+At a San Diego regional qualification competition, we entered a discussion with team 6077, Syntax Error, about code optimization. We were sharing our varied tricks which were used in code, and through discussion, it became clear that there were a couple points they were particularly interested in implementing. We passed them some contact information, and later received an email from them:
+
+\begin{lstlisting}
+Hey Noah,
+
+We're interested in optimizing the speed of our teleop code, and I know you had mentioned at the tournament that you guys XOR-ed the joystick values to determine when the values had changed--allowing you to skip checks when things weren't changing. Could you please go into more depth as to how you achieved this? Did you directly modify joystickdriver.c? Which values should we be XOR-ing exactly?
+
+Thanks,
+-Collin 
+\end{lstlisting}
+
+We wrote out a document generally detailing the approaches we took when optimizing our teleoperated code. My response was the following PDF file:
+
+\includepdf[pages={1-2}]{SyntaxError.pdf}
+
+The aim was to create an easy-to-follow guide for someone with experience to optimize the teleoperated program. To our enjoyment, they reported significant increases in response time on their controller.
