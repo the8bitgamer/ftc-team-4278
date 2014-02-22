@@ -34,7 +34,7 @@ Ever since last spring, when their team members did a presentation at our school
 The students at the schools are interested in robotics, and are now aware of what the FIRST program can provide. We are thrilled to have the opportunity to interest more students in FTC, and look to continue doing so next year!
 
 \subsection{Helping other teams online}
-As the majority of the members on our team are also on the FRC team \underline{The Aluminum Narwhals} we realize that having online support is one of the best ways to debug and learn about robotics. Chief Delphi, one of the prominent places for online FIRST discussion, is very popular among FRC teams. However, FTC teams do not have nearly as much online support as they may need or like. As a team we have shifted a lot of our focus to helping teams online. We have open-sourced all of our code and have created code tutorials to help out many other teams. We have helped teams in the following ways:
+As the majority of the members on our team are also on the FRC team \underline{The Aluminum Narwhals} we realize that having online support is one of the best ways to debug and learn about robotics. Chief Delphi, one of the prominent places for online FIRST discussion, is very popular among FRC teams. However, FTC teams do not have nearly as much online support as they may need or like. As a team we have shifted a lot of our focus to helping teams online. We have open-sourced all of our code and have created code tutorials to help out many other teams. We have helped teams in the following ways
 
 \subsubsection{Syntax Error code optimization assistance}
 
@@ -58,9 +58,45 @@ The aim was to create an easy-to-follow guide for someone with experience to opt
 
 \subsubsection{Reddit}
 To our pleasant surprise the FTC Reddit subforum was started this year and our team has jumped completely on board to help other teams with both programming and mechanical help. We often will have Skype calls with other teams around the country or just send long documents to them. We have also created extensive and comprehensive documents that detail all of the details, including the advantages and disadvantages, of the different drive trains. The following pages have some of our biggest discussions with teams on Reddit:
+
 \includepdf[pages={-}]{CodeHelp.pdf}
 \includepdf[pages={-}]{FTCHanging.pdf}
 \includepdf[pages={-}]{GearingFTC.pdf}
+
+Additionally, the code assistance post was also mirrored on the Chief Delphi FRC forums. We have contacted six teams through these mediums. In particular:
+
+\begin{fancyquotes}
+I saw your offer to help teams with programming. We are a new FTC all girls team and could use some help with programming our robot. We originally had tank drive and were able to modify the code to work. However, we thought omni direction would be be better for us and built a [chassis] with omni directional wheels mounted at 45 degrees in each corner with a motor on each. There is an encoder on each. I know there has to be some conversion to establish drive vectors, but having some challenges with that. If you had some sample RobotC code that would be great. The girls are very sharp and could make it work, we just need a little help. Ideally we want to use one joystick to go forward, back, left, right. Then the other joystick to rotate left or rotate right.
+ 
+Anything you can do to provide sample code would be VERY much appreciated! Thanks!
+
+\textit{Coach Jerry, Team NESI (6033)}
+\end{fancyquotes}
+
+Our approach to helping teams in this situation is not to outright give the solution, but help provide a conceptual framework for thinking about approaching a solution. That way, teams still gain the educational experience of solving problems themselves, but aren't working in the dark when they attempt to solve the problem.
+
+\begin{fancyquotes}
+I'd be happy to explain conceptually! I'm sure you and I would both agree that, even though I could simply give source code, it's better for the programmers to come up with it themselves to gain a conceptual understanding. Of course, holonomic drive (45 degree omni) is confusing, so feel free to ask questions!
+
+First, the programmers will need to have an understanding of polar coordinates. Nothing too deep, just the basics: that they are expressed with an angle and a radius. The best holonomic drive will follow sines and cosines, so I recommend converting rectangular coordinates to polar coordinates. In this way, the theta of the joystick position becomes the direction the robot is to move in, and the ``r'' magnitude becomes the speed.
+
+There are two parts to a holonomic drive: rotation and translation. Rotation allows the robot to turn to any bearing, and translation allows the robot to move in any direction at a time. Make sure the wheels are aligned such that, in positive power, both the left and right side motors move forward.
+
+Rotation should be added to translation, since translation is more important and complex. Thus, the goal is to work out a translation algorithm. Remember that your controller should be stored in polar coordinates. It is helpful to plot out on paper which direction you want the motors to move for each angle; for instance, at 45 degrees, you want the front left (FL) and bottom right (BR) at 100\% power, and FR/BL at 0\% power. You can use these points to build a sine/cosine graph for each wheel. 
+
+Once a translation algorithm has been tested and implemented, rotation is the next step. Conceptually, to rotate the robot, all the wheels need to move the same direction. Thus, you can simply add whatever your rotational value is (we use the x axis on the second joystick, but be sure to divide by 128 to get a number from -1 to 1) directly to the output from the sines and cosines.
+
+When you add rotation, you will encounter another problem: sometimes motors will be set to 200\% power, while others are at 100\%. Yet the robot still needs to turn. The cause of this problem lies in the rotation. If the robot is going at 45 degrees, FL/BR = 100\%, FB/BL = 0\%. However, if you are rotating at full power, you'll end up with a situation where FL/BR = 200\%, FB/BL = 100\%. The robot will just drive forward. What you need to do at this point is find the maximum power, and divide all the powers by it. They will stay proportional, and you'll get the expected output.
+
+Please let me know if you have any questions! It's certainly not a simple algorithm to think about. I've tried to give a general conceptual outline of how it works, since we'd probably both agree it's better to write the code oneself. Still, if you would like further help, feel free to ask!
+\end{fancyquotes}
+
+While we have removed most of the discussion from this text, the conversation was left with:
+
+\begin{fancyquotes}
+Your explanation will be a big help to the programmers! I anticipate they will have some questions for you about how the theory gets put into practice with RobotC. Thanks for pointing out some of the troublesome aspects of how translation and rotation come together. We will be in touch. Thanks! 
+\end{fancyquotes}
+
 \subsection{Mentoring of FLL teams}
 Our team aided the Islamic School of San Diego's FLL Teams during their rookie years by mentoring the young kids on robotics and the engineering design process in general. Our students voluntarily watched over the excited and energetic children, assisted in teaching them key concepts, and created useful PowerPoint presentations that were presented to further educate the FLL teams.
 
