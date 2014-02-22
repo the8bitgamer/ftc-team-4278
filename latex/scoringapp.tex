@@ -1,0 +1,27 @@
+\section{Team scoring and ranking application}
+
+It is difficult to deny a certain degree of randomness in the FTC competitions. While the competitions are fair and the sample size is large, the ranking points and qualifying points do not necessarily give a clear picture as to the difficulty of the competition or the overall effectiveness of a specific team.
+
+In order to mitigate this problem, we have created our own method for ranking teams fairly based on how well they perform in each match. This allows us to provide a cleaner and easier ranking system for teams, which gives them due credit for the quality of their robot and design.
+
+Let us assume, for instance, that two very good teams are up against one very good team and a moderately good team. Statistically speaking, it is more likely for the two very good teams to win the match. The current ranking point system accomodates this by only giving the winning teams ranking points. While this is, for the most part, fair and effective, there are certain cases under which teams are not necessarily given equal competition - or, even, that a team was lucky in their match selection. 
+
+With our scoring and ranking app, we mitigate this problem in a few critical ways. While the FTC competition's scoring measurements are fair and accurate, the program we designed gives better insight into how much specific teams are actually helping their alliance partners, and allows teams to make more clear decisions about who they may wish to pick during alliance selection. 
+
+The algorithm is composed of three steps:
+
+\begin{enumerate}
+\item The algorithm finds the average match score for each team
+\item The algorithm then finds how much that average score was changed by a specific alliance
+\item The algorithm then adds those together to produce a final score - the ``power rank'' for each team
+\end{enumerate}
+
+These three steps combined do several unique things. However, the most important of these is that \textbf{the algorithm gives teams credit for how much they assist their alliance's overall score.} This means that if you help your alliance - even if you don't win the match - you're still credited for your assistance in that match. 
+
+In this way, it becomes irrelevant how well the players do in ther competition; rather, it simply becomes relevant how well the individual team does when contributing to their alliance score. This is the ultimate goal of the algorithm: instead of measuring the competition, measure the individual robot.
+
+Over the course of the program's use and execution, we have noted several distinct cases where teams who are, in all honesty, quite good, do not end up as a match seed or even necessarily near the top - instead, they have lost many of their matches. It becomes clear when looking at match records that such teams are often pitted against the hardest teams to beat, and so the ranking points may not necessarily be the best representation of their success as an FTC team.
+
+We do appreciate FIRST's method for ranking teams at the competiton, however. It's very straightforward, clear-cut, and promotes healthy and friendly competition. The method we use, however, is designed more so for fairness to the individual teams than it is for the actual rankings themselves.
+
+\textbf{We make the results of these analyses public.} At each competition, we have had multiple teams ask to see our ranking results, simply because they would like to know where their team lies, or because they would like to gather a clearer picture of which teams may be better to pick. Either way, it would be unfair of us to keep these results to ourselves, so we make them available for broader use.

@@ -1,6 +1,6 @@
 \section{Outreach}
 
-As a team, de.evolution believes that robotics is more than just the engineering. Our first year as a team we saw that the other FTC team at our school, Domo Arigato, was entirely seniors and we were sad that it was going to disappear. This inspired us to try and spread robotics to the younger students and have people involved to keep robotics teams going and to propogate the message of FIRST throughout our community. We have started a robotics class at our high school which has turned into the team Domo Arigato. Due to the popularity of the class a second class, and subsequently an FTC team, has been started. Both the Robo Ravens and Domo Arigato, along with our own team, de.evolution, work hard to start a robotics and engineering culture at our school. The section will be structured as follows, we will begin by listing our community outreach and will in the subsequent subsections go into further detail about some of the more important work we do
+As a team, de.evolution believes that robotics is more than just the engineering. Our first year as a team we saw that the other FTC team at our school, Domo Arigato, was entirely seniors and we were sad that it was going to disappear. This inspired us to try and spread robotics to the younger students and have people involved to keep robotics teams going and to propogate the message of FIRST throughout our community. We have started a robotics class at our high school which has turned into the team Domo Arigato. Due to the popularity of the class a second class, and subsequently an FTC team, has been started. Both the Robo Ravens and Domo Arigato, along with our own team, de.evolution, work hard to start a robotics and engineering culture at our school.
 
 \subsection{Community Outreach}
 As a team, de.evolution has tried to do a lot to help spread the ideas of FIRST, robotics and engineering. The following is an extensive list of some of the community outreach that we have done:
@@ -21,6 +21,8 @@ As a team, de.evolution has tried to do a lot to help spread the ideas of FIRST,
 	\item Working with TEDxYouth@SanDiego to spread robotics to the students in San Diego
 	\item Attended and presented at Rotary meetings to show our community the influence of robotics
 \end{enumerate}
+
+Additionally, in the pits, we offer to help any and all teams who are in need of assistance - including offering our contact information to pit admin if any team needs help.
 
 \subsection{In-person demos at middle and elementary schools}
 
@@ -82,20 +84,20 @@ Anything you can do to provide sample code would be VERY much appreciated! Thank
 Our approach to helping teams in this situation is not to outright give the solution, but help provide a conceptual framework for thinking about approaching a solution. That way, teams still gain the educational experience of solving problems themselves, but aren't working in the dark when they attempt to solve the problem.
 
 \begin{fancyquotes}
-I'd be happy to explain conceptually! I'm sure you and I would both agree that, even though I could simply give source code, it's better for the programmers to come up with it themselves to gain a conceptual understanding. Of course, holonomic drive (45 degree omni) is confusing, so feel free to ask questions!
+I'd be happy to explain conceptually! I'm sure you and I would both agree that, even though I could simply give source code, it's better for the programmers to come up with it themselves to gain a conceptual understanding. Of course, holonomic drive (45 degree omni) is confusing, so feel free to ask questions!\newline\newline
 
-First, the programmers will need to have an understanding of polar coordinates. Nothing too deep, just the basics: that they are expressed with an angle and a radius. The best holonomic drive will follow sines and cosines, so I recommend converting rectangular coordinates to polar coordinates. In this way, the theta of the joystick position becomes the direction the robot is to move in, and the ``r'' magnitude becomes the speed.
+First, the programmers will need to have an understanding of polar coordinates. Nothing too deep, just the basics: that they are expressed with an angle and a radius. The best holonomic drive will follow sines and cosines, so I recommend converting rectangular coordinates to polar coordinates. In this way, the theta of the joystick position becomes the direction the robot is to move in, and the ``r'' magnitude becomes the speed.\newline\newline
 
-There are two parts to a holonomic drive: rotation and translation. Rotation allows the robot to turn to any bearing, and translation allows the robot to move in any direction at a time. Make sure the wheels are aligned such that, in positive power, both the left and right side motors move forward.
+There are two parts to a holonomic drive: rotation and translation. Rotation allows the robot to turn to any bearing, and translation allows the robot to move in any direction at a time. Make sure the wheels are aligned such that, in positive power, both the left and right side motors move forward.\newline\newline
 
-Rotation should be added to translation, since translation is more important and complex. Thus, the goal is to work out a translation algorithm. Remember that your controller should be stored in polar coordinates. It is helpful to plot out on paper which direction you want the motors to move for each angle; for instance, at 45 degrees, you want the front left (FL) and bottom right (BR) at 100\% power, and FR/BL at 0\% power. You can use these points to build a sine/cosine graph for each wheel. 
+Rotation should be added to translation, since translation is more important and complex. Thus, the goal is to work out a translation algorithm. Remember that your controller should be stored in polar coordinates. It is helpful to plot out on paper which direction you want the motors to move for each angle; for instance, at 45 degrees, you want the front left (FL) and bottom right (BR) at 100\% power, and FR/BL at 0\% power. You can use these points to build a sine/cosine graph for each wheel. \newline\newline
 
-Once a translation algorithm has been tested and implemented, rotation is the next step. Conceptually, to rotate the robot, all the wheels need to move the same direction. Thus, you can simply add whatever your rotational value is (we use the x axis on the second joystick, but be sure to divide by 128 to get a number from -1 to 1) directly to the output from the sines and cosines.
+Once a translation algorithm has been tested and implemented, rotation is the next step. Conceptually, to rotate the robot, all the wheels need to move the same direction. Thus, you can simply add whatever your rotational value is (we use the x axis on the second joystick, but be sure to divide by 128 to get a number from -1 to 1) directly to the output from the sines and cosines.\newline\newline
 
-When you add rotation, you will encounter another problem: sometimes motors will be set to 200\% power, while others are at 100\%. Yet the robot still needs to turn. The cause of this problem lies in the rotation. If the robot is going at 45 degrees, FL/BR = 100\%, FB/BL = 0\%. However, if you are rotating at full power, you'll end up with a situation where FL/BR = 200\%, FB/BL = 100\%. The robot will just drive forward. What you need to do at this point is find the maximum power, and divide all the powers by it. They will stay proportional, and you'll get the expected output.
+When you add rotation, you will encounter another problem: sometimes motors will be set to 200\% power, while others are at 100\%. Yet the robot still needs to turn. The cause of this problem lies in the rotation. If the robot is going at 45 degrees, FL/BR = 100\%, FB/BL = 0\%. However, if you are rotating at full power, you'll end up with a situation where FL/BR = 200\%, FB/BL = 100\%. The robot will just drive forward. What you need to do at this point is find the maximum power, and divide all the powers by it. They will stay proportional, and you'll get the expected output.\newline\newline
 
 Please let me know if you have any questions! It's certainly not a simple algorithm to think about. I've tried to give a general conceptual outline of how it works, since we'd probably both agree it's better to write the code oneself. Still, if you would like further help, feel free to ask!
-\end{fancyquotes}
+\end{fancyquotes}\newline
 
 While we have removed most of the discussion from this text, the conversation was left with:
 

@@ -1,0 +1,527 @@
+\section{Code Appendices}
+The following code appendices detail our code, and a very high-level explanation of the code's intent and architecture.
+
+Additionally, all of our code is available on Google Code.
+
+\subsection{Teleoperated code}
+\begin{lstlisting}
+#include "drivers/teleoputils.h"
+
+void invokeButton(int button, bool pressed) {
+	switch(button) {
+		case JOY_X:  if(pressed) {setSpinMotor(100);}  else {setSpinMotor(0);} break;
+		case JOY_Y:  if(pressed) {setSpinMotor(100);}  else {setSpinMotor(0);} break;
+		case JOY_A:  if(pressed) {setSpinMotor(100);}  else {setSpinMotor(0);} break;
+		case JOY_B:  if(pressed) {setSpinMotor(100);}  else {setSpinMotor(0);} break;
+
+		case JOY_RB: if(pressed) {setArmMotors(50);}  else {setArmMotors(0);} break;
+		case JOY_LB: if(pressed) {setArmMotors(-100);} else {setArmMotors(0);} break;
+		case JOY_RT: if(pressed) {unlockArmMotors();} else {} break;
+		case JOY_LT: if(pressed) {lockArmMotors();} else {} break;
+
+		case JOY_R3: if(pressed) {} else {} break;
+		case JOY_L3: if(pressed) {} else {} break;
+		case JOY_ST: if(pressed) {} else {} break;
+		case JOY_BA: if(pressed) {} else {} break;
+	}
+}
+
+short btn = JOY_BTN;
+void checkJoystickButtons() {
+	if(btn == JOY_BTN) return;
+	for(short i = 11; i >= 0; i--) {
+		if((btn>>i) ^ (JOY_BTN>>i)) {
+			invokeButton(i, ((btn & (1 << i)) == 0));
+			btn ^= 1<<i;
+		}
+	}
+}
+
+void debugBlock() {
+	nxtDisplayTextLine(0,"%d",rightEncoder);
+	nxtDisplayTextLine(4,"%d",joystick.joy1_TopHat);
+	int dirIR, strIR;
+	HTIRS2readEnhanced(sensorIR, dirIR, strIR);
+	nxtDisplayTextLine(1,"IR: %i", dirIR);
+	if(dirIR == 5) {
+		PlaySound(soundBeepBeep);
+		setRightMotors(0); setLeftMotors(0);
+		setArmMotors(0);
+		while(1 == 1) wait1Msec(5);
+	}
+}
+
+task main() {
+	unlockArmMotors();
+	clearEncoders();
+ 	waitForStart();
+
+ 	while(true) {
+		getJoystickSettings(joystick);
+		checkJoystickButtons();
+		//debugBlock();
+
+		setRightMotors((powscl(JOY_Y1)-powscl(JOY_X1)/1.1));
+		setLeftMotors(0.8*(powscl(JOY_Y1)+powscl(JOY_X1)/1.1));
+	}
+}
+\end{lstlisting}
+
+In essence, our code has two sections: check to see if the buttons have changed, and set the power of the drive motors. This has the effect of keeping the speed of execution high - it doesn't run the button code every iteration, but only if the buttons have actually changed.
+
+\subsection{Autonomous}
+\begin{lstlisting}
+#include "autoconst.h"
+#include "drivers/autoutils.h"
+//#include "drivers/autodummy.h"
+
+int OPT_SIDE = 0; int OPT_AUTO = 0; int OPT_DELAY = 0; int OPT_BRIDGE = 0;
+
+void initializeRobot() {unlockArmMotors();}
+void moveToBridge() {
+	setLeftMotors(60*LEFT_POW_DIFF);
+	setRightMotors(60*RIGHT_POW_DIFF);
+	wait1Msec(3000);
+	setLeftMotors(0);
+	setRightMotors(0);
+}
+
+void runAutoLeft() {
+	int irEncDist = -1;
+	     if(OPT_AUTO == 0) {irEncDist = rbtMoveToIR(C4_ENC, 6000) - getEncoderByInches(IR_REALIGN); rbtMoveFdEnc(IR_REALIGN, 2000);}
+	else if(OPT_AUTO == 1) {rbtMoveFdEnc(C1_ENC, 5000); irEncDist = C1_ENC;}
+	else if(OPT_AUTO == 2) {rbtMoveFdEnc(C2_ENC, 5000); irEncDist = C2_ENC;}
+	else if(OPT_AUTO == 3) {rbtMoveFdEnc(C3_ENC, 5000); irEncDist = C3_ENC;}
+	else if(OPT_AUTO == 4) {rbtMoveFdEnc(C4_ENC, 5000); irEncDist = C4_ENC;}
+
+	rbtArcRight(90);         //Turn to crate
+	rbtMoveFdDist(4, 3000); //Against crate
+	dumpArm();               //Dump blocks
+	rbtMoveFdDist(-1, 1000);  //Back away
+
+	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 2 : 1;
+	if(OPT_BRIDGE == 1) { //Left
+		rbtArcLeft(90);
+		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+1), 6000);
+		rbtArcLeft(-90);
+		rbtMoveFdDist(18, 3000);
+		rbtArcLeft(-90);
+		rbtMoveFdDist(30, 4000);
+	}
+	if(OPT_BRIDGE == 2) { //Right
+		rbtArcRight(-90);
+		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(1), 6000);
+		rbtArcRight(90);
+		rbtMoveFdDist(18, 3000);
+		rbtArcRight(90);
+		rbtMoveFdDist(30, 4000);
+	}
+	if(OPT_BRIDGE == 3) //Back off
+		rbtMoveFdDist(-24, 6000);
+	//if(OPT_BRIDGE == 4); //None
+}
+
+void runAutoRight() {
+	int irEncDist = -1;
+	     if(OPT_AUTO == 0) {irEncDist = rbtMoveToIR(C4_ENC, 6000) - getEncoderByInches(IR_REALIGN); rbtMoveFdEnc(IR_REALIGN, 2000);}
+	else if(OPT_AUTO == 1) {rbtMoveFdEnc(C1_ENC, 5000); irEncDist = C1_ENC;}
+	else if(OPT_AUTO == 2) {rbtMoveFdEnc(C2_ENC, 5000); irEncDist = C2_ENC;}
+	else if(OPT_AUTO == 3) {rbtMoveFdEnc(C3_ENC, 5000); irEncDist = C3_ENC;}
+	else if(OPT_AUTO == 4) {rbtMoveFdEnc(C4_ENC, 5000); irEncDist = C4_ENC;}
+
+	rbtArcLeft(-90);
+	rbtMoveFdDist(4, 3000);
+	dumpArm();
+	rbtMoveFdDist(-1, 1000);
+
+	if(OPT_BRIDGE == 0) OPT_BRIDGE = C23_THRESH < irEncDist ? 1 : 2;
+	if(OPT_BRIDGE == 1) { //Left
+		rbtArcLeft(90);
+		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(1), 6000);
+		rbtArcLeft(-90);
+		rbtMoveFdDist(18, 3000);
+		rbtArcLeft(-90);
+		rbtMoveFdDist(30, 4000);
+	}
+	if(OPT_BRIDGE == 2) { //Right
+		rbtArcRight(-90);
+		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+1), 6000);
+		rbtArcRight(90);
+		rbtMoveFdDist(18, 3000);
+		rbtArcRight(90);
+		rbtMoveFdDist(30, 4000);
+	}
+	if(OPT_BRIDGE == 3) //Back off
+		rbtMoveFdDist(-24, 6000);
+	//if(OPT_BRIDGE == 4); //None
+}
+
+void optionScreen() {
+	nxtDisplayTextLine(0, "NXT:  %.2f V", ((float)nAvgBatteryLevel)/1000.0);
+	if(externalBatteryAvg > 0) nxtDisplayTextLine(1, "EXT: %.2f V", ((float)externalBatteryAvg)/1000.0);
+		else nxtDisplayTextLine(1, "EXT: OFF");
+
+	if(nAvgBatteryLevel < NXT_LOW_BAT) nxtDisplayTextLine(2, "***NXT     LOW***");
+	if(externalBatteryAvg < EXT_LOW_BAT) nxtDisplayTextLine(2, "***    EXT LOW***");
+	if(nAvgBatteryLevel < NXT_LOW_BAT && externalBatteryAvg < EXT_LOW_BAT) nxtDisplayTextLine(2, "***NXT EXT LOW***");
+
+	while(nNxtButtonPressed != BTN_CENTER) { // SIDE: Left | Right | Bridge | None
+		     if(OPT_SIDE == 0) nxtDisplayTextLine(3, "SIDE: Left");
+		else if(OPT_SIDE == 1) nxtDisplayTextLine(3, "SIDE: Right");
+		else if(OPT_SIDE == 2) nxtDisplayTextLine(3, "SIDE: Bridge");
+		else if(OPT_SIDE == 3) nxtDisplayTextLine(3, "SIDE: None");
+
+		if(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) {
+			PlaySound(soundShortBlip);
+			if(nNxtButtonPressed == BTN_LEFT) OPT_SIDE--;
+			if(nNxtButtonPressed == BTN_RIGHT) OPT_SIDE ++;
+			if(OPT_SIDE > 3) OPT_SIDE = 0;
+			if(OPT_SIDE < 0) OPT_SIDE = 3;
+
+			while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
+		}
+	} PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
+
+	if(OPT_SIDE != 3) // DELAY: 0 - 25000
+		while(nNxtButtonPressed != BTN_CENTER) {
+			nxtDisplayTextLine(4, "DELY: %i", OPT_DELAY);
+			if(nNxtButtonPressed == 1 || nNxtButtonPressed == 2) {
+				PlaySound(soundShortBlip);
+				if(nNxtButtonPressed == 2) OPT_DELAY -= (time1[T1] < 200 ? 5000 : 1000);
+				if(nNxtButtonPressed == 1) OPT_DELAY += (time1[T1] < 200 ? 5000 : 1000);
+				if(OPT_DELAY < 0)     OPT_DELAY = 25000;
+				if(OPT_DELAY > 25000) OPT_DELAY = 0;
+
+				while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
+				ClearTimer(T1);
+			}
+		} if(OPT_SIDE != 3) PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
+
+	if(OPT_SIDE < 2) // AUTO: IR | Crate 1 | Crate 2 | Crate 3 | Crate 4
+		while(nNxtButtonPressed != BTN_CENTER) {
+			if(OPT_AUTO == 0) nxtDisplayTextLine(5, "AUTO: IR");
+			else nxtDisplayTextLine(5, "AUTO: Crate %i", OPT_AUTO);
+
+			if(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) {
+				PlaySound(soundShortBlip);
+				if(nNxtButtonPressed == BTN_LEFT) OPT_AUTO--;
+				if(nNxtButtonPressed == BTN_RIGHT) OPT_AUTO++;
+				if(OPT_AUTO > 4) OPT_AUTO = 0;
+				if(OPT_AUTO < 0) OPT_AUTO = 4;
+
+				while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
+			}
+		} if(OPT_SIDE < 2) PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
+
+	if(OPT_SIDE < 2) // BRIDGE: Closest | Left | Right | Back up | None
+		while(nNxtButtonPressed != BTN_CENTER) {
+			     if(OPT_BRIDGE == 0) nxtDisplayTextLine(6, "BRDG: Closest");
+			else if(OPT_BRIDGE == 1) nxtDisplayTextLine(6, "BRDG: Left");
+			else if(OPT_BRIDGE == 2) nxtDisplayTextLine(6, "BRDG: Right");
+			else if(OPT_BRIDGE == 3) nxtDisplayTextLine(6, "BRDG: Back up");
+			else if(OPT_BRIDGE == 4) nxtDisplayTextLine(6, "BRDG: None");
+
+			if(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) {
+				PlaySound(soundShortBlip);
+				if(nNxtButtonPressed == BTN_LEFT) OPT_BRIDGE--;
+				if(nNxtButtonPressed == BTN_RIGHT) OPT_BRIDGE++;
+				if(OPT_BRIDGE > 4) OPT_BRIDGE = 0;
+				if(OPT_BRIDGE < 0) OPT_BRIDGE = 4;
+
+				while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
+			}
+		} if(OPT_SIDE < 2) PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
+
+	nxtDisplayTextLine(7, "*** LOCKED ***");
+}
+
+task main() {
+	initializeRobot();
+	optionScreen();
+	waitForStart();
+	wait1Msec(OPT_DELAY);
+	     if(OPT_SIDE == 0) runAutoLeft();
+	else if(OPT_SIDE == 1) runAutoRight();
+	else if(OPT_SIDE == 2) moveToBridge();
+	lockdownRobot();
+}
+\end{lstlisting}
+
+The autonomous program has a few relevant steps. The first is to display the option screen for the robot. This is a user interface control which allows us to dynamically assign various parameters for autonomous. Namely, we can select our side (or simply indicate we want to go to the bridge), assign a delay to startup (for inter-team coordination), select whether to go to a specific crate or the IR beacon, and finally which side of the bridge the code should go on (closest, right, left, or none).
+
+The code has been generically created so that no matter which options we select, the code will execute and follow through properly.
+
+\subsection{Drivers and utility files}
+There are three utility files in our archive: \lstinline{sharedutils.h}, \lstinline{teleoputils.h}, and \lstinline{autoutils.h}. Additionally, the file \lstinline{autodummy.h} is a temporary autonomous file used for visualizing the output from autonomous without actually running any motors.
+
+Additionally, we created several utility files which are used before and after matches, and for diagnostics and testing purposes.
+
+\subsubsection{The shared utility file}
+\begin{lstlisting}
+#ifndef __SHAREDUTILS__
+#define __SHAREDUTILS__
+
+#include "JoystickDriver4278.c"
+#include "hitechnic-irseeker-v2.h"
+#include "wiringnxt.h"
+
+#define setLeftMotors(x)  {motor[mLeft1]  = x; motor[mLeft2]  =  x;}
+#define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] =  x;}
+#define setArmMotors(x)   {motor[mArm1]   = x; motor[mArm2]   = -x;}
+#define setSpinMotor(x)   {motor[mSpin]   = x;}
+#define lockArmMotors()   {servo[servoL1] = 155; servo[servoL2] = 20;}
+#define unlockArmMotors() {servo[servoL1] = 120; servo[servoL2] = 70;}
+
+#define leftEncoder     abs(nMotorEncoder[mArm2])
+#define rightEncoder    abs(nMotorEncoder[mArm1])
+#define clearEncoders() {nMotorEncoder[mArm1] = 0; nMotorEncoder[mArm2] = 0;}
+
+//Distance Macros
+#define INCH   1.0
+#define CM     0.3937
+#define MM    39.370
+#define YARD  36.0
+#define FOOT  12.0
+#define METER 39.370
+
+#define WHEELCIRC 12.566
+#define WHEELBASE 15.309
+#define FLOORMAT  24.0
+
+#define BTN_CENTER 3
+#define BTN_LEFT   2
+#define BTN_RIGHT  1
+#define BTN_BACK   0
+
+#define LEFT_POW_DIFF 0.563
+#define RIGHT_POW_DIFF 1.0
+
+void waitForStart() {
+  while(true) {
+    getJoystickSettings(joystick);
+    if(!joystick.StopPgm) break;
+  }
+}
+
+#endif //__SHAREDUTILS__
+\end{lstlisting}
+
+You may notice that most of this code is defined by \lstinline{#define} statements. This is intentional - these values are intended to be used as conversions and small macros. For instance, wherever the compiler sees \lstinline{setSpinMotor(float power)}, it will automatically replace it with the command \lstinline{motor[mSpin] = power;}. This way, we minimize the amount of clutter in our code and maximize its readability.
+
+\subsubsection{The teleop utilities file}
+\begin{lstlisting}
+#ifndef __TELEOPDRIVER__
+#define __TELEOPDRIVER__
+
+#include "sharedutils.h"
+
+//Allows threshold to be defined in teleop-file
+#define THRESH 10.0
+#define MINX   10.0
+#define SLOPE   0.5
+#define DISTA   0.6
+
+float powscl(int xz) {
+	float sign = (float)sgn(xz);
+	float x = abs(xz)/128.0;
+	if(x < DISTA) {return 100 * sign * (x*SLOPE);}
+		else {return 100 * sign * ((DISTA*SLOPE*(x-1.0) - x + DISTA) / (DISTA - 1.0));}
+}
+
+//Controller 1 - Left Joystick - Linear
+#define JOY_X1 (abs(joystick.joy1_x1) > THRESH ? joystick.joy1_x1 : 0)
+#define JOY_Y1 (abs(joystick.joy1_y1) > THRESH ? -1.0*joystick.joy1_y1 : 0)
+
+//Defines current button map layout
+#define JOY_X 0
+#define JOY_Y 3
+#define JOY_B 2
+#define JOY_A 1
+
+#define JOY_RB 5
+#define JOY_LB 4
+#define JOY_LT 6
+#define JOY_RT 7
+
+#define JOY_R3 10
+#define JOY_L3 11
+
+#define JOY_ST 9
+#define JOY_BA 8
+
+#define JOY_BTN joystick.joy1_Buttons
+
+int getLeftPowTopHat(int topHat) {
+	if(topHat == 0) return 100;
+	if(topHat == 6) return -100;
+	if(topHat == 4) return -100;
+	if(topHat == 2) return 100;
+	return 0;
+}
+
+int getRightPowTopHat(int topHat) {
+	//topHat--;
+	if(topHat == 0) return 100;
+	if(topHat == 6) return 100;
+	if(topHat == 4) return -100;
+	if(topHat == 2) return -100;
+	return 0;
+}
+
+#endif //__TELEOPUTILS__
+\end{lstlisting}
+
+This file is intended to expand upon the \lstinline{sharedutils.h} file. It includes definitions for the buttons, so that instead of checking button 5, we check button \lstinline{JOY\_RB}; it keeps everything cleaner and more logical. Additionally, we created a power scalar function to more easily transition from ranges of high power to those of low power in movement.
+
+\subsubsection{The autonomous utilities file}
+\begin{lstlisting}
+#ifndef __AUTODRIVER__
+#define __AUTODRIVER__
+
+#include "sharedutils.h"
+
+#define DRV_TIMER T3
+#define MAX_TURN_TIME 3000
+#define PAUSE_TIME 160
+
+void pause() {wait1Msec(PAUSE_TIME);}
+void pause(int n) {for(int i = 0; i < n; i++) pause();}
+void estop() {StopAllTasks();}
+
+int getEncoderByInches(float inches) {return floor((1440)*(inches)/WHEELCIRC);}
+float getInchesByEncoder(int encode) {return (((float)encode)/1440.0)*WHEELCIRC;}
+
+void dumpArm() {
+	//PlaySound(soundBlip);
+	setArmMotors(50);
+	wait1Msec(1550);
+
+	//PlaySound(soundBlip);
+	setArmMotors(0);
+	wait1Msec(400);
+
+	//PlaySound(soundBlip);
+	setArmMotors(-50);
+	wait1Msec(1100);
+
+	//PlaySound(soundBeepBeep);
+	setArmMotors(0);
+}
+
+void lockdownRobot() {
+	setLeftMotors(0);
+	setRightMotors(0);
+	setArmMotors(0);
+	setSpinMotor(0);
+	unlockArmMotors();
+	while(true) wait1Msec(5);
+}
+
+int rbtMoveToIR(int max, int timeout) {
+	int dirIR, strIR; float stopRightEnc;
+	HTIRS2readEnhanced(sensorIR, dirIR, strIR);
+	clearEncoders();
+
+	ClearTimer(DRV_TIMER);
+	while(dirIR != 5 && rightEncoder < max) {
+		HTIRS2readEnhanced(sensorIR, dirIR, strIR);
+		stopRightEnc = rightEncoder;
+		if(dirIR != 5) {setLeftMotors(40); setRightMotors(40);}
+		if(time1[DRV_TIMER] > timeout) lockdownRobot();
+	}
+	setLeftMotors(0); setRightMotors(0); pause(3);
+	return rightEncoder;
+}
+
+void rbtMoveFdDist(float inches, int msec) {
+	clearEncoders();
+	int enc = abs(getEncoderByInches(inches));
+	int norm = 1.0*sgn(inches);
+	ClearTimer(DRV_TIMER);
+	int lEnc = leftEncoder; int rEnc = rightEncoder;
+	while(abs(lEnc) < enc && abs(rEnc) < enc) {
+		if(time1[DRV_TIMER] > msec) lockdownRobot();
+		lEnc = leftEncoder; rEnc = rightEncoder;
+		setLeftMotors (100.0*norm*LEFT_POW_DIFF);
+		setRightMotors(100.0*norm*RIGHT_POW_DIFF);
+	}
+	if(time1[DRV_TIMER] > msec) lockdownRobot();
+	setLeftMotors(0); setRightMotors(0); pause();
+}
+void rbtMoveFdEnc(int enc, int msec) {rbtMoveFdDist(getInchesByEncoder(enc), msec);}
+
+void rbtArcLeft(float degs) {
+	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
+	clearEncoders();
+	setLeftMotors(-1*sgn(degs)*90);
+	ClearTimer(DRV_TIMER);
+	while(leftEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
+	setLeftMotors(0); pause();
+}
+
+void rbtArcRight(float degs) {
+	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
+	clearEncoders();
+	setRightMotors(sgn(degs)*60);
+	ClearTimer(DRV_TIMER);
+	while(rightEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
+	setRightMotors(0); pause();
+}
+
+void rbtTurnRight(float degs) {
+	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
+	clearEncoders();
+	setLeftMotors( -1*sgn(degs)*40);
+	setRightMotors(sgn(degs)*30);
+	ClearTimer(DRV_TIMER);
+	while(rightEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
+	setLeftMotors(0); setRightMotors(0); pause();
+}
+
+void rbtTurnLeft(float degs) {
+	int enc = getEncoderByInches((PI*WHEELBASE)*(abs(degs)/360.0));
+	clearEncoders();
+	setLeftMotors(sgn(degs)*60);
+	setRightMotors(-1*sgn(degs)*60);
+	ClearTimer(DRV_TIMER);
+	while(leftEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
+	setLeftMotors(0); setRightMotors(0); pause();
+}
+
+#endif //__AUTODRIVER__
+\end{lstlisting}
+
+The autonomous utilities file is designed to make the logic flow easily. Recall that statements in our autonomous program come in the form of \lstinline{rbtTurnLeft();}, not a sequence of commands with the same effect. That is, in essence, the entire purpose of this file.
+
+\begin{comment}
+	\subsubsection{Drive differential binary search algorithm}
+	This algorithm is designed to determine the power differential between both sides of the robot. Due to the mechanical properties of motors and chains, the power required to move a certain speed is slightly different for each side of the robot. This program is designed to accurately determine what that differential is, and allow us to accommodate for it in code.
+
+	\begin{lstlisting}
+	#include "drivers/autoutils.h"
+
+	task main() {
+		float low = 0;
+		float high = 2;
+		float mid = 1;
+		while(true) {
+			mid = (low + high) / 2.0;
+			nxtDisplayTextLine(3, "%f", high);
+			nxtDisplayTextLine(4, "%f", mid);
+			nxtDisplayTextLine(5, "%f", low);
+
+			clearEncoders();
+			setLeftMotors(50.0*mid);
+			setRightMotors(50);
+			wait1Msec(3000);
+			setLeftMotors(0); setRightMotors(0);
+
+			bool cont = false;
+			while(!cont) {
+				if(nNxtButtonPressed == BTN_RIGHT) {high = mid; cont = true;}
+				if(nNxtButtonPressed == BTN_LEFT) {low = mid; cont = true;}
+			}
+		}
+	}
+	\end{lstlisting}
+\end{comment}
