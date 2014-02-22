@@ -5,7 +5,7 @@
 
 #define DRV_TIMER T3
 #define MAX_TURN_TIME 3000
-#define PAUSE_TIME 160
+#define PAUSE_TIME 250
 
 void pause() {wait1Msec(PAUSE_TIME);}
 void pause(int n) {for(int i = 0; i < n; i++) pause();}
@@ -80,8 +80,8 @@ void rbtMoveFdDist(float inches, int msec) {
 	while(abs(lEnc) < enc && abs(rEnc) < enc) {
 		if(time1[DRV_TIMER] > msec) lockdownRobot();
 		lEnc = leftEncoder; rEnc = rightEncoder;
-		setLeftMotors (100.0*norm*LEFT_POW_DIFF);
-		setRightMotors(100.0*norm*RIGHT_POW_DIFF);
+		setLeftMotors (80.0*norm);
+		setRightMotors(80.0*norm);
 	}
 	if(time1[DRV_TIMER] > msec) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0); pause();
