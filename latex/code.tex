@@ -3,6 +3,8 @@ Detailed in this section is the method and reason to our software architecture. 
 
 We have chosen a particular structure for our code. We have rewritten \lstinline{JoystickDriver.c}{} to better express our needs. By removing superfluous tasks from the driver, we maintained functionality while increasing our efficiency by approximately threefold. We have created a set of utility headers: \lstinline{teleoputils.h}{}, \lstinline{autoutils.h}{}, and \lstinline{sharedutils.h}{} to address the need for macros, \lstinline{#define}{} statements, and standardized functions. Both \lstinline{teleoputils.h}{} and \lstinline{autoutils.h}{} import \lstinline{sharedutils.h}{}, so that file is never explicitly included in the main code body. Drivers were pulled from HiTechnic's online library for 3rd party sensors.
 
+Additionally, it may be worth taking a peek into the code appendices in the back of this engineering notebook.
+
 \subsection{Teleoperated Mode}
 
 Teleoperated mode has the following requirements: \begin{enumerate}
