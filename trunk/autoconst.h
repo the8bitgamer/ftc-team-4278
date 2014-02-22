@@ -11,7 +11,7 @@
 	#define C4_ENC 4306 //Optimal 4306
 
 	#define BRIDGE_ENC 5853
-	#define IR_REALIGN 1.5
+	#define IR_REALIGN 4
 
 	#define C12_THRESH ((C1_ENC+C2_ENC)/2)
 	#define C23_THRESH ((C2_ENC+C3_ENC)/2)

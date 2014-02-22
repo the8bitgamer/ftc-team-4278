@@ -73,7 +73,7 @@ void runAutoLeft() {
 
 void runAutoRight() {
 	int irEncDist = -1;
-	     if(OPT_AUTO == 0) {irEncDist = rbtMoveToIR(C4_ENC, 6000) - getEncoderByInches(IR_REALIGN); rbtMoveFdEnc(IR_REALIGN, 2000);}
+	     if(OPT_AUTO == 0) {irEncDist = rbtMoveToIR(C4_ENC, 6000) - getEncoderByInches(IR_REALIGN); pause(); rbtMoveFdDist(-IR_REALIGN, 2000);}
 	else if(OPT_AUTO == 1) {rbtMoveFdEnc(C1_ENC, 5000); irEncDist = C1_ENC;}
 	else if(OPT_AUTO == 2) {rbtMoveFdEnc(C2_ENC, 5000); irEncDist = C2_ENC;}
 	else if(OPT_AUTO == 3) {rbtMoveFdEnc(C3_ENC, 5000); irEncDist = C3_ENC;}
@@ -88,17 +88,17 @@ void runAutoRight() {
 	if(OPT_BRIDGE == 1) { //Left
 		rbtArcLeft(90);
 		rbtMoveFdEnc(BRIDGE_ENC-irEncDist+getEncoderByInches(1), 6000);
-		rbtArcLeft(-90);
+		rbtArcLeft(-88);
 		rbtMoveFdDist(18, 3000);
-		rbtArcLeft(-90);
+		rbtArcLeft(-92);
 		rbtMoveFdDist(30, 4000);
 	}
 	if(OPT_BRIDGE == 2) { //Right
 		rbtArcRight(-90);
 		rbtMoveFdEnc(irEncDist+getEncoderByInches(WHEELBASE+1), 6000);
-		rbtArcRight(90);
+		rbtArcRight(88);
 		rbtMoveFdDist(18, 3000);
-		rbtArcRight(90);
+		rbtArcRight(92);
 		rbtMoveFdDist(30, 4000);
 	}
 	if(OPT_BRIDGE == 3) //Back off
@@ -188,7 +188,7 @@ void optionScreen() {
 task main() {
 	initializeRobot();
 	optionScreen();
-	waitForStart();
+	//waitForStart();
 	wait1Msec(OPT_DELAY);
 	     if(OPT_SIDE == 0) runAutoLeft();
 	else if(OPT_SIDE == 1) runAutoRight();
