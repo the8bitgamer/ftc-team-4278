@@ -9,7 +9,7 @@
 #define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] =  x;}
 #define setArmMotors(x)   {motor[mArm1]   = x; motor[mArm2]   = -x;}
 #define setSpinMotor(x)   {motor[mSpin]   = x;}
-#define lockArmMotors()   {servo[servoL1] = 155; servo[servoL2] = 20;}
+#define lockArmMotors()   {servo[servoL1] = 165; servo[servoL2] = 10;}
 #define unlockArmMotors() {servo[servoL1] = 120; servo[servoL2] = 70;}
 
 #define leftEncoder     abs(nMotorEncoder[mArm2])
