@@ -40,6 +40,26 @@ void lockdownRobot() {
 	while(true) wait1Msec(5);
 }
 
+float getIRDir(tSensors link) {
+    static float prevDir = 0.0; float currDir; int acS[5]; int idx;
+
+    idx = HTIRS2readACDir(link); currDir = (float)idx;
+    if (idx == 0) {
+        currDir = prevDir;
+    } else if (HTIRS2readAllACStrength(link, acS[0], acS[1], acS[2], acS[3], acS[4])) {
+        idx = (idx - 1)/2;
+        if ((idx < 4) && (acS[idx] != 0) && (acS[idx + 1] != 0)) {
+            currDir += (float)(acS[idx + 1] - acS[idx]) / max(acS[idx], acS[idx + 1]);
+        }
+        nxtDisplayTextLine(0, "Idx=%d,Dir=%5.1f", idx, currDir);
+        nxtDisplayTextLine(2, "S1=%d,S2=%d", acS[0], acS[1]);
+        nxtDisplayTextLine(3, "S3=%d,S4=%d", acS[2], acS[3]);
+        nxtDisplayTextLine(4, "S5=%d", acS[4]);
+    }
+    prevDir = currDir;
+    return currDir;
+}
+
 int rbtMoveToIR(int max, int timeout) {
 	int stopRightEnc,dir1, dir2, dir3, dir4, dir5, lowThresh2 = 0, lowThresh = 0, peak = -1000, peak2 = -1000;
 	for(int i=0;i<15;i++){
