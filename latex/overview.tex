@@ -1,6 +1,8 @@
 \section{Robot Design and History Overview}
 In this section, we detail each component of the robot, the design decisions that went into it, critical tests, and the general development of our design.
 
+We have since changed our robot's design significantly from what follows. We have kept the following sections for two reasons: 1) for the sake of historical design records, and 2) for the sake of clarity. The changes to our robot from this version are detailed in section 1.4.
+
 Over the past four years, we have gone through multiple paradigm shifts in our design process. Our first year, we simply threw ourselves at the problem and left the result to be decided. This worked wonderfully at the time, but in retrospect, much of that was simply sheer luck and is not sustainable in future years. We struck the correct idea, and executed it effectively, but not to the best of our ability. 
 	
 As a result, the second year, our effectiveness slumped. Though we still won several awards for placing third in local competitions, we did not perform as we had hoped. The reasons for this are twofold: First, we failed to properly conceptualize what it is we intended to do before making an attempt at execution. In this way, the robot's design suffered significantly from problems which could have been solved with some forethought. Secondly, we failed to properly test the components of the design before implementation. We threw parts together without accurately testing each one for validity, and refused to change the parts that did not work.
@@ -64,3 +66,49 @@ We have additional constraints on our length as well: we need to 1) be able to s
 \paragraph{Flag spinner} This deserves an honorable mention. We used the dead space on the back panel to add a wheel with two prongs. We originally wanted to use a rubber panel and friction to turn the flag spinner, and our first tests told us this would work. However, in practice, it was too difficult to align, and was replaced with two prongs. 
 
 The rotational motor is geared 1:3. This is satisfactory, and provides a lift time of 4.5 seconds, which is good enough for our purposes.
+
+\newpage \subsection{Changes in Version 3}
+
+We decided after our last regional competition to make significant changes to the robot. We wanted to pick up blocks more consistently, improve the accuracy of autonomous, allow for a double hanging system, and increase the drive train's speed. 
+
+\subsubsection{Drive train speed}
+
+To increase the drive train's speed, it was necessary to do two things: primarily, add another motor onto each side of the drive train; secondarily, decrease the overall weight of our robot. The first was a rather simple task to accomplish; simply place the motors in a triangle and gear them together. The gear ratios have been changed slightly, and as a result, we move across the field in approximately 2.75 seconds. Speed, previously a significant limiting factor, is no longer one for us.
+
+\subsubsection{Block pickup accuracy}
+
+As a result of our drive train changes, we were allowed the option to reposition the center of gravity of the robot. We have identified over the past few competitions a simple issue: our weight has mostly been at the back of the robot, away from the block scoop, so when we accelerate quickly the scoop kicks up slightly. This stops it from effectively picking up blocks. By changing the center of gravity to the approximate center of the robot, we have entirely stopped this problem from occurring.
+
+\subsubsection{Double hanging}
+
+One of the main benefits to our mechanism is that we do not have a dedicated mechancial process for hanging; instead, we simply use the torque of the arm to carry our robot. However, there is a significant disadvantage to this: our hooks are in a fixed position, separated by the width of the arm. This has made it incredibly difficult (and in most cases impossible) for us to effectively double hang.
+
+We recognize that this is an important aspect of the game, and that, in order to become a more competitive robot, we should accommodate other roobts in this respect. 
+
+Instead of changing our arm, we decided to add an identical bar on \textit{our} robot to the one which is used for hanging. This means that another team could hang on our arm the exact same way they might normally hang from the regular bar. They then pull themselves up on us, we pull ourselves off the ground, and both robots are hanging.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{images/DoubleHangBar.png}
+\end{center}
+\caption{Double hanging bar - this is vertical when we are prepared to hang, so other robots may hang on us}
+\end{figure}
+
+\subsubsection{Gearboxes! The Power Takeoff mechanism}
+
+In order to facilitate the additional increase in drive power we wished, we would have needed nine motors: six on drive, two on the arm, and one for the flag. To solve this problem, we decided to use a power takeoff mechanism, which allows us to transfer motor power between the flag spinner and the arm movement. This means that the flag spinner gets the additional power of an extra motor, while we conserve a motor.
+
+In order to achieve this, we moved the gearboxes from inside the arm panels to the center of our robot. This, additionally, allowed us to increase the centering of our robot's mass. The power takeoff mechanism relies on a special gear called a ``dog'' and a servo shifter. The mechanism can be seen here:
+
+The highlighted gear below is the dog gear: 
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.3]{images/GearboxDog.png}
+\includegraphics[scale=0.3]{images/DogGearLock.png}
+\end{center}
+\caption{Left: dog gear in the neutral position; right: demonstration of how the dog gear locks}
+\end{figure}
+
+This gear turns with the axle. The other two gears are on bearings, so they spin freely around the axle - however, when the dog gear is locked into one of the two gears, they rotate simultaneously. The dog gear has the capacity to shift between the two gears, causing power transfer to change from one gear to the other - i.e. from the flag spinner to the arm and back. This happens automatically in code when necessary. The driver does not need to think about switching; power will be directed where the driver indicates it should.
+
