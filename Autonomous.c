@@ -1,24 +1,23 @@
-#pragma config(Hubs,   S1,  HTMotor,  HTMotor,  none,     none)
-#pragma config(Hubs,   S2,  HTServo,  none,     none,     none)
-#pragma config(Hubs,   S4,  HTMotor,  HTMotor,  none,     none)
-#pragma config(Sensor, S1,         ,  sensorI2CMuxController)
-#pragma config(Sensor, S2,         ,  sensorI2CMuxController)
-#pragma config(Sensor, S3, sensorIR,  sensorI2CCustom)
-#pragma config(Sensor, S4,    HTSPB,  sensorI2CMuxController)
-#pragma config(Motor,   mtr_S1_C1_1,   mArm2, tmotorTetrix, openLoop, encoder)
-#pragma config(Motor,   mtr_S1_C1_2,   mArm1, tmotorTetrix, openLoop, encoder)
-#pragma config(Motor,   mtr_S1_C2_1, mRight1, tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,   mtr_S1_C2_2, mRight2, tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,   mtr_S4_C1_1,  mLeft1, tmotorTetrix, openLoop)
-#pragma config(Motor,   mtr_S4_C1_2,  mLeft2, tmotorTetrix, openLoop)
-#pragma config(Motor,   mtr_S4_C2_1,   mSpin, tmotorTetrix, openLoop)
-#pragma config(Motor,   mtr_S4_C2_2,  mNull1, tmotorTetrix, openLoop)
-#pragma config(Servo,  srvo_S2_C1_1, servoL2, tServoStandard)
-#pragma config(Servo,  srvo_S2_C1_2, servoL1, tServoStandard)
-#pragma config(Servo,  srvo_S2_C1_3,  servo3, tServoNone)
-#pragma config(Servo,  srvo_S2_C1_4,  servo4, tServoNone)
-#pragma config(Servo,  srvo_S2_C1_5,  servo5, tServoNone)
-#pragma config(Servo,  srvo_S2_C1_6,  servo6, tServoNone)
+#pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTMotor)
+#pragma config(Hubs,  S2, HTServo,  none,     none,     none)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
+#pragma config(Sensor, S2,     ,               sensorI2CMuxController)
+#pragma config(Sensor, S3,     sensorIR,       sensorI2CCustom)
+#pragma config(Sensor, S4,     HTSPB,          sensorNone)
+#pragma config(Motor,  mtr_S1_C1_1,     mLeft1,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_2,     mRight1,       tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C2_1,     mShift1,       tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C2_2,     mShift2,       tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C3_1,     mLeft2,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C3_2,     mLeft3,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C4_1,     mRight2,       tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C4_2,     mRight3,       tmotorTetrix, openLoop, reversed)
+#pragma config(Servo,  srvo_S2_C1_1,    sShifter,             tServoStandard)
+#pragma config(Servo,  srvo_S2_C1_2,    sLock,                tServoStandard)
+#pragma config(Servo,  srvo_S2_C1_3,    servo3,               tServoNone)
+#pragma config(Servo,  srvo_S2_C1_4,    servo4,               tServoNone)
+#pragma config(Servo,  srvo_S2_C1_5,    servo5,               tServoNone)
+#pragma config(Servo,  srvo_S2_C1_6,    servo6,               tServoNone)
 //*!!Codez automagically venerated by 'ROWBOT SEA' conflagration lizard               !!*//
 
 #include "autoconst.h"
@@ -181,7 +180,6 @@ void optionScreen() {
 				while(nNxtButtonPressed == BTN_LEFT || nNxtButtonPressed == BTN_RIGHT) wait1Msec(5);
 			}
 		} if(OPT_SIDE < 2) PlaySound(soundShortBlip); while(nNxtButtonPressed == BTN_CENTER) wait1Msec(5);
-
 	nxtDisplayTextLine(7, "*** LOCKED ***");
 }
 
