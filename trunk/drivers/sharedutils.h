@@ -5,16 +5,22 @@
 #include "hitechnic-irseeker-v2.h"
 #include "wiringnxt.h"
 
-#define setLeftMotors(x)  {motor[mLeft1]  = x; motor[mLeft2]  =  x;}
-#define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] =  x;}
-#define setArmMotors(x)   {motor[mArm1]   = x; motor[mArm2]   = -x;}
-#define setSpinMotor(x)   {motor[mSpin]   = x;}
-#define lockArmMotors()   {servo[servoL1] = 165; servo[servoL2] = 10;}
-#define unlockArmMotors() {servo[servoL1] = 120; servo[servoL2] = 70;}
+#define setLeftMotors(x)  {motor[mLeft1]  = x; motor[mLeft2]  =  x; motor[mLeft3]  = x;}
+#define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] =  x; motor[mRight3] = x;}
+#define setShiftMotors(x)   {motor[mShift1] = x; motor[mShift2] = x;}
 
-#define leftEncoder     abs(nMotorEncoder[mArm2])
-#define rightEncoder    abs(nMotorEncoder[mArm1])
-#define clearEncoders() {nMotorEncoder[mArm1] = 0; nMotorEncoder[mArm2] = 0;}
+#define setArmLocked()   {servo[sLock] = 140;}
+#define setArmUnlocked() {servo[sLock] = 080;}
+
+bool shifterStateArm = true;
+#define setShifterArm()  {servo[sShifter] = 100; shifterStateArm = true;}
+#define setShifterFlag() {servo[sShifter] = 170; shifterStateArm = false;}
+#define getShifterState() (shifterStateArm)
+#define flipShifterState() {if(shifterStateArm) setShifterFlag(); else setShifterArm();}
+
+#define leftEncoder     abs(nMotorEncoder[mLeft1])
+#define rightEncoder    abs(nMotorEncoder[mRight1])
+#define clearEncoders() {nMotorEncoder[mLeft1] = 0; nMotorEncoder[mRight1] = 0;}
 
 //Distance Macros
 #define INCH   1.0
@@ -34,7 +40,7 @@
 #define BTN_BACK   0
 
 #define LEFT_POW_DIFF 1.0
-#define RIGHT_POW_DIFF 1.0
+#define RIGHT_POW_DIFF 0.73
 
 void waitForStart() {
   while(true) {
@@ -42,5 +48,7 @@ void waitForStart() {
     if(!joystick.StopPgm) break;
   }
 }
+
+float max(float a, float b) {return (a>b ? a : b);}
 
 #endif //__SHAREDUTILS__

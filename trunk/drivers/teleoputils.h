@@ -4,7 +4,7 @@
 #include "sharedutils.h"
 
 //Allows threshold to be defined in teleop-file
-#define THRESH 10.0
+#define THRESH 20.0
 #define MINX   10.0
 #define SLOPE   0.5
 #define DISTA   0.6

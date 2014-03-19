@@ -13,36 +13,25 @@
 #pragma config(Motor,  mtr_S1_C4_1,     mRight2,       tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C4_2,     mRight3,       tmotorTetrix, openLoop, reversed)
 #pragma config(Servo,  srvo_S2_C1_1,    sShifter,             tServoStandard)
-#pragma config(Servo,  srvo_S2_C1_2,    sLock,                tServoStandard)
-#pragma config(Servo,  srvo_S2_C1_3,    servo3,               tServoNone)
+#pragma config(Servo,  srvo_S2_C1_2,    servo2,               tServoStandard)
+#pragma config(Servo,  srvo_S2_C1_3,    sLock,                tServoNone)
 #pragma config(Servo,  srvo_S2_C1_4,    servo4,               tServoNone)
 #pragma config(Servo,  srvo_S2_C1_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S2_C1_6,    servo6,               tServoNone)
 //*!!Codez automagically venerated by 'ROWBOT SEA' conflagration lizard               !!*//
 
+#include "autoconst.h"
 #include "drivers/autoutils.h"
 
 task main() {
-	float low = 0;
-	float high = 2;
-	float mid = 1;
-	while(true) {
-		mid = (low + high) / 2.0;
-		nxtDisplayTextLine(3, "%f", high);
-		nxtDisplayTextLine(4, "%f", mid);
-		nxtDisplayTextLine(5, "%f", low);
+	float r0 = getIRDir(sensorIR)-8, r1;
+	if(r0 > 0) rbtArcRight(-7); else rbtArcLeft(20);
+	rbtMoveFdDist(-10, 5000);
 
-		wait1Msec(3500);
-		clearEncoders();
-		setLeftMotors(50.0*mid);
-		setRightMotors(50);
-		wait1Msec(2000);
-		setLeftMotors(0); setRightMotors(0);
-
-		bool cont = false;
-		while(!cont) {
-			if(nNxtButtonPressed == BTN_RIGHT) {high = mid; cont = true;}
-			if(nNxtButtonPressed == BTN_LEFT) {low = mid; cont = true;}
-		}
-	}
+	ClearTimer(T1);	while(time1[T1] < 2000) {
+		r1 = getIRDir(sensorIR)-8; int acS[5]; HTIRS2readAllACStrength(sensorIR, acS[0], acS[1], acS[2], acS[3], acS[4]);
+		if(r0 > 0) {setLeftMotors(acS[4] > acS[3] ? -6 : -50); setRightMotors(acS[4] > acS[3] ? -50 : -8);}
+    else       {setLeftMotors(acS[4] > acS[3] ? -6 : -90); setRightMotors(acS[4] > acS[3] ? -30 :  0);}
+	} setLeftMotors(0); setRightMotors(0); int cr = (r0 > 0 ? (r1 > 0 ? 1 : 2) : (r1 > 0 ? 3 : 4));
+	nxtDisplayBigTextLine(3, "%f", cr); for(;;);
 }
