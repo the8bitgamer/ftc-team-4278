@@ -5,9 +5,8 @@
 #include "hitechnic-irseeker-v2.h"
 #include "wiringnxt.h"
 
-#define setLeftMotors(x)  {motor[mLeft1]  = x; motor[mLeft2]  =  x; motor[mLeft3]  = x;}
-#define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] =  x; motor[mRight3] = x;}
-#define setShiftMotors(x)   {motor[mShift1] = x; motor[mShift2] = x;}
+#define setLeftMotors(x)  {motor[mLeftFront]  = x; motor[mLeftBack]  =  x;}
+#define setRightMotors(x) {motor[mRightFront] = x; motor[mRightBack] =  x;}
 
 #define setArmLocked()   {servo[sLock] = 140;}
 #define setArmUnlocked() {servo[sLock] = 080;}
@@ -20,7 +19,7 @@ bool shifterStateArm = true;
 
 #define leftEncoder     abs(nMotorEncoder[mLeft1])
 #define rightEncoder    abs(nMotorEncoder[mRight1])
-#define clearEncoders() {nMotorEncoder[mLeft1] = 0; nMotorEncoder[mRight1] = 0;}
+#define clearEncoders() {}
 
 //Distance Macros
 #define INCH   1.0
