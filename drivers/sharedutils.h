@@ -5,8 +5,8 @@
 #include "hitechnic-irseeker-v2.h"
 #include "wiringnxt.h"
 
-#define setLeftMotors(x)  {motor[mLeftFront]  = x; motor[mLeftBack]  =  x;}
-#define setRightMotors(x) {motor[mRightFront] = x; motor[mRightBack] =  x;}
+#define setLeftMotors(x)  {motor[mLeft1]  = x; motor[mLeft2]  =  x;}
+#define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] =  x;}
 
 #define setArmLocked()   {servo[sLock] = 140;}
 #define setArmUnlocked() {servo[sLock] = 080;}

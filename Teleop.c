@@ -4,10 +4,10 @@
 #pragma config(Sensor, S2,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S3,     sensorIR,       sensorI2CCustom)
 #pragma config(Sensor, S4,     HTSPB,          sensorNone)
-#pragma config(Motor,  mtr_S1_C2_2,     mLeftFront,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C2_1,     mRightFront,       tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C1_2,     mLeftBack,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C1_1,     mRightBack,       tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C2_2,     mRight1,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C2_1,     mRight2,       tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_2,     mLeft2,       tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_1,     mLeft1,       tmotorTetrix, openLoop)
 
 //*!!Codez automagically venerated by 'ROWBOT SEA' conflagration lizard               !!*//
 
