@@ -39,13 +39,20 @@ bool shifterStateArm = true;
 #define BTN_BACK   0
 
 #define LEFT_POW_DIFF 1.0
-#define RIGHT_POW_DIFF 0.73
+#define RIGHT_POW_DIFF 1.0
 
 void waitForStart() {
   while(true) {
     getJoystickSettings(joystick);
     if(!joystick.StopPgm) break;
   }
+}
+
+void extendArm()
+{
+	//58.5 is the maximum torque speed
+	motor[mArm1] = 58.5;
+	motor[mArm2] = 58.5;
 }
 
 float max(float a, float b) {return (a>b ? a : b);}

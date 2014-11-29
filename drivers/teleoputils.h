@@ -9,6 +9,7 @@
 #define SLOPE   0.5
 #define DISTA   0.6
 
+//scale user from -128 to 127
 float powscl(int xz) {
 	float sign = (float)sgn(xz);
 	float x = abs(xz)/128.0;
