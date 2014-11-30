@@ -4,14 +4,14 @@
 #pragma config(Sensor, S2,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S3,     sensorIR,       sensorHiTechnicIRSeeker600)
 #pragma config(Sensor, S4,     HTSPB,          sensorNone)
-#pragma config(Motor,  mtr_S1_C2_2,     mRight1,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C2_1,     mRight2,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C1_2,     mLeft2,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C1_1,     mLeft1,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S2_C1_1,     mArm1,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S2_C1_2,     mArm2,       tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_2,     mRight1,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_1,     mRight2,       tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C2_2,     mLeft2,       tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C2_1,     mLeft1,       tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C3_1,     mArm1,       tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C3_2,     mArm2,       tmotorTetrix, openLoop)
 
-//*!!Codez automagically venerated by 'ROWBOT SEA' conflagration lizard               !!*//
+//*!!Codez automagically venerated by 'ROWBOAT SEA' conflagration lizard               !!*//
 
 #include "drivers/teleoputils.h"
 #include "Feedback.h"
@@ -42,23 +42,7 @@ task main() {
 	//waitForStart();
 
 	extendArm();
-
-	//start up speed feedback tasks
-	float leftMotorSpeedMultiplier;
-	float rightMotorSpeedMultiplier;
-
-	motorNumberParam = mRight1;
-	multiplierParam = &rightMotorSpeedMultiplier;
   StartTask(monitorFeedback);
-
-  while(!paramsReceived)
-  {
-  	wait10Msec(1);
-  }
-  paramsReceived = false;
-  motorNumberParam = mLeft1;
-	multiplierParam = &leftMotorSpeedMultiplier;
-	StartTask(monitorFeedback);
 
  	while(true)
  		{
@@ -68,8 +52,8 @@ task main() {
 
 		if(joystick.joy1_TopHat == -1) {
 
-			setRightMotors(-rightMotorSpeedMultiplier*(powscl(JOY_Y1) + powscl(JOY_X1))/2.6);
-			setLeftMotors(leftMotorSpeedMultiplier*(powscl(JOY_Y1) - powscl(JOY_X1))/2.6);
+			setRightMotors(multiplierLeft*(powscl(JOY_Y1) + powscl(JOY_X1))/2.6);
+			setLeftMotors(multiplierRight*(powscl(JOY_Y1) - powscl(JOY_X1))/2.6);
 		} else {
 			setRightMotors(getRightPowTopHat(joystick.joy1_TopHat));
 			setLeftMotors(getLeftPowTopHat(joystick.joy1_TopHat));
