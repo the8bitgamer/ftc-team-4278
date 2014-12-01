@@ -87,18 +87,20 @@ void rbtMoveFdDist(float inches, int msec) {
 	setLeftMotors(0); setRightMotors(0); pause();
 }
 
-void rbtMoveFdDistErr(float inches, int msec) {
+bool rbtMoveFdDistErr(float inches, int msec) {
 	clearEncoders();
 	int enc = abs(getEncoderByInches(inches));
 	int norm = 1.0*sgn(inches);
 	ClearTimer(DRV_TIMER);
 
 	while(leftEncoder < enc && rightEncoder < enc) {
-		if(time1[DRV_TIMER] > msec) return;
+		if(time1[DRV_TIMER] > msec) return false;
 		setLeftMotors (20.0*norm*LEFT_POW_DIFF);
 		setRightMotors(20.0*norm*RIGHT_POW_DIFF);
 	}
 	setLeftMotors(0); setRightMotors(0); pause();
+
+	return true;
 }
 
 void rbtMoveFdDist(float pw, float inches, int msec) {

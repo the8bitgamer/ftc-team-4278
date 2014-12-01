@@ -104,9 +104,10 @@ int powerToSpeedTable[101] = {
 	0,
 };
 
+//#define FEEDBACKDEBUG
 
 //must be less than 1000
-#define CHECK_INTERVAL_MILLIS 200
+#define CHECK_INTERVAL_MILLIS 100
 
 //used to pass parameters to a task
 float multiplierLeft = 0;
@@ -114,15 +115,19 @@ float multiplierRight = 0;
 
 float updateSide(tMotor motorNumber, float * queue, int * startOfQueue)
 {
+#ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("motor: %s", motorNumber == mRight1 ? "right" : "left");
-
+#endif
 	int desiredSpeedDegreesPerSecond = powerToSpeedTable[100 - abs(motor[motorNumber])];
 
+#ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("desired speed in dps: %d", desiredSpeedDegreesPerSecond);
-
+#endif
 	int actualSpeedDegreesPerSecond = abs(nMotorEncoder[motorNumber]) * (1000 / CHECK_INTERVAL_MILLIS);
 
+#ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("actual speed in dps: %d", actualSpeedDegreesPerSecond);
+#endif
 
 	float ratio;
 	if(actualSpeedDegreesPerSecond == 0)
@@ -134,7 +139,9 @@ float updateSide(tMotor motorNumber, float * queue, int * startOfQueue)
 		 ratio = desiredSpeedDegreesPerSecond / (float)actualSpeedDegreesPerSecond;
 	}
 
+#ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("corrective ratio: %f", ratio);
+#endif
 
 	queue[(*startOfQueue)++] = ratio;
 
@@ -178,7 +185,9 @@ float updateSide(tMotor motorNumber, float * queue, int * startOfQueue)
 			avg = 1;
 		}
 
+#ifdef FEEDBACKDEBUG
 		writeDebugStreamLine("average corrective ratio: %f", avg);
+#endif
 
 		return avg;
 	}
