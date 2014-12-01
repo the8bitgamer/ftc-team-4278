@@ -11,10 +11,9 @@
 
 //scale user from -128 to 127
 float powscl(int xz) {
-	float sign = (float)sgn(xz);
-	float x = abs(xz)/128.0;
-	if(x < DISTA) {return 100 * sign * (x*SLOPE);}
-		else {return 100 * sign * ((DISTA*SLOPE*(x-1.0) - x + DISTA) / (DISTA - 1.0));}
+	float x = xz/128.0;
+
+	return 100 * x;
 }
 
 //Controller 1 - Left Joystick - Linear

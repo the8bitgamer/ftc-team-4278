@@ -29,7 +29,7 @@ bool shifterStateArm = true;
 #define FOOT  12.0
 #define METER 39.370
 
-#define WHEELCIRC 12.566
+#define WHEELCIRC 9.42585
 #define WHEELBASE 15.309
 #define FLOORMAT  24.0
 
