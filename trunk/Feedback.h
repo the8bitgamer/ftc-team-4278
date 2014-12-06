@@ -1,117 +1,26 @@
 
 //place feedback table from GenFeedbackTable.c here
 int powerToSpeedTable[101] = {
-	2796,
-	3736,
-	3706,
-	3744,
-	3688,
-	3692,
-	3880,
-	3540,
-	3704,
-	3872,
-	3664,
-	3716,
-	3498,
-	3858,
-	3716,
-	3690,
-	3668,
-	3664,
-	3518,
-	3830,
-	3650,
-	3666,
-	3492,
-	3666,
-	3824,
-	3498,
-	3634,
-	3618,
-	3626,
-	3646,
-	3610,
-	3578,
-	3618,
-	3600,
-	3586,
-	3760,
-	3582,
-	3570,
-	3556,
-	3576,
-	3404,
-	3552,
-	3514,
-	3556,
-	3518,
-	3498,
-	3660,
-	3342,
-	3648,
-	3462,
-	3310,
-	3490,
-	3440,
-	3400,
-	3436,
-	3410,
-	3396,
-	3382,
-	3384,
-	3346,
-	3324,
-	3308,
-	3300,
-	3276,
-	3222,
-	3264,
-	3216,
-	3156,
-	3132,
-	3138,
-	3100,
-	3034,
-	3020,
-	2978,
-	2922,
-	2868,
-	2860,
-	2800,
-	2726,
-	2684,
-	2626,
-	2540,
-	2462,
-	2368,
-	2284,
-	2176,
-	2048,
-	1936,
-	1786,
-	1692,
-	1452,
-	1400,
-	1076,
-	940,
-	862,
-	398,
-	104,
-	0,
-	0,
-	0,
-	0,
-};
+	2996,	3678,	3698,	3628,	3640,	3696,	3666,	3644,	3672,	3672,
+	3614,	3636,	3664,	3668,	3584,	3612,	3636,	3626,	3614,	3640,
+	3636,	3584,	3598,	3616,	3610,	3738,	3608,	3426,	3572,	3554,
+	3624,	3608,	3508,	3722,	3400,	3572,	3662,	3528,	3546,	3356,
+	3682,	3498,	3362,	3486,	3656,	3336,	3494,	3600,	3434,	3456,
+	3440,	3398,	3416,	3420,	3398,	3330,	3370,	3372,	3298,	3320,
+	3342,	3326,	3220,	3222,	3256,	3216,	3142,	3198,	3180,	3092,
+	3086,	3048,	3048,	2954,	2928,	2902,	2856,	2800,	2774,	2720,
+	2610,	2582,	2480,	2402,	2280,	2216,	2126,	1990,	1868,	1720,
+	1530,	1382,	1204,	964,	930,	582,	142,	0,	0,	0, 0};
 
 //#define FEEDBACKDEBUG
 
 //must be less than 1000
-#define CHECK_INTERVAL_MILLIS 100
+#define CHECK_INTERVAL_MILLIS 200
 
 float multiplierLeft = 1;
 float multiplierRight = 1;
 
+bool encodersWereCleared = true;
 
 /*
 This function returns the power correction value for the motor(s) whose stats are given.
@@ -119,19 +28,22 @@ This function returns the power correction value for the motor(s) whose stats ar
 Returns 0 on failure.
 
 */
+
 float updateSide(tMotor motorNumber, float * queue, int * startOfQueue, int * previousEncoderValue)
 {
-
-	if(nMotorEncoder[motorNumber] < *previousEncoderValue)
+	if(encodersWereCleared)
 	{
 		//someone reset a motor encoder, probably one of the auto routines
 		//fail and try again when we have reliable data
-		*previousEncoderValue = nMotorEncoder[motorNumber];
+		encodersWereCleared = false;
 		return 0;
 	}
 
 	int encoderDist = nMotorEncoder[motorNumber] - *previousEncoderValue;
 	*previousEncoderValue = nMotorEncoder[motorNumber];
+#ifdef FEEDBACKDEBUG
+	writeDebugStreamLine("encoder distance traveled: %d", encoderDist);
+#endif
 
 #ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("motor: %s", motorNumber == mRight1 ? "right" : "left");
@@ -223,19 +135,19 @@ task monitorFeedback()
 	int previousEncoderValueRight = 0;
 	int previousEncoderValueLeft = 0;
 
-	nMotorEncoder[mRight2] = 0;
-	nMotorEncoder[mLeft1] = 0;
+	nMotorEncoder[mRight1] = 0;
+	nMotorEncoder[mLeft2] = 0;
 
 	while(true)
 	{
 		Sleep(CHECK_INTERVAL_MILLIS);
-		float rightValue = updateSide(mRight2, rollingQueueRight, &startOfRollingQueueRight, &previousEncoderValueRight);
+		float rightValue = updateSide(mRight1, rollingQueueRight, &startOfRollingQueueRight, &previousEncoderValueRight);
 		if(rightValue != 0)
 		{
 			multiplierRight = rightValue;
 		}
 
-		float leftValue = updateSide(mLeft1, rollingQueueLeft, &startOfRollingQueueLeft, &previousEncoderValueLeft);
+		float leftValue = updateSide(mLeft2, rollingQueueLeft, &startOfRollingQueueLeft, &previousEncoderValueLeft);
 		if(leftValue != 0)
 		{
 			multiplierLeft = leftValue;

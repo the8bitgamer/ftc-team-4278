@@ -17,19 +17,47 @@
 
 void invokeButton(int button, bool pressed) {
 	switch(button) {
-		case BUTTON_X:  if(pressed) {} else {} break;
-		case BUTTON_Y:  if(pressed) {} else {} break;
-		case BUTTON_R3:
+		case BUTTON_X:
 			if(pressed)
 				{
-					extendArm();
+					motor[mArm1] = 58;
 				}
 				else
 				{
 					stopArm();
 				}
 				break;
-		case BUTTON_L3: if(pressed) {} else {} break;
+		case BUTTON_Y:
+			if(pressed)
+				{
+					motor[mArm1] = -58;
+				}
+				else
+				{
+					stopArm();
+				}
+				break;
+			case BUTTON_B:
+			if(pressed)
+				{
+					motor[mArm2] = -58;
+				}
+				else
+				{
+					stopArm();
+				}
+				break;
+			case BUTTON_A:
+			if(pressed)
+				{
+					motor[mArm2] = 58;
+				}
+				else
+				{
+					stopArm();
+				}
+				break;
+		case BUTTON_LT: if(pressed) {extendArm();} else {stopArm();} break;
 		case BUTTON_ST: if(pressed){} else {} break;
 		case BUTTON_BA: if(pressed) {} else {} break;
 	}
