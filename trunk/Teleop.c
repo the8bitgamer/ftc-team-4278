@@ -10,6 +10,8 @@
 #pragma config(Motor,  mtr_S1_C2_1,     mLeft1,       tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C3_1,     mArm1,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_2,     mArm2,       tmotorTetrix, openLoop)
+#pragma config(Servo,  srvo_S2_C1_1,    tubeHook1,            tServoStandard)
+#pragma config(Servo,  srvo_S2_C1_2,    tubeHook2,            tServoStandard)
 
 //*!!Codez automagically venerated by 'ROWBOAT SEA' conflagration lizard               !!*//
 
@@ -57,9 +59,10 @@ void invokeButton(int button, bool pressed) {
 					stopArm();
 				}
 				break;
-		case BUTTON_LT: if(pressed) {extendArm();} else {stopArm();} break;
-		case BUTTON_ST: if(pressed){} else {} break;
-		case BUTTON_BA: if(pressed) {} else {} break;
+		case BUTTON_LB: if(pressed) {extendArm();} else {stopArm();} break;
+		case BUTTON_LT: if(pressed){servo[tubeHook1] = 3;} else {} break;
+		case BUTTON_RT: if(pressed) {servo[tubeHook2] = 242;} else {} break;
+		case BUTTON_RB: if(pressed) {retractHooks();} else {} break;
 	}
 }
 
