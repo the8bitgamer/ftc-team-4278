@@ -109,12 +109,30 @@ int powerToSpeedTable[101] = {
 //must be less than 1000
 #define CHECK_INTERVAL_MILLIS 100
 
-//used to pass parameters to a task
-float multiplierLeft = 0;
-float multiplierRight = 0;
+float multiplierLeft = 1;
+float multiplierRight = 1;
 
-float updateSide(tMotor motorNumber, float * queue, int * startOfQueue)
+
+/*
+This function returns the power correction value for the motor(s) whose stats are given.
+
+Returns 0 on failure.
+
+*/
+float updateSide(tMotor motorNumber, float * queue, int * startOfQueue, int * previousEncoderValue)
 {
+
+	if(nMotorEncoder[motorNumber] < *previousEncoderValue)
+	{
+		//someone reset a motor encoder, probably one of the auto routines
+		//fail and try again when we have reliable data
+		*previousEncoderValue = nMotorEncoder[motorNumber];
+		return 0;
+	}
+
+	int encoderDist = nMotorEncoder[motorNumber] - *previousEncoderValue;
+	*previousEncoderValue = nMotorEncoder[motorNumber];
+
 #ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("motor: %s", motorNumber == mRight1 ? "right" : "left");
 #endif
@@ -123,7 +141,7 @@ float updateSide(tMotor motorNumber, float * queue, int * startOfQueue)
 #ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("desired speed in dps: %d", desiredSpeedDegreesPerSecond);
 #endif
-	int actualSpeedDegreesPerSecond = abs(nMotorEncoder[motorNumber]) * (1000 / CHECK_INTERVAL_MILLIS);
+	int actualSpeedDegreesPerSecond = abs(encoderDist) * (1000 / CHECK_INTERVAL_MILLIS);
 
 #ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("actual speed in dps: %d", actualSpeedDegreesPerSecond);
@@ -202,15 +220,26 @@ task monitorFeedback()
 	int startOfRollingQueueLeft = 0;
 	int startOfRollingQueueRight = 0;
 
+	int previousEncoderValueRight = 0;
+	int previousEncoderValueLeft = 0;
+
+	nMotorEncoder[mRight2] = 0;
+	nMotorEncoder[mLeft1] = 0;
+
 	while(true)
 	{
 		Sleep(CHECK_INTERVAL_MILLIS);
+		float rightValue = updateSide(mRight2, rollingQueueRight, &startOfRollingQueueRight, &previousEncoderValueRight);
+		if(rightValue != 0)
+		{
+			multiplierRight = rightValue;
+		}
 
-		multiplierRight = updateSide(mRight2, rollingQueueRight, &startOfRollingQueueRight);
-		multiplierLeft = updateSide(mLeft1, rollingQueueLeft, &startOfRollingQueueLeft);
-
-		nMotorEncoder[mRight2] = 0;
-		nMotorEncoder[mLeft1] = 0;
+		float leftValue = updateSide(mLeft1, rollingQueueLeft, &startOfRollingQueueLeft, &previousEncoderValueLeft);
+		if(leftValue != 0)
+		{
+			multiplierLeft = leftValue;
+		}
 	}
 
 

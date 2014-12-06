@@ -80,9 +80,19 @@ void optionScreen() {
 }
 
 task main() {
-	//optionScreen();
-	//wait1Msec(OPT_DELAY);
+	//--------------------------------------------------------
+	//Setup stuff goes here
+	//--------------------------------------------------------
+
+	StartTask(monitorFeedback);
 	extendArm();
 
+
+	//--------------------------------------------------------
+	//Main sequence goes here
+	//--------------------------------------------------------
+	rbtMoveFdDist(54, 10000);
+	rbtArcLeft(90);
+	rbtMoveFdDist(54, 10000);
 
 }
