@@ -68,6 +68,12 @@ void stopArm()
 	motor[mArm2] = 0;
 }
 
+void retractHooks()
+{
+	servo[tubeHook1] = 239;
+	servo[tubeHook2] = 16;
+}
+
 float max(float a, float b) {return (a>b ? a : b);}
 
 #endif //__SHAREDUTILS__

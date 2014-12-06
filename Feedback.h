@@ -34,7 +34,7 @@ float updateSide(tMotor motorNumber, float * queue, int * startOfQueue, int * pr
 	if(encodersWereCleared)
 	{
 		//someone reset a motor encoder, probably one of the auto routines
-		//fail and try again when we have reliable data
+		//so, fail and try again when we have reliable data
 		encodersWereCleared = false;
 		return 0;
 	}
