@@ -17,9 +17,10 @@
 #define getShifterState() (shifterStateArm)
 #define flipShifterState() {if(shifterStateArm) setShifterFlag(); else setShifterArm();}
 
-#define leftEncoder     abs(nMotorEncoder[mLeft1])
+#define leftEncoder     abs(nMotorEncoder[mLeft2])
 #define rightEncoder    abs(nMotorEncoder[mRight1])
-#define clearEncoders() {}
+
+#define clearEncoders() {nMotorEncoder[mLeft2] = 0; nMotorEncoder[mRight1] = 0; encodersWereCleared = true;}
 
 //Distance Macros
 #define INCH   1.0

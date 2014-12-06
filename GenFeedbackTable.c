@@ -27,11 +27,6 @@ It'll print the table to the debug log.
 
 task main() {
 
-	motor[mLeft1] = 50;
-	motor[mLeft2] = 50;
-
-	for(;;){}
-
 	writeDebugStreamLine("int powerToSpeedTable[101] = {");
 
 	int newlineCounter = 0;
@@ -40,8 +35,8 @@ task main() {
  	{
  		if(newlineCounter++ >= 10)
  		{
- 			writeDebugStream("\n");
- 			newlineCounter = 0;
+ 			writeDebugStreamLine(" ");
+ 			newlineCounter = 1;
  		}
 
  		motor[mRight1] = counter;
@@ -52,9 +47,9 @@ task main() {
 
  		//in degrees per millisecond
  		//though, there's not 360 degrees in a revolution
- 		int angularSpeed = nMotorEncoder[mRight1] * 2;
+ 		int angularSpeed = rightEncoder * 2;
 
- 		writeDebugStreamLine("	%d,", angularSpeed);
+ 		writeDebugStream("	%d,", angularSpeed);
 	}
 
 	writeDebugStreamLine("};");

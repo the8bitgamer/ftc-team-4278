@@ -4,15 +4,15 @@
 #include "sharedutils.h"
 
 #define DRV_TIMER T3
-#define MAX_TURN_TIME 3000
+#define MAX_TURN_TIME 5000
 #define PAUSE_TIME 250
 
 void pause() {wait1Msec(PAUSE_TIME);}
 void pause(int n) {for(int i = 0; i < n; i++) pause();}
 void estop() {StopAllTasks();}
 
-int getEncoderByInches(float inches) {return floor((1440)*(inches)/WHEELCIRC);}
-float getInchesByEncoder(float encode) {return ((float)encode/1440.0)*WHEELCIRC;}
+int getEncoderByInches(float inches) {return floor((DEG_PER_REV)*(inches)/WHEELCIRC);}
+float getInchesByEncoder(float encode) {return (encode/DEG_PER_REV)*WHEELCIRC;}
 
 void lockdownRobot() {
 	PlaySound(soundException);
@@ -119,21 +119,30 @@ void rbtMoveFdDist(float pw, float inches, int msec) {
 
 void rbtMoveFdEnc(int enc, int msec) {rbtMoveFdDist(getInchesByEncoder(enc), msec);}
 
-void rbtArcLeft(float degs) {
+
+//arc to the right (set LEFT motors)
+void rbtArcRight(float degs) {
 	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setLeftMotors(-1*sgn(degs)*60);
+	setLeftMotors(sgn(degs)*40);
 	ClearTimer(DRV_TIMER);
 	while(leftEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0); pause();
 }
 
-void rbtArcRight(float degs) {
+//arc to the left (set RIGHT motors)
+void rbtArcLeft(float degs) {
 	int enc = getEncoderByInches((2.0*PI*WHEELBASE)*(abs(degs)/360.0));
 	clearEncoders();
-	setRightMotors(sgn(degs)*40);
+	int sign = sgn(degs);
+	setRightMotors(sign*40);
 	ClearTimer(DRV_TIMER);
-	while(rightEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
+	while(rightEncoder < enc)
+	{
+		wait10Msec(1);
+		if(time1[DRV_TIMER] > MAX_TURN_TIME)
+			lockdownRobot();
+	}
 	setRightMotors(0); pause();
 }
 
