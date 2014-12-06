@@ -14,13 +14,21 @@
 //*!!Codez automagically venerated by 'ROWBOAT SEA' conflagration lizard               !!*//
 
 #include "drivers/teleoputils.h"
-#include "Feedback.h"
 
 void invokeButton(int button, bool pressed) {
 	switch(button) {
 		case BUTTON_X:  if(pressed) {} else {} break;
 		case BUTTON_Y:  if(pressed) {} else {} break;
-		case BUTTON_R3: if(pressed) {} else {} break;
+		case BUTTON_R3:
+			if(pressed)
+				{
+					extendArm();
+				}
+				else
+				{
+					stopArm();
+				}
+				break;
 		case BUTTON_L3: if(pressed) {} else {} break;
 		case BUTTON_ST: if(pressed){} else {} break;
 		case BUTTON_BA: if(pressed) {} else {} break;
@@ -39,9 +47,6 @@ void checkJoystickButtons() {
 }
 
 task main() {
-	//waitForStart();
-
-	extendArm();
   StartTask(monitorFeedback);
 
  	while(true)
@@ -52,8 +57,8 @@ task main() {
 
 		if(joystick.joy1_TopHat == -1) {
 
-			setRightMotors(multiplierLeft*(powscl(JOY_Y1) + powscl(JOY_X1))/2.6);
-			setLeftMotors(multiplierRight*(powscl(JOY_Y1) - powscl(JOY_X1))/2.6);
+			setRightMotors((powscl(JOY_Y1) + powscl(JOY_X1))/2.6);
+			setLeftMotors((powscl(JOY_Y1) - powscl(JOY_X1))/2.6);
 		} else {
 			setRightMotors(getRightPowTopHat(joystick.joy1_TopHat));
 			setLeftMotors(getLeftPowTopHat(joystick.joy1_TopHat));

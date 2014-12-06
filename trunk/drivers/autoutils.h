@@ -12,7 +12,7 @@ void pause(int n) {for(int i = 0; i < n; i++) pause();}
 void estop() {StopAllTasks();}
 
 int getEncoderByInches(float inches) {return floor((1440)*(inches)/WHEELCIRC);}
-float getInchesByEncoder(int encode) {return (((float)encode)/1440.0)*WHEELCIRC;}
+float getInchesByEncoder(float encode) {return ((float)encode/1440.0)*WHEELCIRC;}
 
 void lockdownRobot() {
 	PlaySound(soundException);

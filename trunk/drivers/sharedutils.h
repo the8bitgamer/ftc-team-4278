@@ -4,14 +4,14 @@
 #include "JoystickDriver4278.c"
 #include "hitechnic-irseeker-v2.h"
 #include "wiringnxt.h"
+#include "Feedback.h"
 
-#define setLeftMotors(x)  {motor[mLeft1]  = x; motor[mLeft2]  =  x;}
-#define setRightMotors(x) {motor[mRight1] = x; motor[mRight2] =  x;}
+#define setLeftMotors(x)  {int pow = multiplierLeft*x; motor[mLeft1] = pow; motor[mLeft2] = pow;}
+#define setRightMotors(x) {int powr = multiplierRight*x; motor[mRight1] = powr; motor[mRight2] =  powr;}
 
 #define setArmLocked()   {servo[sLock] = 140;}
 #define setArmUnlocked() {servo[sLock] = 080;}
 
-bool shifterStateArm = true;
 #define setShifterArm()  {servo[sShifter] = 100; shifterStateArm = true;}
 #define setShifterFlag() {servo[sShifter] = 170; shifterStateArm = false;}
 #define getShifterState() (shifterStateArm)
@@ -30,7 +30,9 @@ bool shifterStateArm = true;
 #define METER 39.370
 
 #define WHEELCIRC 9.42585
-#define WHEELBASE 15.309
+
+//horizontal distance between wheels
+#define WHEELBASE 10.95
 #define FLOORMAT  24.0
 
 #define BTN_CENTER 3
@@ -40,6 +42,9 @@ bool shifterStateArm = true;
 
 #define LEFT_POW_DIFF 1.0
 #define RIGHT_POW_DIFF 1.0
+
+//degrees per revolution
+#define DEG_PER_REV 1440
 
 void waitForStart() {
   while(true) {
@@ -53,6 +58,13 @@ void extendArm()
 	//58.5 is the maximum torque speed
 	motor[mArm1] = 58.5;
 	motor[mArm2] = 58.5;
+}
+
+void stopArm()
+{
+	//58.5 is the maximum torque speed
+	motor[mArm1] = 0;
+	motor[mArm2] = 0;
 }
 
 float max(float a, float b) {return (a>b ? a : b);}
