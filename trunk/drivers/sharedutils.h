@@ -57,21 +57,27 @@ void waitForStart() {
 void extendArm()
 {
 	//58.5 is the maximum torque speed
-	motor[mArm1] = 58.5;
-	motor[mArm2] = 58.5;
+	//motor[mArm1] = 58.5;
+	//motor[mArm2] = 58.5;
 }
 
 void stopArm()
 {
 	//58.5 is the maximum torque speed
-	motor[mArm1] = 0;
-	motor[mArm2] = 0;
+	//motor[mArm1] = 0;
+	//motor[mArm2] = 0;
 }
 
 void retractHooks()
 {
-	servo[tubeHook1] = 239;
-	servo[tubeHook2] = 16;
+	servo[tubeHook1] = 242;
+	servo[tubeHook2] = 3;
+}
+
+void extendHooks()
+{
+	servo[tubeHook1] = 3;
+	servo[tubeHook2] = 242;
 }
 
 float max(float a, float b) {return (a>b ? a : b);}

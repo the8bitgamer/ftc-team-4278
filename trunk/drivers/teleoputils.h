@@ -40,19 +40,18 @@ float powscl(int xz) {
 #define JOY_BTN joystick.joy1_Buttons
 
 int getLeftPowTopHat(int topHat) {
-	if(topHat == 0) return 100;
-	if(topHat == 6) return -100;
-	if(topHat == 4) return -100;
-	if(topHat == 2) return 100;
+	if(topHat == 0) return -35;
+	if(topHat == 6) return -35;
+	if(topHat == 4) return 35;
+	if(topHat == 2) return 35;
 	return 0;
 }
 
 int getRightPowTopHat(int topHat) {
-	//topHat--;
-	if(topHat == 0) return 100;
-	if(topHat == 6) return 100;
-	if(topHat == 4) return -100;
-	if(topHat == 2) return -100;
+	if(topHat == 0) return -35;
+	if(topHat == 6) return 35;
+	if(topHat == 4) return 35;
+	if(topHat == 2) return -35;
 	return 0;
 }
 
