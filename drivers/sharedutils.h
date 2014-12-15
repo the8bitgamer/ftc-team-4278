@@ -47,6 +47,14 @@
 //degrees per revolution
 #define DEG_PER_REV 1440
 
+//servo constants
+#define HOOK1_HOOKDOWN 15
+#define HOOK1_HOOKREST 242
+#define HOOK1_ROBOLOCK 0
+
+#define HOOK2_HOOKDOWN 230
+#define HOOK2_HOOKREST 3
+#define HOOK2_ROBOLOCK 260
 void waitForStart() {
   while(true) {
     getJoystickSettings(joystick);
@@ -70,14 +78,20 @@ void stopArm()
 
 void retractHooks()
 {
-	servo[tubeHook1] = 242;
-	servo[tubeHook2] = 3;
+	servo[tubeHook1] = HOOK1_HOOKREST;
+	servo[tubeHook2] = HOOK2_HOOKREST;
+}
+
+void activateStopBlocks()
+{
+	servo[tubeHook1] = HOOK1_ROBOLOCK;
+	servo[tubeHook2] = HOOK2_ROBOLOCK;
 }
 
 void extendHooks()
 {
-	servo[tubeHook1] = 3;
-	servo[tubeHook2] = 242;
+	servo[tubeHook1] = HOOK1_HOOKDOWN;
+	servo[tubeHook2] = HOOK2_HOOKDOWN;
 }
 
 float max(float a, float b) {return (a>b ? a : b);}

@@ -24,7 +24,8 @@ void lockdownRobot() {
 float getIRDir(tSensors link) {
     static float prevDir = 0.0; float currDir; int acS[5]; int idx;
 
-    idx = HTIRS2readACDir(link); currDir = (float)idx;
+    idx = HTIRS2readACDir(link);
+    currDir = (float)idx;
     if (idx == 0) {
         currDir = 0;
     } else if (HTIRS2readAllACStrength(link, acS[0], acS[1], acS[2], acS[3], acS[4])) {
@@ -41,37 +42,6 @@ float getIRDir(tSensors link) {
     prevDir = currDir;
     return currDir;
 }
-
-//int rbtMoveToIR(int max, int timeout) {
-//	int stopRightEnc,dir1, dir2, dir3, dir4, dir5, lowThresh2 = 0, lowThresh = 0, peak = -1000, peak2 = -1000;
-//	for(int i=0;i<15;i++){
-//		HTIRS2readAllACStrength(sensorIR, dir1, dir2, dir3, dir4, dir5);
-//		lowThresh += dir3;
-//		lowThresh2 += dir2;
-//		wait1Msec(10);
-//	}lowThresh /= 15; lowThresh2 /= 15;
-//	//clearEncoders();
-//	ClearTimer(DRV_TIMER);
-//	peak = dir3-lowThresh;
-//	peak2 = dir2-lowThresh2;
-//	do {
-//		if(peak<dir3-lowThresh)peak = dir3-lowThresh;
-//		if(peak2<dir2-lowThresh)peak2 = dir2-lowThresh;
-//		HTIRS2readAllACStrength(sensorIR, dir1, dir2, dir3, dir4, dir5);
-//		stopRightEnc = rightEncoder;
-//		if(dir3 <= dir2*(0.3) || peak <= 85) {setLeftMotors(20); setRightMotors(20);}
-//		if(time1[DRV_TIMER] > timeout) lockdownRobot();
-//		nxtDisplayTextLine(1, "DIR1: %d", dir1);
-//		nxtDisplayTextLine(2, "DIR2: %d", dir2);
-//		nxtDisplayTextLine(3, "DIR3: %d", dir3-lowThresh);
-//		nxtDisplayTextLine(4, "DIR4: %d", dir4);
-//		nxtDisplayTextLine(5, "DIR5: %d", dir5);
-//		nxtDisplayTextLine(6, "Peak: %d", peak);
-//		nxtDisplayTextLine(7, "Peak2: %d", peak2);
-//	}while(dir3 <= dir2*(0.3) || peak <= 85);//&& rightEncoder < max);
-//	setLeftMotors(0); setRightMotors(0); pause(3);
-//	return rightEncoder;
-//}
 
 void rbtMoveFdDist(float inches, int msec) {
 	clearEncoders();

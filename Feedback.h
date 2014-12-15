@@ -48,7 +48,7 @@ float updateSide(tMotor motorNumber, float * queue, int * startOfQueue, int * pr
 #ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("motor: %s", motorNumber == mRight1 ? "right" : "left");
 #endif
-	int desiredSpeedDegreesPerSecond = powerToSpeedTable[100 - abs(motor[motorNumber])];
+	int desiredSpeedDegreesPerSecond = powerToSpeedTable[abs(motor[motorNumber])];
 
 #ifdef FEEDBACKDEBUG
 	writeDebugStreamLine("desired speed in dps: %d", desiredSpeedDegreesPerSecond);
