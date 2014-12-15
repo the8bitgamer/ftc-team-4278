@@ -83,7 +83,7 @@ task main() {
 
 	StartTask(monitorFeedback);
 	extendArm();
-
+	retractHooks();
 
 	//--------------------------------------------------------
 	//Main sequence goes here
