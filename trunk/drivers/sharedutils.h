@@ -30,7 +30,7 @@
 #define FOOT  12.0
 #define METER 39.370
 
-#define WHEELCIRC 9.42585
+#define WHEELCIRC 18.8517
 
 //horizontal distance between wheels
 #define WHEELBASE 10.95
@@ -46,34 +46,20 @@
 
 //degrees per revolution
 #define DEG_PER_REV 1440
-
 //servo constants
-#define HOOK1_HOOKDOWN 15
-#define HOOK1_HOOKREST 242
-#define HOOK1_ROBOLOCK 0
+#define HOOK1_HOOKDOWN 255 // middle + 128
+#define HOOK1_HOOKREST 64 // middle - 64
+#define HOOK1_ROBOLOCK 8
 
-#define HOOK2_HOOKDOWN 230
-#define HOOK2_HOOKREST 3
-#define HOOK2_ROBOLOCK 260
+//hook 2 offset +6
+#define HOOK2_HOOKDOWN 12
+#define HOOK2_HOOKREST 198
+#define HOOK2_ROBOLOCK 248
 void waitForStart() {
   while(true) {
     getJoystickSettings(joystick);
     if(!joystick.StopPgm) break;
   }
-}
-
-void extendArm()
-{
-	//58.5 is the maximum torque speed
-	//motor[mArm1] = 58.5;
-	//motor[mArm2] = 58.5;
-}
-
-void stopArm()
-{
-	//58.5 is the maximum torque speed
-	//motor[mArm1] = 0;
-	//motor[mArm2] = 0;
 }
 
 void retractHooks()
