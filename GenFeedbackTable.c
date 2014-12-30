@@ -1,4 +1,5 @@
-#pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
+#pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  none)
+#pragma config(Hubs,  S2, HTServo,  none,  none,  none)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S3,     sensorIR,       sensorHiTechnicIRSeeker600)
 #pragma config(Sensor, S4,     HTSPB,          sensorNone)
@@ -6,8 +7,10 @@
 #pragma config(Motor,  mtr_S1_C1_2,     mRight1,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_1,     mLeft1,        tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C2_2,     mLeft2,        tmotorTetrix, openLoop, reversed)
-#pragma config(Servo,  srvo_S1_C3_1,    tubeHook1,            tServoStandard)
-#pragma config(Servo,  srvo_S1_C3_2,    tubeHook2,            tServoStandard)
+#pragma config(Motor,  mtr_S1_C3_1,     mSlide1,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C3_2,     mSlide2,        tmotorTetrix, openLoop)
+#pragma config(Servo,  srvo_S2_C1_3,    tubeHook1,            tServoStandard)
+#pragma config(Servo,  srvo_S2_C1_4,    tubeHook2,            tServoStandard)
 
 //*!!Codez automagically venerated by 'ROWBOT SEA' conflagration lizard               !!*//
 
@@ -24,6 +27,9 @@ It'll print the table to the debug log.
 
 
 task main() {
+
+	servo[tubeHook1] = 128;
+	servo[tubeHook2] = 128;
 
 	writeDebugStreamLine("int powerToSpeedTable[101] = {");
 

@@ -57,6 +57,49 @@ void rbtMoveFdDist(float inches, int msec) {
 	setLeftMotors(0); setRightMotors(0); pause();
 }
 
+void extendArm()
+{
+	//58.5 is the maximum torque speed
+	motor[mSlide1] = -54;
+	motor[mSlide2] = 58.5;
+
+	nMotorEncoder[mSlide1] = 0;
+  nMotorEncoder[mSlide2] = 0;
+
+	bool slideOneDone = false;
+	bool slideTwoDone = false;
+
+	ClearTimer(DRV_TIMER);
+
+	while(!(slideOneDone && slideTwoDone))
+	{
+		if(time1[DRV_TIMER] > 1000 && (abs(nMotorEncoder[mSlide1]) < 100 || abs(nMotorEncoder[mSlide2]) < 100))
+		{
+			writeDebugStreamLine("Encoder not registering, emergency slide stop!");
+			writeDebugStreamLine("Slide Motor Enc. 1: %d, Slide Motor Enc. 2: %d", nMotorEncoder[mSlide1], nMotorEncoder[mSlide2]);
+			motor[mSlide1] = 0;
+			motor[mSlide2] = 0;
+			return;
+		}
+
+
+		if(nMotorEncoder[mSlide1] < -32000)
+		{
+			motor[mSlide1] = 0;
+			slideOneDone = true;
+		}
+		if(nMotorEncoder[mSlide2] > 40000)
+		{
+			motor[mSlide2] = 0;
+			slideTwoDone = true;
+		}
+
+		writeDebugStreamLine("Slide Motor 1: %d, Slide Motor 2: %d", nMotorEncoder[mSlide1], nMotorEncoder[mSlide2]);
+
+	}
+
+}
+
 bool rbtMoveFdDistErr(float inches, int msec) {
 	clearEncoders();
 	int enc = abs(getEncoderByInches(inches));
