@@ -62,41 +62,26 @@ void extendArm()
 	//58.5 is the maximum torque speed
 	motor[mSlide1] = -54;
 	motor[mSlide2] = 58.5;
-
-	nMotorEncoder[mSlide1] = 0;
-  nMotorEncoder[mSlide2] = 0;
-
-	bool slideOneDone = false;
-	bool slideTwoDone = false;
-
 	ClearTimer(DRV_TIMER);
 
-	while(!(slideOneDone && slideTwoDone))
+	while(!sensor[sensorSlideEndstop])
 	{
-		if(time1[DRV_TIMER] > 1000 && (abs(nMotorEncoder[mSlide1]) < 100 || abs(nMotorEncoder[mSlide2]) < 100))
+		if(time1[DRV_TIMER] > 10000)
 		{
-			writeDebugStreamLine("Encoder not registering, emergency slide stop!");
-			writeDebugStreamLine("Slide Motor Enc. 1: %d, Slide Motor Enc. 2: %d", nMotorEncoder[mSlide1], nMotorEncoder[mSlide2]);
+			writeDebugStreamLine("Touch sensor not registering, emergency slide stop!");
 			motor[mSlide1] = 0;
 			motor[mSlide2] = 0;
 			return;
 		}
-
-
-		if(nMotorEncoder[mSlide1] < -32000)
+		else
 		{
-			motor[mSlide1] = 0;
-			slideOneDone = true;
+			wait10Msec(1)
 		}
-		if(nMotorEncoder[mSlide2] > 40000)
-		{
-			motor[mSlide2] = 0;
-			slideTwoDone = true;
-		}
-
-		writeDebugStreamLine("Slide Motor 1: %d, Slide Motor 2: %d", nMotorEncoder[mSlide1], nMotorEncoder[mSlide2]);
 
 	}
+
+	motor[mSlide1] = 0;
+	motor[mSlide2] = 0;
 
 }
 
@@ -177,6 +162,25 @@ void rbtTurnLeft(float degs) {
 	ClearTimer(DRV_TIMER);
 	while(leftEncoder < enc) if(time1[DRV_TIMER] > MAX_TURN_TIME) lockdownRobot();
 	setLeftMotors(0); setRightMotors(0); pause();
+}
+
+int getLeftTurnToBeacon()
+{
+	float IRDir = getIRDir(sensorIR);
+
+	if(IRDir >= 5)
+	{
+		writeDebugStreamLine("Estimating that the IR beacon is straight ahead");
+		return 0;
+	}
+	else if(IRDir >= 2)
+	{
+		writeDebugStreamLine("Estimating that the IR beacon is half turned to the left");
+		return 45;
+	}
+
+	writeDebugStreamLine("Estimating that the IR beacon is fully turned to the left");
+	return 90;
 }
 
 int rbtMoveToIR(int timeout) {

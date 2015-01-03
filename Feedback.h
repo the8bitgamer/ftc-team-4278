@@ -1,16 +1,18 @@
 
 //place feedback table from GenFeedbackTable.c here
 int powerToSpeedTable[101] = {
-	2996,	3678,	3698,	3628,	3640,	3696,	3666,	3644,	3672,	3672,
-	3614,	3636,	3664,	3668,	3584,	3612,	3636,	3626,	3614,	3640,
-	3636,	3584,	3598,	3616,	3610,	3738,	3608,	3426,	3572,	3554,
-	3624,	3608,	3508,	3722,	3400,	3572,	3662,	3528,	3546,	3356,
-	3682,	3498,	3362,	3486,	3656,	3336,	3494,	3600,	3434,	3456,
-	3440,	3398,	3416,	3420,	3398,	3330,	3370,	3372,	3298,	3320,
-	3342,	3326,	3220,	3222,	3256,	3216,	3142,	3198,	3180,	3092,
-	3086,	3048,	3048,	2954,	2928,	2902,	2856,	2800,	2774,	2720,
-	2610,	2582,	2480,	2402,	2280,	2216,	2126,	1990,	1868,	1720,
-	1530,	1382,	1204,	964,	930,	582,	142,	0,	0,	0, 0};
+	0,	17,	0,	1,	107,	235,	888,	869,	1271,	1506,
+	1696,	1866,	1975,	2097,	2252,	2398,	2349,	2518,	2624,	2703,
+	2711,	2792,	2862,	2843,	2950,	3002,	2997,	3002,	3068,	3039,
+	3191,	3204,	3197,	3186,	3196,	3290,	3264,	3274,	3347,	3297,
+	3327,	3351,	3402,	3398,	3390,	3413,	3471,	3480,	3368,	3493,
+	3473,	3518,	3434,	3506,	3571,	3437,	3590,	3540,	3499,	3546,
+	3656,	3487,	3652,	3574,	3559,	3625,	3642,	3616,	3666,	3530,
+	3707,	3627,	3621,	3632,	3630,	3677,	3692,	3615,	3656,	3789,
+	3641,	3648,	3679,	3730,	3734,	3584,	3812,	3711,	3695,	3721,
+	3633,	3759,	3686,	3805,	3618,	3768,	3758,	3746,	3706,	3709,
+	3803};
+
 
 //#define FEEDBACKDEBUG
 
@@ -20,7 +22,7 @@ int powerToSpeedTable[101] = {
 float multiplierLeft = 1;
 float multiplierRight = 1;
 
-bool encodersWereCleared = true;
+bool encodersWereCleared = false;
 
 /*
 This function returns the power correction value for the motor(s) whose stats are given.
@@ -136,7 +138,7 @@ task monitorFeedback()
 	int previousEncoderValueLeft = 0;
 
 	nMotorEncoder[mRight1] = 0;
-	nMotorEncoder[mLeft2] = 0;
+	nMotorEncoder[mLeft1] = 0;
 
 	while(true)
 	{
@@ -147,7 +149,7 @@ task monitorFeedback()
 			multiplierRight = rightValue;
 		}
 
-		float leftValue = updateSide(mLeft2, rollingQueueLeft, &startOfRollingQueueLeft, &previousEncoderValueLeft);
+		float leftValue = updateSide(mLeft1, rollingQueueLeft, &startOfRollingQueueLeft, &previousEncoderValueLeft);
 		if(leftValue != 0)
 		{
 			multiplierLeft = leftValue;
