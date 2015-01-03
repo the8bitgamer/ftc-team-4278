@@ -3,21 +3,14 @@
 
 #include "JoystickDriver4278.c"
 #include "hitechnic-irseeker-v2.h"
-#include "wiringnxt.h"
 #include "Feedback.h"
 
 #define setLeftMotors(x)  {int pow = multiplierLeft*x; motor[mLeft1] = pow; motor[mLeft2] = pow;}
 #define setRightMotors(x) {int powr = multiplierRight*x; motor[mRight1] = powr; motor[mRight2] =  powr;}
-
-#define setArmLocked()   {servo[sLock] = 140;}
-#define setArmUnlocked() {servo[sLock] = 080;}
-
-#define setShifterArm()  {servo[sShifter] = 100; shifterStateArm = true;}
-#define setShifterFlag() {servo[sShifter] = 170; shifterStateArm = false;}
 #define getShifterState() (shifterStateArm)
 #define flipShifterState() {if(shifterStateArm) setShifterFlag(); else setShifterArm();}
 
-#define leftEncoder     abs(nMotorEncoder[mLeft2])
+#define leftEncoder     abs(nMotorEncoder[mLeft1])
 #define rightEncoder    abs(nMotorEncoder[mRight1])
 
 #define clearEncoders() {nMotorEncoder[mLeft2] = 0; nMotorEncoder[mRight1] = 0; encodersWereCleared = true;}
@@ -66,12 +59,6 @@ void retractHooks()
 {
 	servo[tubeHook1] = HOOK1_HOOKREST;
 	servo[tubeHook2] = HOOK2_HOOKREST;
-}
-
-void activateStopBlocks()
-{
-	servo[tubeHook1] = HOOK1_ROBOLOCK;
-	servo[tubeHook2] = HOOK2_ROBOLOCK;
 }
 
 void extendHooks()

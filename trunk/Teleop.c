@@ -2,14 +2,14 @@
 #pragma config(Hubs,  S2, HTServo,  none,  none,  none)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S3,     sensorIR,       sensorHiTechnicIRSeeker600)
-#pragma config(Sensor, S4,     HTSPB,          sensorNone)
-#pragma config(Motor,  mtr_S1_C1_1,     mRight2,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C1_2,     mRight1,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C2_1,     mLeft1,        tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C2_2,     mLeft2,        tmotorTetrix, openLoop, reversed)
+#pragma config(Sensor, S4,     sensorSlideEndstop, sensorTouch)
+#pragma config(Motor,  mtr_S1_C1_1,     mRight2,       tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C1_2,     mRight1,       tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C2_1,     mLeft1,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C2_2,     mLeft2,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     mSlide1,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_2,     mSlide2,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C4_1,     mChain,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C4_1,     mChain,        tmotorTetrix, openLoop, reversed)
 #pragma config(Servo,  srvo_S2_C1_3,    tubeHook1,            tServoStandard)
 #pragma config(Servo,  srvo_S2_C1_4,    tubeHook2,            tServoStandard)
 
@@ -43,12 +43,6 @@ void invokeButton(int button, bool pressed) {
 					servo[tubeHook2] = HOOK2_HOOKDOWN;
 				}
 			} else {} break;
-
-		case BUTTON_A:
-			if(pressed)
-			{
-				activateStopBlocks();
-			} else {} break;
 		case BUTTON_Y:
 			if(pressed) {retractHooks();} else {} break;
 		case BUTTON_RB:
@@ -59,17 +53,17 @@ void invokeButton(int button, bool pressed) {
 			if(pressed) {motor[mSlide1] = -58.5;} else {motor[mSlide1] = 0;} break;
 		case BUTTON_ST:
 			if(pressed) {motor[mSlide2] = -35;} else {motor[mSlide2] = 0;} break;
-		case BUTTON_L3:
+		case BUTTON_A:
 			if(pressed)
 				{
-					//if(motor[mChain] != 50)
-					//{
-					//	motor[mChain] = 50;
-					//}
-					//else
-					//{
+					if(motor[mChain] != 0)
+					{
 						motor[mChain] = 0;
-					//}
+					}
+					else
+					{
+						motor[mChain] = 50;
+					}
 				} else {} break;
 	}
 }
@@ -114,6 +108,10 @@ task main() {
 		if(abs(joystick.joy1_y2) > 15.0)
 		{
 			motor[mChain] = powscl(joystick.joy1_y2);
+		}
+		else
+		{
+			motor[mChain] = 0;
 		}
 	}
 }
