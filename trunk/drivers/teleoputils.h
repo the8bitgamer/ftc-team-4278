@@ -18,7 +18,10 @@ float powscl(int xz) {
 
 //Controller 1 - Left Joystick - Linear
 #define JOY_X1 (abs(joystick.joy1_x1) > THRESH ? joystick.joy1_x1 : 0)
-#define JOY_Y1 (abs(joystick.joy1_y1) > THRESH ? -1.0*joystick.joy1_y1 : 0)
+#define JOY_X2 (abs(joystick.joy1_x2) > THRESH ? joystick.joy1_x2 : 0)
+#define JOY_Y1 (abs(joystick.joy1_y1) > THRESH ? joystick.joy1_y1 : 0)
+#define JOY_Y2 (abs(joystick.joy1_y2) > THRESH ? joystick.joy1_y2 : 0)
+
 
 //Defines current button map layout
 #define BUTTON_X 0

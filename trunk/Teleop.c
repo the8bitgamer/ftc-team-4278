@@ -1,21 +1,18 @@
-#pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTMotor)
-#pragma config(Hubs,  S2, HTServo,  none,  none,  none)
+#pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S3,     sensorIR,       sensorHiTechnicIRSeeker600)
-#pragma config(Sensor, S4,     sensorSlideEndstop, sensorTouch)
-#pragma config(Motor,  mtr_S1_C1_1,     mRight2,       tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C1_2,     mRight1,       tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C2_1,     mLeft1,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C2_2,     mLeft2,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_1,     mSlide1,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_2,     mSlide2,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C4_1,     mChain,        tmotorTetrix, openLoop, reversed)
-#pragma config(Servo,  srvo_S2_C1_3,    tubeHook1,            tServoStandard)
-#pragma config(Servo,  srvo_S2_C1_4,    tubeHook2,            tServoStandard)
+#pragma config(Sensor, S4,     ultrasonic,     sensorSONAR)
+#pragma config(Motor,  mtr_S1_C2_1,     mRight2,       tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C2_2,     mRight1,       tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C1_1,     mLeft1,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_2,     mLeft2,        tmotorTetrix, openLoop)
+#pragma config(Servo,  srvo_S1_C3_3,    tubeHook1,            tServoStandard, reversed)
+#pragma config(Servo,  srvo_S1_C3_4,    tubeHook2,            tServoStandard, reversed)
 
 //*!!Codez automagically venerated by 'ROWBOAT SEA' conflagration lizard               !!*//
 
 #include "drivers/teleoputils.h"
+
+bool useTankDrive = false;
 
 void invokeButton(int button, bool pressed) {
 	switch(button) {
@@ -45,26 +42,46 @@ void invokeButton(int button, bool pressed) {
 			} else {} break;
 		case BUTTON_Y:
 			if(pressed) {retractHooks();} else {} break;
-		case BUTTON_RB:
-			if(pressed) {motor[mSlide2] = 58.5;} else {motor[mSlide2] = 0;} break;
-		case BUTTON_BA:
-			if(pressed) {motor[mSlide1] = 35;} else {motor[mSlide1] = 0;} break;
-		case BUTTON_LB:
-			if(pressed) {motor[mSlide1] = -58.5;} else {motor[mSlide1] = 0;} break;
-		case BUTTON_ST:
-			if(pressed) {motor[mSlide2] = -35;} else {motor[mSlide2] = 0;} break;
-		case BUTTON_A:
+		//case BUTTON_RB:
+		//	if(pressed) {motor[mSlide2] = 58;} else {motor[mSlide2] = 0;} break;
+		//case BUTTON_BA:
+		//	if(pressed) {motor[mSlide1] = 35;} else {motor[mSlide1] = 0;} break;
+		//case BUTTON_LB:
+		//	if(pressed) {motor[mSlide1] = -55;} else {motor[mSlide1] = 0;} break;
+		//case BUTTON_ST:
+		//	if(pressed) {motor[mSlide2] = -35;} else {motor[mSlide2] = 0;} break;
+		//case BUTTON_A:
+		//	if(pressed)
+		//		{
+		//			if(motor[mChain] != 50 * CHAINSPEEDSCALAR)
+		//			{
+		//				motor[mChain] = 50 * CHAINSPEEDSCALAR;
+		//			}
+		//			else
+		//			{
+		//				motor[mChain] = 0;
+		//			}
+		//		} else {} break;
+
+		//case BUTTON_Y:
+		//	if(pressed)
+		//		{
+		//			if(motor[mChain] != 100)
+		//			{
+		//				motor[mChain] = 100;
+		//			}
+		//			else
+		//			{
+		//				motor[mChain] = 0;
+		//			}
+		//		} else {} break;
+
+		case BUTTON_L3:
 			if(pressed)
-				{
-					if(motor[mChain] != 0)
-					{
-						motor[mChain] = 0;
-					}
-					else
-					{
-						motor[mChain] = 50;
-					}
-				} else {} break;
+			{
+				useTankDrive = !useTankDrive;
+			}
+			break;
 	}
 }
 
@@ -85,33 +102,55 @@ task main() {
   //declare variables out here for max speed
   int joyYScaled = 0;
   int joyXScaled = 0;
-  nMotorEncoder[mSlide1] = 0;
-  nMotorEncoder[mSlide2] = 0;
+  //nMotorEncoder[mSlide1] = 0;
+  //nMotorEncoder[mSlide2] = 0;
+
+  int gateMotorDir = 1;
  	while(true) {
 		getJoystickSettings(joystick);
 		checkJoystickButtons();
 
-		if(joystick.joy1_TopHat == -1) {
 
-			joyYScaled = powscl(JOY_Y1);
+		writeDebugStreamLine("rightEncoder: %d, leftEncoder: %d", rightEncoder, leftEncoder);
 
-			joyXScaled = powscl(JOY_X1);
+		if(joystick.joy1_TopHat == -1)
+		{
+			if(useTankDrive)
+			{
+				setRightMotors(powscl(-1.0*JOY_Y2));
+				setLeftMotors(powscl(-1.0*JOY_Y1));
+			}
+			else
+			{
+				joyYScaled = powscl(-1.0*JOY_Y1);
 
-			setRightMotors((joyYScaled +joyXScaled)/2.6);
-			setLeftMotors((joyYScaled - joyXScaled)/2.6);
+				joyXScaled = powscl(JOY_X1);
+
+				setRightMotors(clamp_int(joyYScaled +joyXScaled, -100, 100));
+				setLeftMotors(clamp_int(joyYScaled - joyXScaled, -100, 100));
+			}
 		}
 		else
 		{
 			setRightMotors(getRightPowTopHat(joystick.joy1_TopHat));
 			setLeftMotors(getLeftPowTopHat(joystick.joy1_TopHat));
 		}
-		if(abs(joystick.joy1_y2) > 15.0)
-		{
-			motor[mChain] = powscl(joystick.joy1_y2);
-		}
-		else
-		{
-			motor[mChain] = 0;
-		}
+		//if(abs(joystick.joy1_y2) > 15.0)
+		//{
+		//	motor[mChain] = (powscl(joystick.joy1_y2) * CHAINSPEEDSCALAR);
+		//}
+		//else
+		//{
+		//	motor[mChain] = 0;
+		//}
+
+		//if(abs(joystick.joy1_x2) > 15.0)
+		//{
+		//	motor[motorA] = (joystick.joy1_x2/128.0) * 20;
+		//}
+		//else
+		//{
+		//	motor[motorA] = 0;
+		//}
 	}
 }

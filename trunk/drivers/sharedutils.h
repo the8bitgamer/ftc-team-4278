@@ -10,10 +10,10 @@
 #define getShifterState() (shifterStateArm)
 #define flipShifterState() {if(shifterStateArm) setShifterFlag(); else setShifterArm();}
 
-#define leftEncoder     abs(nMotorEncoder[mLeft1])
-#define rightEncoder    abs(nMotorEncoder[mRight1])
+#define leftEncoder     abs(nMotorEncoder[mLeft2])
+#define rightEncoder    abs(nMotorEncoder[mRight2])
 
-#define clearEncoders() {nMotorEncoder[mLeft2] = 0; nMotorEncoder[mRight1] = 0; encodersWereCleared = true;}
+#define clearEncoders() {nMotorEncoder[mLeft2] = 0; nMotorEncoder[mRight2] = 0; encodersWereCleared = true;}
 
 //Distance Macros
 #define INCH   1.0
@@ -23,7 +23,7 @@
 #define FOOT  12.0
 #define METER 39.370
 
-#define WHEELCIRC 18.8517
+#define WHEELCIRC 9.42585
 
 //horizontal distance between wheels
 #define WHEELBASE 10.95
@@ -40,19 +40,33 @@
 //degrees per revolution
 #define DEG_PER_REV 1440
 //servo constants
-#define HOOK1_HOOKDOWN 255 // middle + 128
-#define HOOK1_HOOKREST 64 // middle - 64
-#define HOOK1_ROBOLOCK 8
+#define HOOK1_HOOKDOWN 80
+#define HOOK1_HOOKREST 224
 
-//hook 2 offset +6
-#define HOOK2_HOOKDOWN 12
-#define HOOK2_HOOKREST 198
-#define HOOK2_ROBOLOCK 248
+//hook 2
+#define HOOK2_HOOKDOWN 176
+#define HOOK2_HOOKREST 32
+
+#define CHAINSPEEDSCALAR .5
 void waitForStart() {
   while(true) {
     getJoystickSettings(joystick);
     if(!joystick.StopPgm) break;
   }
+}
+
+//clamp an int inclusively between two other ints
+int clamp_int(int toClamp, int min, int max)
+{
+	if(toClamp < min)
+	{
+		toClamp = min;
+	}
+	else if(toClamp > max)
+	{
+		toClamp = max;
+	}
+	return toClamp;
 }
 
 void retractHooks()

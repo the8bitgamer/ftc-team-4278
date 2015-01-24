@@ -1,17 +1,19 @@
 
 //place feedback table from GenFeedbackTable.c here
+
+
 int powerToSpeedTable[101] = {
-	0,	17,	0,	1,	107,	235,	888,	869,	1271,	1506,
-	1696,	1866,	1975,	2097,	2252,	2398,	2349,	2518,	2624,	2703,
-	2711,	2792,	2862,	2843,	2950,	3002,	2997,	3002,	3068,	3039,
-	3191,	3204,	3197,	3186,	3196,	3290,	3264,	3274,	3347,	3297,
-	3327,	3351,	3402,	3398,	3390,	3413,	3471,	3480,	3368,	3493,
-	3473,	3518,	3434,	3506,	3571,	3437,	3590,	3540,	3499,	3546,
-	3656,	3487,	3652,	3574,	3559,	3625,	3642,	3616,	3666,	3530,
-	3707,	3627,	3621,	3632,	3630,	3677,	3692,	3615,	3656,	3789,
-	3641,	3648,	3679,	3730,	3734,	3584,	3812,	3711,	3695,	3721,
-	3633,	3759,	3686,	3805,	3618,	3768,	3758,	3746,	3706,	3709,
-	3803};
+	0,	7,	0,	0,	0,	4,	41,	72,	7,	154,
+	298,	812,	881,	972,	1092,	1240,	1374,	1439,	1584,	1676,
+	1741,	1826,	1932,	1998,	2038,	2146,	2178,	2262,	2320,	2353,
+	2427,	2429,	2489,	2526,	2564,	2575,	2548,	2637,	2669,	2711,
+	2752,	2791,	2772,	2826,	2853,	2891,	2864,	2905,	2941,	2950,
+	2935,	3006,	2949,	3026,	3025,	3001,	3049,	3058,	3048,	3082,
+	3091,	3072,	3120,	3152,	3079,	3151,	3169,	3161,	3168,	3153,
+	3200,	3175,	3236,	3233,	3200,	3248,	3256,	3271,	3238,	3296,
+	3306,	3272,	3288,	3330,	3316,	3317,	3385,	3312,	3387,	3373,
+	3330,	3384,	3340,	3393,	3364,	3396,	3400,	3368,	3425,	3438,
+	3462};
 
 
 //#define FEEDBACKDEBUG
@@ -112,7 +114,7 @@ float updateSide(tMotor motorNumber, float * queue, int * startOfQueue, int * pr
 	else
 	{
 		float avg = total / usefulNumbersInQueue;
-		if(avg <= 1.05)
+		if(avg <= 1.02)
 		{
 			avg = 1;
 		}
@@ -137,19 +139,19 @@ task monitorFeedback()
 	int previousEncoderValueRight = 0;
 	int previousEncoderValueLeft = 0;
 
-	nMotorEncoder[mRight1] = 0;
-	nMotorEncoder[mLeft1] = 0;
+	nMotorEncoder[mRight2] = 0;
+	nMotorEncoder[mLeft2] = 0;
 
 	while(true)
 	{
 		Sleep(CHECK_INTERVAL_MILLIS);
-		float rightValue = updateSide(mRight1, rollingQueueRight, &startOfRollingQueueRight, &previousEncoderValueRight);
+		float rightValue = updateSide(mRight2, rollingQueueRight, &startOfRollingQueueRight, &previousEncoderValueRight);
 		if(rightValue != 0)
 		{
 			multiplierRight = rightValue;
 		}
 
-		float leftValue = updateSide(mLeft1, rollingQueueLeft, &startOfRollingQueueLeft, &previousEncoderValueLeft);
+		float leftValue = updateSide(mLeft2, rollingQueueLeft, &startOfRollingQueueLeft, &previousEncoderValueLeft);
 		if(leftValue != 0)
 		{
 			multiplierLeft = leftValue;
