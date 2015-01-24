@@ -89,7 +89,7 @@ task main() {
 
 	//waitForStart();
   //extendArm();
-	rbtMoveFdDist(-48, 13000);
+	rbtMoveFdDist(-47, 13000);
 
 	int centerpiecePosition = getCenterpiecePosition();
 
@@ -111,7 +111,7 @@ task main() {
 		rbtArcRight(-45);
 		rbtMoveFdDist(-30, 9000);
 
-		rbtArcLeft(-53);
+		rbtArcLeft(-60);
 		rbtMoveFdDist(100, 55, 5000);
 	}
 
