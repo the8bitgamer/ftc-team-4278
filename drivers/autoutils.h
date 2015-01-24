@@ -50,45 +50,47 @@ void rbtMoveFdDist(float inches, int msec) {
 	ClearTimer(DRV_TIMER);
 
 	while(leftEncoder < enc && rightEncoder < enc) {
+
+		//writeDebugStreamLine("rightEncoder: %d, leftEncoder: %d", rightEncoder, leftEncoder);
 		if(time1[DRV_TIMER] > msec) lockdownRobot();
-		setLeftMotors (25*norm*LEFT_POW_DIFF);
-		setRightMotors(25*norm*RIGHT_POW_DIFF);
+		setLeftMotors (15*norm*LEFT_POW_DIFF);
+		setRightMotors(15*norm*RIGHT_POW_DIFF);
 	}
 	setLeftMotors(0); setRightMotors(0); pause();
 }
 
-void extendArm()
-{
-	//58.5 is the maximum torque speed
-	motor[mSlide1] = -54;
-	motor[mSlide2] = 58.5;
-	ClearTimer(DRV_TIMER);
+//void extendArm()
+//{
+//	//58.5 is the maximum torque speed
+//	motor[mSlide1] = -57;
+//	motor[mSlide2] = 58.5;
+//	ClearTimer(DRV_TIMER);
 
-	while(!sensor[sensorSlideEndstop])
-	{
-		if(time1[DRV_TIMER] > 10000)
-		{
-			writeDebugStreamLine("Touch sensor not registering, emergency slide stop!");
-			motor[mSlide1] = 0;
-			motor[mSlide2] = 0;
-			return;
-		}
-		else
-		{
-			wait10Msec(1)
-		}
+//	while(SensorValue(sensorSlideEndstop) == 0)
+//	{
+//		if(time1[DRV_TIMER] > 15000)
+//		{
+//			writeDebugStreamLine("Touch sensor not registering, emergency slide stop!");
+//			motor[mSlide1] = 0;
+//			motor[mSlide2] = 0;
+//			return;
+//		}
+//		else
+//		{
+//			wait10Msec(1);
+//		}
 
-	}
+//	}
 
-	motor[mSlide1] = 0;
-	motor[mSlide2] = 0;
+//	motor[mSlide1] = 0;
+//	motor[mSlide2] = 0;
 
-}
+//}
 
 bool rbtMoveFdDistErr(float inches, int msec) {
 	clearEncoders();
 	int enc = abs(getEncoderByInches(inches));
-	int norm = 1.0*sgn(inches);
+	int norm = sgn(inches);
 	ClearTimer(DRV_TIMER);
 
 	while(leftEncoder < enc && rightEncoder < enc) {
@@ -137,6 +139,7 @@ void rbtArcLeft(float degs) {
 	ClearTimer(DRV_TIMER);
 	while(rightEncoder < enc)
 	{
+		//writeDebugStreamLine("rightEncoder: %d, leftEncoder: %d", rightEncoder, leftEncoder);
 		wait10Msec(1);
 		if(time1[DRV_TIMER] > MAX_TURN_TIME)
 			lockdownRobot();
@@ -164,38 +167,41 @@ void rbtTurnLeft(float degs) {
 	setLeftMotors(0); setRightMotors(0); pause();
 }
 
-int getLeftTurnToBeacon()
+int getCenterpiecePosition()
 {
-	float IRDir = getIRDir(sensorIR);
+	//float IRDir = getIRDir(sensorIR);
+	int ultrasonicDist = SensorValue(ultrasonic);
+	writeDebugStreamLine("Ultrasonic Distance: %d", ultrasonicDist);
 
-	if(IRDir >= 5)
+
+	if(ultrasonicDist <= 105) //beacon detected  at the center or to the left
 	{
-		writeDebugStreamLine("Estimating that the IR beacon is straight ahead");
-		return 0;
+		writeDebugStreamLine("Estimating that the tube is at position 1");
+		return 1;
 	}
-	else if(IRDir >= 2)
+	else if(ultrasonicDist > 250)
 	{
-		writeDebugStreamLine("Estimating that the IR beacon is half turned to the left");
-		return 45;
+		writeDebugStreamLine("Estimating that the tube is at position 2");
+		return 2;
 	}
 
-	writeDebugStreamLine("Estimating that the IR beacon is fully turned to the left");
-	return 90;
+	writeDebugStreamLine("Estimating that the tube is at position 3");
+	return 3;
 }
 
-int rbtMoveToIR(int timeout) {
-	float r0 = getIRDir(sensorIR)-8, r1; bool i = true;
-	if(r0 > 0){ rbtArcRight(-7); rbtMoveFdDist(-10, 5000);}
-	else 			{ rbtArcLeft(12);  rbtMoveFdDist(-10, 5000);}
+//int rbtMoveToIR(int timeout) {
+//	float r0 = getIRDir(sensorIR)-8, r1; bool i = true;
+//	if(r0 > 0){ rbtArcRight(-7); rbtMoveFdDist(-10, 5000);}
+//	else 			{ rbtArcLeft(12);  rbtMoveFdDist(-10, 5000);}
 
-	ClearTimer(T1);	while(time1[T1] < timeout) {
-		if(i){r1 = getIRDir(sensorIR)-8;i=false; nxtDisplayBigTextLine(3, "%f", r1);} int acS[5]; HTIRS2readAllACStrength(sensorIR, acS[0], acS[1], acS[2], acS[3], acS[4]);
+//	ClearTimer(T1);	while(time1[T1] < timeout) {
+//		if(i){r1 = getIRDir(sensorIR)-8;i=false; nxtDisplayBigTextLine(3, "%f", r1);} int acS[5]; HTIRS2readAllACStrength(sensorIR, acS[0], acS[1], acS[2], acS[3], acS[4]);
 
-		if(r0 > 0) {setLeftMotors(acS[4] > acS[3] ? -10 : -50); setRightMotors(acS[4] > acS[3] ? -37 : -8);}
-    else       {setLeftMotors(acS[4] > acS[3] ? -6 : -90); setRightMotors(acS[4] > acS[3] ? -30 :  0);}
-	} setLeftMotors(0); setRightMotors(0);
+//		if(r0 > 0) {setLeftMotors(acS[4] > acS[3] ? -10 : -50); setRightMotors(acS[4] > acS[3] ? -37 : -8);}
+//    else       {setLeftMotors(acS[4] > acS[3] ? -6 : -90); setRightMotors(acS[4] > acS[3] ? -30 :  0);}
+//	} setLeftMotors(0); setRightMotors(0);
 
-	return (r0 > 0 ? (r1 > 0 ? 1 : 2) : (r1 > 0 ? 3 : 4));
-}
+//	return (r0 > 0 ? (r1 > 0 ? 1 : 2) : (r1 > 0 ? 3 : 4));
+//}
 
 #endif //__AUTODRIVER__
