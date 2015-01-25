@@ -12,6 +12,7 @@
 
 #include "drivers/teleoputils.h"
 
+bool halfSpeed = false;
 bool useTankDrive = false;
 
 void invokeButton(int button, bool pressed) {
@@ -42,8 +43,8 @@ void invokeButton(int button, bool pressed) {
 			} else {} break;
 		case BUTTON_Y:
 			if(pressed) {retractHooks();} else {} break;
-		//case BUTTON_RB:
-		//	if(pressed) {motor[mSlide2] = 58;} else {motor[mSlide2] = 0;} break;
+		case BUTTON_RB:
+			if(pressed) {halfSpeed = true;} else {halfSpeed = false;} break;
 		//case BUTTON_BA:
 		//	if(pressed) {motor[mSlide1] = 35;} else {motor[mSlide1] = 0;} break;
 		//case BUTTON_LB:
@@ -111,7 +112,7 @@ task main() {
 		checkJoystickButtons();
 
 
-		writeDebugStreamLine("rightEncoder: %d, leftEncoder: %d", rightEncoder, leftEncoder);
+		//writeDebugStreamLine("rightEncoder: %d, leftEncoder: %d", rightEncoder, leftEncoder);
 
 		if(joystick.joy1_TopHat == -1)
 		{
@@ -125,6 +126,12 @@ task main() {
 				joyYScaled = powscl(-1.0*JOY_Y1);
 
 				joyXScaled = powscl(JOY_X1);
+
+				if(halfSpeed)
+				{
+					joyXScaled /= 4;
+					joyYScaled /= 4;
+				}
 
 				setRightMotors(clamp_int(joyYScaled +joyXScaled, -100, 100));
 				setLeftMotors(clamp_int(joyYScaled - joyXScaled, -100, 100));
