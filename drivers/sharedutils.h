@@ -6,7 +6,7 @@
 #include "Feedback.h"
 
 #define setLeftMotors(x)  {int pow = multiplierLeft*x; motor[mLeft1] = pow; motor[mLeft2] = pow;}
-#define setRightMotors(x) {int powr = multiplierRight*x; motor[mRight1] = powr; motor[mRight2] =  powr;}
+#define setRightMotors(x) {int powr = 1.4*multiplierRight*x; motor[mRight1] = powr; motor[mRight2] =  powr;}
 #define getShifterState() (shifterStateArm)
 #define flipShifterState() {if(shifterStateArm) setShifterFlag(); else setShifterArm();}
 
@@ -41,18 +41,31 @@
 #define DEG_PER_REV 1440
 //servo constants
 #define HOOK1_HOOKDOWN 80
-#define HOOK1_HOOKREST 224
+#define HOOK1_HOOKREST 240
 
 //hook 2
 #define HOOK2_HOOKDOWN 176
-#define HOOK2_HOOKREST 32
+#define HOOK2_HOOKREST 16
 
 #define CHAINSPEEDSCALAR .5
 void waitForStart() {
-  while(true) {
+
+	int poundIndex = 0;
+  while(true)
+  {
+  	eraseDisplay();
+		nxtDisplayTextLine(1, "Waiting for match...");
+		nxtDisplayBigStringAt(++poundIndex, 35, "#");
+		if(poundIndex == 100)
+		{
+			poundIndex = 0;
+		}
+		wait1Msec(6);
     getJoystickSettings(joystick);
     if(!joystick.StopPgm) break;
   }
+
+  eraseDisplay();
 }
 
 //clamp an int inclusively between two other ints
